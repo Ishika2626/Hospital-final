@@ -126,7 +126,7 @@ namespace HospitalManagementSystem.Models
         public DateTime Date { get; set; } // yyyy-MM-dd
         public string AttendanceStatus { get; set; }
 
-        public TimeSpan? PunchInTime { get; set; } // Make PunchInTime nullable
+        public TimeSpan PunchInTime { get; set; } // Make PunchInTime nullable
         public TimeSpan? PunchOutTime { get; set; } // PunchOutTime is already nullable
 
         public string EmployeeName { get; set; }
