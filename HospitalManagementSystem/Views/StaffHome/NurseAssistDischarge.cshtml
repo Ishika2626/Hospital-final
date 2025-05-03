@@ -1,0 +1,188 @@
+﻿@model List<HospitalManagementSystem.Models.DischargedPatientViewModel>
+
+@{
+    ViewBag.Title = "Discharged Patients";
+    Layout = "_stafflayout";
+}
+
+<div class="container mt-4">
+    <h3 class="text-center mb-4">📝 Discharged Patients (Assigned to You)</h3>
+    <input type="text" id="searchInput" class="form-control mb-3" placeholder="🔍 Search by Patient Name">
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>aid</th>
+                <th>Patient Name</th>
+                <th>Doctor</th>
+                <th>Diagnosis</th>
+                <th>Discharge Date</th>
+                <th>Discharge Reason</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.AdmissionId</td>
+                    <td>@item.PatientName</td>
+                    <td>@item.DoctorName</td>
+                    <td>@item.Diagnosis</td>
+                    <td>
+                        @if (item.DischargeDate.HasValue)
+                        {
+                            @item.DischargeDate?.ToString("yyyy-MM-dd")
+                        }
+                        else
+                        {
+                            <span>N/A</span>
+                        }
+                    </td>
+                    <td>@item.DischargeReason</td>
+                    <td>
+                        @if (!item.DischargeDate.HasValue)
+                        {
+                            <button class="btn btn-primary"
+                                    data-toggle="modal"
+                                    data-target="#dischargeModal"
+                                    data-admissionid="@item.AdmissionId"
+                                    data-patientid="@item.PatientId">
+                                Discharge
+                            </button>
+    
+                        }
+                        else
+                        {
+                            <span>Discharged</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Back Button -->
+    <a href="@Url.Action("NurseDashboard", "StaffHome")" class="btn btn-secondary mt-3"
+       style="background-color: #6c757d; color: white; padding: 10px 15px;
+                  border-radius: 5px; text-decoration: none; display: inline-block;">
+        ⬅ Back to Dashboard
+    </a>
+</div>
+
+<!-- Modal for Discharge Details -->
+<div class="modal fade" id="dischargeModal" tabindex="-1" role="dialog" aria-labelledby="dischargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dischargeModalLabel">Discharge Patient</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="dischargeForm" method="post" action="@Url.Action("Discharge", "StaffHome")">
+                    <input type="hidden" id="AdmissionId" name="AdmissionId" />
+                    <input type="hidden" id="PatientId" name="PatientId" />
+
+                    <p>Admission ID: <span id="showAdmissionId"></span></p>
+
+                    <div class="form-group">
+                        <label for="DischargeDate">Discharge Date</label>
+                        <input type="date" id="DischargeDate" name="DischargeDate" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="DischargeReason">Discharge Reason</label>
+                        <textarea id="DischargeReason" name="DischargeReason" class="form-control" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="DoctorId">Doctor</label>
+                        <select id="DoctorId" name="DoctorId" class="form-control" required>
+                            <option value="">Select Doctor</option>
+                            @foreach (var doctor in ViewBag.Doctors as List<Doctor>)
+                            {
+                                <option value="@doctor.DoctorId">@doctor.FullName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Discharge</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Your custom script AFTER libraries are loaded
+    $('#dischargeModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var admissionId = button.data('admissionid');
+        var patientId = button.data('patientid');
+        $('#showAdmissionId').text(admissionId);
+
+        $('#AdmissionId').val(admissionId);
+        $('#PatientId').val(patientId);
+    });
+
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+        var filter = this.value.toLowerCase();
+        var rows = document.querySelectorAll("table tbody tr");
+
+        rows.forEach(row => {
+            var patientName = row.cells[1].textContent.toLowerCase(); // Notice: cells[1] because 0 = aid
+            row.style.display = patientName.includes(filter) ? "" : "none";
+        });
+    });
+</script>
+
+
+<style>
+    body {
+        background-color: #f4f8fb;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h3 {
+        font-weight: bold;
+        color: #007BFF;
+    }
+
+    .table {
+        background-color: white;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+        .table th {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+        }
+
+        .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+    .form-control {
+        border-radius: 20px;
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+    }
+
+    .btn-secondary {
+        border-radius: 25px;
+        font-weight: 500;
+    }
+
+    #searchInput::placeholder {
+        color: #999;
+    }
+</style>

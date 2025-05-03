@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "_stafflayout";
+}
+
+<div class="text-center mt-3">
+    <a href="@Url.Action("PharmacistDashboard", "StaffHome")" class="btn btn-secondary mb-3"
+       style="background-color: #6c757d; color: white; padding: 10px 15px;
+              border-radius: 5px; text-decoration: none; display: inline-block;">
+        🔙 Back to Dashboard
+    </a>
+</div>
+
+<div class="container mt-4">
+    <div class="card p-4">
+        <h3 class="text-center mb-4">Prescription Requests</h3>
+
+        <div class="table-responsive">
+            <!-- Enables horizontal scrolling on small screens -->
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Doctor</th>
+                        <th>Medicine</th>
+                        <th>Dosage</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>Dr. Smith</td>
+                        <td>Paracetamol</td>
+                        <td>500mg</td>
+                        <td><span class="badge bg-warning text-dark">Pending</span></td>
+                        <td>
+                            <a href="#" class="btn btn-success btn-sm">✔ Dispense</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jane Doe</td>
+                        <td>Dr. Brown</td>
+                        <td>Ibuprofen</td>
+                        <td>200mg</td>
+                        <td><span class="badge bg-warning text-dark">Pending</span></td>
+                        <td>
+                            <a href="#" class="btn btn-success btn-sm">✔ Dispense</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,105 @@
+﻿@{
+    ViewData["Title"] = "Staff Dashboard";
+    Layout = "_StaffLayout";
+}
+
+<div class="container mt-4">
+
+    <!-- Quick Actions (Role-Based) -->
+    <h4 class="quick-actions-title">⚡ Quick Actions</h4>
+    <div class="row">
+
+        <h2 class="text-center mb-4">🧪 Lab Technician Panel</h2>
+
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>🧪 Conduct Lab Tests</h5>
+                        <p>Perform and record results for laboratory tests.</p>
+                        <a asp-controller="StaffHome" asp-action="LTConductLabTest" class="btn btn-success w-100">📝 Conduct Test</a>
+                    </div>
+                </div>
+
+                <!-- Manage Test Requests -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>📋 Test Requests</h5>
+                        <p>View and process laboratory test requests.</p>
+                        <a asp-controller="StaffHome" asp-action="LTTestRequests" class="btn btn-primary w-100">🔬 View Requests</a>
+                    </div>
+                </div>
+
+                <!-- Conducted Tests -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>🧾 Conducted Tests</h5>
+                        <p>Manage and update test results.</p>
+                        <a asp-controller="StaffHome" asp-action="LTTestReports" class="btn btn-success w-100">📊 View Results</a>
+                    </div>
+                </div>
+
+                <!-- Sample Collection -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>🧫 Sample Collection</h5>
+                        <p>Monitor and update collected samples.</p>
+                        <a asp-controller="StaffHome" asp-action="LTManagePatietSamples" class="btn btn-warning w-100">📦 Manage Samples</a>
+                    </div>
+                </div>
+
+                <!-- Equipment Maintenance -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>🛠 Equipment Maintenance</h5>
+                        <p>Track and maintain laboratory equipment.</p>
+                        <a asp-controller="StaffHome" asp-action="LTEquipmentMaintenance" class="btn btn-danger w-100">⚙ Maintenance Log</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>🏥 Lab Inventory</h5>
+                        <p>Manage laboratory equipment, reagents, and stock.</p>
+                        <a asp-controller="StaffHome" asp-action="LTLabInventory" class="btn btn-warning w-100">📦 Manage Inventory</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <style>
+            .card {
+                transition: transform 0.2s, box-shadow 0.2s;
+                border-radius: 10px;
+                border: none;
+            }
+
+                .card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                }
+
+            @@media (max-width: 768px) {
+                .btn {
+                    font-size: 14px;
+                    padding: 10px;
+                }
+            }
+
+            .quick-actions-title {
+                text-align: center; /* Centers the text */
+                font-weight: bold; /* Makes text bold */
+                font-size: 24px; /* Sets a readable font size */
+                margin-bottom: 20px;
+            }
+
+            @@media (max-width: 768px) {
+                .quick-actions-title {
+                    font-size: 20px; /* Slightly smaller for mobile */
+                }
+            }
+
+            .container{
+                margin-bottom: 50px;
+            }
+        </style>

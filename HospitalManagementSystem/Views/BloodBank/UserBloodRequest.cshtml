@@ -1,0 +1,517 @@
+﻿@{
+    ViewData["Title"] = "Blood Request";
+}
+@{
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LifeStream Blood Bank - Request Blood</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet" />
+    <style>
+        /* Color scheme and variables */
+        :root {
+            --primary-color: #ff6b6b; /* Vibrant red */
+            --secondary-color: #ffe66d; /* Bright yellow */
+            --accent-color: #4ecdc4; /* Turquoise */
+            --dark-color: #1a1a1d; /* Dark background */
+            --light-color: #f7f7f7; /* Light background */
+        }
+
+        /* Global styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-color), #e6e6e6);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            background-color: var(--dark-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-brand {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+            .navbar-brand span {
+                color: var(--secondary-color);
+            }
+
+        .navbar-nav .nav-link {
+            color: var(--light-color);
+            transition: color 0.3s ease;
+        }
+
+            .navbar-nav .nav-link:hover,
+            .navbar-nav .nav-link.active {
+                color: var(--accent-color);
+            }
+
+        /* Form section styling */
+        .form-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+            .form-header h3,
+            .form-header h5 {
+                margin: 0;
+            }
+
+        .info-alert {
+            background-color: rgba(78, 205, 196, 0.1);
+            border-left: 5px solid var(--accent-color);
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        /* Blood type button styling */
+        .blood-type-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .blood-type-btn {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .blood-type-btn.active {
+                background-color: var(--primary-color);
+                color: white;
+                border-color: var(--primary-color);
+            }
+
+        /* Input focus styling */
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+        }
+
+        .required-label::after {
+            content: "*";
+            color: var(--primary-color);
+            margin-left: 3px;
+        }
+
+        /* Footer styling */
+        .footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 40px 0;
+        }
+
+            .footer h5 {
+                margin-bottom: 20px;
+            }
+
+            .footer a {
+                color: var(--light-color);
+                text-decoration: none;
+            }
+
+                .footer a:hover {
+                    color: var(--primary-color);
+                }
+
+        .social-icons a {
+            color: var(--light-color);
+            margin-right: 15px;
+            font-size: 1.3rem;
+            transition: color 0.3s ease;
+        }
+
+            .social-icons a:hover {
+                color: var(--primary-color);
+            }
+
+        /* Custom modal styling */
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Content -->
+    <div class="container py-5" style="margin-top:80px">
+        <div class="row">
+            <!-- Request Form Section -->
+            <div class="col-lg-8 mb-4">
+                <div class="form-section">
+                    <div class="form-header">
+                        <h3>
+                            <i class="fas fa-hand-holding-medical me-2"></i> Request Blood
+                        </h3>
+                    </div>
+                    <div class="p-4">
+                        <div class="alert info-alert" role="alert">
+                            <i class="fas fa-info-circle me-2"></i> All fields marked with
+                            <span class="text-danger">*</span> are required.
+                        </div>
+                        <form id="bloodRequestForm">
+                            <!-- Emergency request toggle -->
+                            <div class="mb-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           id="emergencyRequest" />
+                                    <label class="form-check-label" for="emergencyRequest">
+                                        <span class="badge bg-warning text-dark">Emergency</span>
+                                        (within 24 hours)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Patient details -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="patientName" class="form-label required-label">Patient Name</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="patientName"
+                                           placeholder="John Doe"
+                                           required />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="patientAge" class="form-label required-label">Patient Age</label>
+                                    <input type="number"
+                                           class="form-control"
+                                           id="patientAge"
+                                           min="0"
+                                           max="120"
+                                           placeholder="30"
+                                           required />
+                                </div>
+                            </div>
+
+                            <!-- Hospital details -->
+                            <div class="mb-3">
+                                <label for="hospitalName" class="form-label required-label">Hospital/Facility Name</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="hospitalName"
+                                       placeholder="City Hospital"
+                                       required />
+                            </div>
+
+                            <!-- Contact details -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="contactName" class="form-label required-label">Contact Person</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="contactName"
+                                           placeholder="Jane Smith"
+                                           required />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="contactPhone" class="form-label required-label">Contact Phone</label>
+                                    <input type="tel"
+                                           class="form-control"
+                                           id="contactPhone"
+                                           placeholder="(123) 456-7890"
+                                           required />
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contactEmail" class="form-label">Contact Email</label>
+                                <input type="email"
+                                       class="form-control"
+                                       id="contactEmail"
+                                       placeholder="email@example.com" />
+                            </div>
+
+                            <!-- Blood type selection -->
+                            <div class="mb-4">
+                                <label class="form-label required-label">Select Blood Type</label>
+                                <div class="blood-type-selector">
+                                    <button type="button" class="blood-type-btn" data-blood-type="A+">A+</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="A-">A-</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="B+">B+</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="B-">B-</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="AB+">AB+</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="AB-">AB-</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="O+">O+</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="O-">O-</button>
+                                </div>
+                                <input type="hidden" id="selectedBloodType" required />
+                            </div>
+
+                            <!-- Units required and date -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="unitsRequired" class="form-label required-label">Units Required</label>
+                                    <input type="number"
+                                           class="form-control"
+                                           id="unitsRequired"
+                                           min="1"
+                                           placeholder="1"
+                                           required />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="requiredBy" class="form-label required-label">Required By Date</label>
+                                    <input type="date" class="form-control" id="requiredBy" required />
+                                </div>
+                            </div>
+
+                            <!-- Additional details -->
+                            <div class="mb-3">
+                                <label for="medicalReason" class="form-label">Medical Reason</label>
+                                <textarea class="form-control"
+                                          id="medicalReason"
+                                          rows="3"
+                                          placeholder="Describe the condition or reason (optional)"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="additionalInfo" class="form-label">Additional Information</label>
+                                <textarea class="form-control"
+                                          id="additionalInfo"
+                                          rows="2"
+                                          placeholder="Any extra details (optional)"></textarea>
+                            </div>
+
+                            <!-- File upload for medical document -->
+                            <div class="mb-4">
+                                <label for="medicalDocument" class="form-label">Upload Medical Document <small>(optional)</small></label>
+                                <input type="file"
+                                       class="form-control"
+                                       id="medicalDocument"
+                                       accept=".pdf,.doc,.docx" />
+                            </div>
+
+                            <!-- Terms and conditions -->
+                            <div class="form-check mb-4">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       id="termsCheck"
+                                       required />
+                                <label class="form-check-label" for="termsCheck">
+                                    I confirm that the information provided is accurate and I consent to the processing of my request.
+                                </label>
+                            </div>
+
+                            <!-- Submit button -->
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    Submit Request
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Important Info -->
+                <div class="form-section">
+                    <div class="form-header">
+                        <h5><i class="fas fa-info-circle me-2"></i>Important Info</h5>
+                    </div>
+                    <div class="p-3">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <i class="fas fa-check text-success me-2"></i>Urgent requests are prioritized
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-check text-success me-2"></i>Confirmation email will be sent
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-check text-success me-2"></i>Response within 2 hours
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-exclamation-triangle text-warning me-2"></i>Medical document may be required
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact Card -->
+                <div class="form-section">
+                    <div class="form-header">
+                        <h5><i class="fas fa-phone-alt me-2"></i>Need Help?</h5>
+                    </div>
+                    <div class="p-3">
+                        <p>For urgent assistance, please call our helpline:</p>
+                        <div class="d-grid gap-2 mb-3">
+                            <a href="tel:+18001234567" class="btn btn-outline-danger">
+                                <i class="fas fa-phone-alt me-2"></i>1-800-BLOOD-HELP
+                            </a>
+                            <a href="mailto:emergency@lifestream.org" class="btn btn-outline-secondary">
+                                <i class="fas fa-envelope me-2"></i>emergency@lifestream.org
+                            </a>
+                        </div>
+                        <p class="mb-0"><small>Available 24/7 for emergency support.</small></p>
+                    </div>
+                </div>
+
+                <!-- Blood Compatibility Chart -->
+                <div class="form-section">
+                    <div class="form-header">
+                        <h5><i class="fas fa-chart-pie me-2"></i>Blood Compatibility</h5>
+                    </div>
+                    <div class="p-3">
+                        <p class="small">Check compatible blood types:</p>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Can Receive</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>A+</td>
+                                    <td>A+, A-, O+, O-</td>
+                                </tr>
+                                <tr>
+                                    <td>A-</td>
+                                    <td>A-, O-</td>
+                                </tr>
+                                <tr>
+                                    <td>B+</td>
+                                    <td>B+, B-, O+, O-</td>
+                                </tr>
+                                <tr>
+                                    <td>B-</td>
+                                    <td>B-, O-</td>
+                                </tr>
+                                <tr>
+                                    <td>AB+</td>
+                                    <td>All types</td>
+                                </tr>
+                                <tr>
+                                    <td>AB-</td>
+                                    <td>A-, B-, AB-, O-</td>
+                                </tr>
+                                <tr>
+                                    <td>O+</td>
+                                    <td>O+, O-</td>
+                                </tr>
+                                <tr>
+                                    <td>O-</td>
+                                    <td>O- only</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade"
+         id="confirmationModal"
+         tabindex="-1"
+         aria-labelledby="confirmationModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Request Submitted</h5>
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Your blood request has been received. We will contact you shortly.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script>
+        // Blood type selector functionality
+        document.querySelectorAll('.blood-type-btn').forEach(button => {
+          button.addEventListener('click', function () {
+            document.querySelectorAll('.blood-type-btn').forEach(btn =>
+              btn.classList.remove('active')
+            );
+            this.classList.add('active');
+            document.getElementById('selectedBloodType').value =
+              this.getAttribute('data-blood-type');
+          });
+        });
+
+        // Form submission handling
+        document
+          .getElementById('bloodRequestForm')
+          .addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Validate that blood type is selected
+            if (!document.getElementById('selectedBloodType').value) {
+              alert('Please select a blood type.');
+              return;
+            }
+            // Show confirmation modal
+            var confirmationModal = new bootstrap.Modal(
+              document.getElementById('confirmationModal')
+            );
+            confirmationModal.show();
+
+            // Optionally send data to the server here (AJAX call)
+            setTimeout(() => {
+              // Reset form and update minimum date
+              this.reset();
+              document
+                .querySelectorAll('.blood-type-btn')
+                .forEach(btn => btn.classList.remove('active'));
+              document
+                .getElementById('requiredBy')
+                .setAttribute('min', new Date().toISOString().split('T')[0]);
+            }, 1000);
+          });
+
+        // Set minimum date for "Required By" field to today
+        document
+          .getElementById('requiredBy')
+          .setAttribute('min', new Date().toISOString().split('T')[0]);
+    </script>
+</body>
+</html>

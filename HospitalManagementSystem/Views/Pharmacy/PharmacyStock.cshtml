@@ -1,0 +1,121 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+@model HospitalManagementSystem.Models.PharmacyStock;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pharmacy Stock</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6; 
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .btn {
+            width: 100%; 
+        }
+    </style>
+</head>
+<body>
+    <div class="col-md-2" style="margin-left:40px;">
+        <a href="@Url.Action("DisplayPharmacyStock","Pharmacy")" class="btn btn-primary btn-sm px-3 py-2" style="font-size: 14px; background: linear-gradient(to right, #1e3c72, #2a5298); border: none;">
+            <i class="fa-solid fa-list"></i> Pharmacy Stock List
+        </a>
+    </div>
+    <div class="container">     
+        <div class="card p-3">
+            <div class="card-header">
+                <i class="fa-solid fa-boxes-stacked"></i> Pharmacy Stock
+            </div>
+
+            <div class="card-body">
+                <form id="pharmacyStockForm" action="@Url.Action("PharmacyStock", "Pharmacy")" method="post">
+                    <div class="row">
+                        <!-- Medicine ID -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-id-badge"></i> Select Medicine</label>
+                            @Html.DropDownListFor(m => m.MedicineId,
+                                     (List<SelectListItem>)ViewBag.medicineName,
+                                     "-- Select Medicine --",
+                                     new { @class = "form-control", required = "required" })
+
+                        </div>
+
+                        <!-- Stock Quantity -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-sort-numeric-up"></i> Stock Quantity</label>
+                            <input type="number" class="form-control" id="stock_quantity" asp-for="StockQuantity" required min="0">
+                        </div>
+
+                        <!-- Stock In Date -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-calendar-plus"></i> Stock In Date</label>
+                            <input type="datetime-local" class="form-control" id="stock_in_date" asp-for="StockInDate" required>
+                        </div>
+
+                        <!-- Stock Out Date -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-calendar-minus"></i> Stock Out Date</label>
+                            <input type="datetime-local" class="form-control" id="stock_out_date" asp-for="StockOutDate">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-cubes-stacked"></i> Stock Balance</label>
+                            <input type="number" class="form-control" id="stock_balance" asp-for="StockBalance" min="0">
+                        </div>
+
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-plus"></i> Add Stock
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="reset" class="btn btn-danger">
+                                <i class="fa-solid fa-eraser"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

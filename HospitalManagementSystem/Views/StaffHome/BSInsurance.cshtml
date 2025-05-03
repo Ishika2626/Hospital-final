@@ -1,0 +1,105 @@
+﻿@{
+    ViewData["Title"] = "Insurance Processing";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<a asp-controller="StaffHome" asp-action="BillingStaffDashboard" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-3">📑 Insurance Claims</h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Policy No</th>
+                    <th>Patient</th>
+                    <th>Claim Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>POL-2025-001</td>
+                    <td>Jane Smith</td>
+                    <td>$1,000</td>
+                    <td><span class="badge bg-warning">Pending</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#approveClaimModal">✔ Approve</button>
+                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectClaimModal">❌ Reject</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Approve Claim Modal -->
+<div class="modal fade" id="approveClaimModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 class="modal-title">✔ Approve Claim</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to approve this claim?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success">Approve</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Claim Modal -->
+<div class="modal fade" id="rejectClaimModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 class="modal-title">❌ Reject Claim</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <label>Reason for Rejection:</label>
+                <textarea class="form-control" placeholder="Enter reason"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger">Reject</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table {
+        min-width: 600px; /* Ensures proper display on small screens */
+    }
+
+    .badge {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+
+    .btn-sm {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+
+    @@media (max-width: 768px) {
+        .btn
+
+    {
+        font-size: 13px;
+        padding: 8px;
+    }
+
+    }
+</style>

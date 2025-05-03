@@ -1,0 +1,134 @@
+﻿@{
+    ViewData["Title"] = "Staff Dashboard";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <!-- Quick Actions (Role-Based) -->
+    <h4 class="quick-actions-title">⚡ Quick Actions</h4>
+    <div class="row">
+
+        <h2 class="text-center mb-4">💼 HR Manager Panel</h2>
+
+        <div class="container">
+            <div class="row g-4">
+                <!-- 👥 Employee Management -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>👥 Employee Management</h5>
+                        <p>View, add, and manage hospital employees.</p>
+                        <a asp-controller="StaffHome" asp-action="HREmployee" class="btn btn-primary w-100">🔍 Manage Employees</a>
+                    </div>
+                </div>
+
+                <!-- 📋 Hiring & Recruitment -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>📋 Hiring & Recruitment</h5>
+                        <p>Track and process job applications.</p>
+                        <a asp-controller="StaffHome" asp-action="HRHiring" class="btn btn-success w-100">📄 View Applications</a>
+                    </div>
+                </div>
+
+                <!-- 💰 Payroll Management -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>💰 Payroll & Salaries</h5>
+                        <p>Manage salaries, bonuses, and deductions for employees.</p>
+                        <a asp-controller="StaffHome" asp-action="HRPayroll" class="btn btn-warning w-100">💳 Manage Payroll</a>
+                    </div>
+                </div>
+
+                <!-- 🕒 Scheduling -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>🕒 Shift Scheduling</h5>
+                        <p>Assign and manage employee work shifts.</p>
+                        <a asp-controller="StaffHome" asp-action="HRScheduling" class="btn btn-dark w-100">🗓️ Manage Schedules</a>
+                    </div>
+                </div>
+
+                <!-- 📅 Attendance -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>📅 Attendance</h5>
+                        <p>Monitor and mark employee attendance.</p>
+                        <a asp-controller="StaffHome" asp-action="HRAttendance" class="btn btn-danger w-100">⏳ Manage Attendance</a>
+                    </div>
+                </div>
+
+                <!-- 🌴 Leave Requests -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>🌴 Leave Management</h5>
+                        <p>Track, approve or reject employee leave requests.</p>
+                        <a asp-controller="StaffHome" asp-action="HRLeaves" class="btn btn-secondary w-100">📝 Manage Leave Requests</a>
+                    </div>
+                </div>
+
+                <!-- 📊 Performance Reviews -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>📊 Performance Reviews</h5>
+                        <p>Evaluate and document employee performance.</p>
+                        <a asp-controller="StaffHome" asp-action="HRPerformance" class="btn btn-info w-100">📈 View Performance</a>
+                    </div>
+                </div>
+
+                <!-- 🎓 Training Programs -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>🎓 Training Programs</h5>
+                        <p>Manage training sessions and employee participation.</p>
+                        <a asp-controller="StaffHome" asp-action="HRTraining" class="btn btn-secondary w-100">📚 Manage Trainings</a>
+                    </div>
+                </div>
+
+                <!-- ⚠️ Employee Complaints -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>⚠️ Employee Complaints</h5>
+                        <p>Log and resolve employee concerns and issues.</p>
+                        <a asp-controller="StaffHome" asp-action="HRComplaints" class="btn btn-secondary w-100">📩 View Complaints</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <style>
+            .card {
+                transition: transform 0.2s, box-shadow 0.2s;
+                border-radius: 10px;
+                border: none;
+            }
+
+                .card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                }
+
+            @@media (max-width: 768px) {
+                .btn {
+                    font-size: 14px;
+                    padding: 10px;
+                }
+            }
+
+            .quick-actions-title {
+                text-align: center; /* Centers the text */
+                font-weight: bold; /* Makes text bold */
+                font-size: 24px; /* Sets a readable font size */
+                margin-bottom: 20px;
+            }
+
+            @@media (max-width: 768px) {
+                .quick-actions-title {
+                    font-size: 20px; /* Slightly smaller for mobile */
+                }
+            }
+            .container{
+                margin-bottom: 50px;
+            }
+        </style>

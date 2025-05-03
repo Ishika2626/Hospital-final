@@ -1,0 +1,190 @@
+﻿@{
+    ViewData["Title"] = "Bill Insurance";
+}
+@{
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing & Insurance | CureLife Hospital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .banner {
+            background: linear-gradient(to right, rgba(0, 123, 255, 0.7), rgba(0, 255, 255, 0.5)) center/cover no-repeat;
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+            margin-top:100px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #007bff;
+        }
+
+        .info-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+            .info-card:hover {
+                transform: translateY(-5px);
+            }
+
+        .faq-item {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .contact-box {
+            background: linear-gradient(to right, rgba(0, 123, 255, 0.7), rgba(0, 255, 255, 0.5)) center/cover no-repeat;
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+            .contact-box a {
+                color: #fff;
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+
+    <!-- Banner Section -->
+    <section class="banner">
+        <h1>Billing & Insurance</h1>
+        <p>Easy, transparent, and hassle-free payment & insurance claims</p>
+    </section>
+
+    <!-- Overview Section -->
+    <section class="container my-5">
+        <h2 class="section-title">Overview</h2>
+        <p class="text-center">
+            CureLife Hospital provides easy and secure billing options with multiple payment methods.
+            We accept a wide range of insurance providers, ensuring you get seamless treatment without financial stress.
+        </p>
+    </section>
+
+    <!-- Billing & Insurance Section -->
+    <section class="container">
+        <div class="row">
+            <!-- Billing Information -->
+            <div class="col-md-6 mb-4">
+                <div class="info-card">
+                    <h4><i class="bi bi-cash-coin text-primary"></i> Billing Information</h4>
+                    <ul>
+                        <li>Payments accepted via cash, credit/debit cards, and online banking</li>
+                        <li>Invoices are generated at the end of treatment</li>
+                        <li>Flexible EMI options available for major surgeries</li>
+                        <li>Online bill payment available through our portal</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Insurance Details -->
+            <div class="col-md-6 mb-4">
+                <div class="info-card">
+                    <h4><i class="bi bi-file-earmark-medical text-success"></i> Insurance Details</h4>
+                    <ul>
+                        <li>We accept all major insurance providers</li>
+                        <li>Cashless treatment facility available</li>
+                        <li>Pre-authorization required for planned treatments</li>
+                        <li>Claim assistance available for quick reimbursements</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Pay Section -->
+    <section class="container my-5">
+        <h2 class="section-title">How to Pay?</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="info-card">
+                    <ol>
+                        <li>Visit our billing counter or log in to our online payment portal.</li>
+                        <li>Enter your patient ID and select the outstanding bill.</li>
+                        <li>Choose a payment method and complete the transaction.</li>
+                        <li>Download the receipt for future reference.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="container my-5">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                        What payment methods do you accept?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        We accept cash, credit/debit cards, UPI, and online banking.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        Do you offer cashless insurance claims?
+                    </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes, we have tie-ups with leading insurance providers for cashless treatments.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        How can I check my billing details online?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        You can log in to our patient portal and check your billing history.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact for Assistance -->
+    <section class="container my-5">
+        <div class="contact-box">
+            <h4>Need Help with Billing or Insurance?</h4>
+            <p>
+                Contact our billing desk at <a href="tel:+1234567890">+123 456 7890</a> or email us at
+                <a href="mailto:billing@curelifehospital.com">billing@curelifehospital.com</a>.
+            </p>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

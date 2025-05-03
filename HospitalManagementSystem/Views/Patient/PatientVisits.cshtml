@@ -1,0 +1,127 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+@model HospitalManagementSystem.Models.patient_visits
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Patient Visits</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="col-md-2" style="margin-left:40px;">
+        <a href="@Url.Action("DisplayPatientVisits","Patient")" class="btn btn-primary btn-sm px-3 py-2" style="font-size: 14px; background: linear-gradient(to right, #1e3c72, #2a5298); border: none;">
+            <i class="fa-solid fa-list"></i> Patient Visits List
+        </a>
+    </div>
+    <div class="container">
+        <div class="card p-3">
+            <div class="card-header">
+                <i class="fa-solid fa-calendar-check"></i> Patient Visit Entry
+            </div>
+
+            <div class="card-body">
+                <form id="visitForm" method="post" action="@Url.Action("PatientVisits", "Patient")">
+                    <div class="row">
+                        <!-- Patient ID -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-id-badge"></i> Patient Name</label>
+                            @Html.DropDownListFor(m => m.PatientId,
+                                     (List<SelectListItem>)ViewBag.patientName,
+                                     "-- Select Patient --",
+                                     new { @class = "form-control", required = "required" })
+                        </div>
+
+                        <!-- Visit Date -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-calendar"></i> Visit Date</label>
+                            <input type="datetime-local" class="form-control" id="visit_date" name="VisitDate" required>
+                        </div>
+
+                        <!-- Department -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-hospital"></i> Department</label>
+                            <input type="text" class="form-control" id="department" name="Department" placeholder="Enter department" required>
+                        </div>
+
+                        <!-- Doctor ID -->
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-id-badge"></i> Doctor Name</label>
+                            @Html.DropDownListFor(m => m.DoctorId,
+                                     (List<SelectListItem>)ViewBag.doctorName,
+                                     "-- Select Docotr --",
+                                     new { @class = "form-control", required = "required" })
+                        </div>
+                        <!-- Visit Reason -->
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-notes-medical"></i> Visit Reason</label>
+                            <textarea class="form-control" id="visit_reason" name="VisitReason" placeholder="Enter reason for visit" required></textarea>
+                        </div>
+
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Visit
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="reset" class="btn btn-danger">
+                                <i class="fa-solid fa-eraser"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

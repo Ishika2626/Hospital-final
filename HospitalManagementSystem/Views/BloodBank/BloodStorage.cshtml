@@ -1,0 +1,155 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blood Storage Management</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="col-md-2" style="margin-left:40px;">
+        <a href="@Url.Action("DisplayBloodStorage","BloodBank")" class="btn btn-primary btn-sm px-3 py-2" style="font-size: 14px;">
+            <i class="fa-solid fa-list"></i> Blood Storage List
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="card p-3">
+            <div class="card-header">
+                <i class="fa-solid fa-warehouse"></i> Blood Storage Management
+            </div>
+
+            <div class="card-body">
+                <form id="bloodStorageForm">
+                    <div class="row">
+                        <!-- Blood Bag ID -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-prescription-bottle"></i> Blood Bag ID</label>
+                            <input type="text" class="form-control" id="blood_bag_id" placeholder="Enter Blood Bag ID" required>
+                        </div>
+
+                        <!-- Storage Location -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-map-marker-alt"></i> Storage Location</label>
+                            <input type="text" class="form-control" id="storage_location" placeholder="Enter Storage Location" required>
+                        </div>
+
+                        <!-- Temperature -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-thermometer-half"></i> Temperature (°C)</label>
+                            <input type="number" step="0.1" class="form-control" id="temperature" placeholder="Enter Temperature" required>
+                        </div>
+
+                        <!-- Humidity -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-tint"></i> Humidity (%)</label>
+                            <input type="number" step="0.1" class="form-control" id="humidity" placeholder="Enter Humidity">
+                        </div>
+
+                        <!-- Blood Type -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-vial"></i> Blood Type</label>
+                            <select class="form-control" id="blood_type" required>
+                                <option value="">Select Blood Type</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-box"></i> Quantity</label>
+                            <input type="number" class="form-control" id="quantity" placeholder="Enter Quantity" value="0">
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa-solid fa-floppy-disk"></i> Submit
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="reset" class="btn btn-danger">
+                                <i class="fa-solid fa-eraser"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript for Handling Form Submission -->
+    <script>
+        document.getElementById("bloodStorageForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Get values from form
+            let blood_bag_id = document.getElementById("blood_bag_id").value;
+            let storage_location = document.getElementById("storage_location").value;
+            let temperature = document.getElementById("temperature").value;
+            let humidity = document.getElementById("humidity").value;
+            let blood_type = document.getElementById("blood_type").value;
+            let quantity = document.getElementById("quantity").value;
+
+            // Insert new row in table (if applicable, otherwise process the data as needed)
+            console.log("Blood Storage Data:", { blood_bag_id, storage_location, temperature, humidity, blood_type, quantity });
+            
+            // Reset form after submission
+            document.getElementById("bloodStorageForm").reset();
+        });
+    </script>
+</body>
+</html>

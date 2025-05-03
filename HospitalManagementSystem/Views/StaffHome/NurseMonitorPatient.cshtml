@@ -1,0 +1,201 @@
+﻿@model List<HospitalManagementSystem.Models.PatientStatusReport>
+
+@{
+    Layout = "_stafflayout";
+}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .table thead {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .critical {
+        background-color: red;
+        color: white;
+    }
+
+    .stable {
+        background-color: green;
+        color: white;
+    }
+
+    .under-observation {
+        background-color: orange;
+        color: white;
+    }
+
+    .add-btn {
+        display: block;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    /* Ensures horizontal scrolling on small screens */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Prevent table from breaking layout */
+    .table {
+        min-width: 800px;
+    }
+</style>
+
+<div class="text-center mt-3">
+    <a href="@Url.Action("NurseDashboard", "StaffHome")" class="btn btn-secondary mb-3"
+       style="background-color: #6c757d; color: white; padding: 10px 15px;
+              border-radius: 5px; text-decoration: none; display: inline-block;">
+        🔙 Back to Dashboard
+    </a>
+</div>
+
+<div class="container mt-4">
+    <div class="card p-4">
+        <h3 class="text-center mb-4">Monitor Patients</h3>
+        <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search by Name or Condition">
+
+        <div class="table-responsive">
+            <!-- Enables horizontal scrolling on small screens -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Phone</th>
+                        <th>Blood Group</th>
+                        <th>Condition</th>
+                        <th>Status</th>
+                        <th>Checkup Done</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="patientTable">
+                    @foreach (var patient in Model)
+                    {
+                        <tr>
+                            <td>@patient.PatientId</td>
+                            <td>@patient.Name</td>
+                            <td>@patient.Gender</td>
+                            <td>@patient.Phone</td>
+                            <td>@patient.BloodGroup</td>
+                            <td>@patient.Condition</td>
+                            <td>
+                                <span class="status-badge @(patient.Status == "Critical" ? "critical" : patient.Status == "Stable" ? "stable" : "under-observation")">
+                                    @patient.Status
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" @(patient.CheckupDone ? "checked" : "") @(patient.CheckupDone ? "" : "disabled") />
+                            </td>
+                            <td>
+                                <button type="button"
+                                        class="btn btn-outline-primary btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#vitalsModal"
+                                        data-patient-id="@patient.PatientId">
+                                    Record Vitals
+                                </button>
+
+                            </td>
+                            
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+  
+<div class="modal fade" id="vitalsModal" tabindex="-1" aria-labelledby="vitalsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-action="SaveVitals" asp-controller="StaffHome">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="vitalsModalLabel">Record Vitals</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                   
+
+                    <input type="hidden" name="PatientId" />
+
+
+                    <div class="mb-3">
+                        <label class="form-label">Blood Pressure</label>
+                        <input type="text" name="BloodPressure" class="form-control" placeholder="e.g., 120/80" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Heart Rate (BPM)</label>
+                        <input type="number" name="HeartRate" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Temperature (°C)</label>
+                        <input type="number" step="0.1" name="Temperature" class="form-control" required />
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save Vitals</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#patientTable tr");
+        rows.forEach(row => {
+            let text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
+    });
+
+    var vitalsModal = document.getElementById('vitalsModal');
+     vitalsModal.addEventListener('show.bs.modal', function (event) {
+         var button = event.relatedTarget;
+         var patientId = button.getAttribute('data-patient-id');
+
+         // Set the hidden input inside the modal with the patientId
+         var inputHidden = vitalsModal.querySelector('input[name="PatientId"]');
+         inputHidden.value = patientId;
+     });    
+</script>
+
+<style>
+    .container {
+        margin-bottom: 100px;
+    }
+</style>

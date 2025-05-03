@@ -1,0 +1,200 @@
+﻿@{
+    ViewData["Title"] = "Emergency Services";
+}
+
+@{
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Services | CureLife Hospital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: url('https://source.unsplash.com/1600x600/?ambulance,hospital') center/cover no-repeat;
+            height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            
+        }
+
+            .hero::before {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 35%;
+                background: rgba(255, 0, 0, 0.6);
+            }
+
+            .hero h1 {
+                position: relative;
+                z-index: 2;
+                font-size: 42px;
+                font-weight: bold;
+            }
+
+        /* Quick Access Buttons */
+        .quick-access {
+            text-align: center;
+            margin-top: -40px;
+        }
+
+            .quick-access .btn {
+                font-size: 18px;
+                padding: 15px 20px;
+                border-radius: 10px;
+                font-weight: bold;
+                width: 250px;
+                transition: 0.3s ease-in-out;
+            }
+
+                .quick-access .btn:hover {
+                    transform: scale(1.05);
+                }
+
+        /* Emergency Services Grid */
+        .service-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: 0.3s ease-in-out;
+        }
+
+            .service-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .service-card i {
+                font-size: 40px;
+                margin-bottom: 10px;
+                color: #dc3545;
+            }
+
+        /* Call to Action */
+        .cta {
+            background: #dc3545;
+            color: white;
+            padding: 40px;
+            text-align: center;
+            margin-top: 50px;
+            border-radius: 12px;
+            margin-bottom:100px;
+        }
+
+            .cta h3 {
+                font-size: 28px;
+            }
+
+            .cta .btn {
+                background: white;
+                color: #dc3545;
+                font-size: 18px;
+                font-weight: bold;
+                padding: 15px 30px;
+                border-radius: 10px;
+            }
+
+                .cta .btn:hover {
+                    background: #b02a37;
+                    color: white;
+                }
+
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Emergency Services - We're Here for You 24/7</h1>
+    </section>
+
+    <!-- Quick Access Buttons -->
+    <section class="container quick-access text-center">
+        <div class="row justify-content-center">
+            <div class="col-md-4 mb-3">
+                <a href="tel:911" class="btn btn-danger"><i class="bi bi-telephone-fill"></i> Call Ambulance</a>
+            </div>
+            <div class="col-md-4 mb-3">
+                <a href="#" class="btn btn-primary"><i class="bi bi-map-fill"></i> Find Nearby Hospitals</a>
+            </div>
+            <div class="col-md-4 mb-3">
+                <a href="#" class="btn btn-success"><i class="bi bi-chat-dots-fill"></i> Live Chat Support</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Services Grid -->
+    <section class="container mt-5">
+        <h3 class="text-center text-danger mb-4">Our Emergency Services</h3>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="service-card">
+                    <i class="bi bi-truck"></i>
+                    <h5>24/7 Ambulance</h5>
+                    <p>Our ambulances are equipped with life-saving facilities and are available round the clock.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="service-card">
+                    <i class="bi bi-heart-pulse"></i>
+                    <h5>Cardiac Emergency</h5>
+                    <p>Immediate treatment for heart attacks and other cardiac emergencies.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="service-card">
+                    <i class="bi bi-hospital"></i>
+                    <h5>Trauma Care</h5>
+                    <p>Expert emergency care for accidents, fractures, and critical injuries.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="service-card">
+                    <i class="bi bi-virus"></i>
+                    <h5>Infection Control</h5>
+                    <p>Rapid response to severe infections and contagious diseases.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="service-card">
+                    <i class="bi bi-person-wheelchair"></i>
+                    <h5>Stroke & Paralysis</h5>
+                    <p>Advanced stroke treatment and rehabilitation services.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="service-card">
+                    <i class="bi bi-patch-plus"></i>
+                    <h5>Emergency Surgery</h5>
+                    <p>Highly skilled surgeons available for critical operations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="container cta">
+        <h3>Need Immediate Help? Call Our Emergency Hotline</h3>
+        <a href="tel:911" class="btn btn-light mt-3"><i class="bi bi-telephone-fill"></i> Call Now</a>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

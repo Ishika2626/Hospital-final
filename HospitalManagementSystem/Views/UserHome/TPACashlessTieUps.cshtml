@@ -1,0 +1,212 @@
+﻿@{
+
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+@{
+    ViewBag.Title = "Hospital Insurance Companies";
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Insurance Companies</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            margin-top: 100px;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        .heading-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .heading-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        /* Adding a separate underline using a div */
+        .heading-underline {
+            width: 120px;
+            height: 4px;
+            background: #ffc107;
+            margin: 8px auto 0;
+            border-radius: 2px;
+        }
+
+
+
+
+
+        .card {
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+            .card:hover {
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                transform: scale(1.05);
+            }
+
+        .card-title {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .contact {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            background: #2c3e50;
+            color: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="heading-container">
+            <h2 class="heading-title">Hospital Insurance Companies</h2>
+            <div class="heading-underline"></div>
+        </div>
+
+
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card p-3">
+                    <h3 class="card-title">ABC Health Insurance</h3>
+                    <p><strong>Policy Type:</strong> Comprehensive</p>
+                    <p><strong>Coverage:</strong> $100,000</p>
+                    <p><strong>Partnered Hospitals:</strong> City Hospital, Green Care Clinic</p>
+                    <p class="contact">abc@insurance.com</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card p-3">
+                    <h3 class="card-title">XYZ Medical Cover</h3>
+                    <p><strong>Policy Type:</strong> Basic</p>
+                    <p><strong>Coverage:</strong> $50,000</p>
+                    <p><strong>Partnered Hospitals:</strong> Metro Hospital, Sunshine Healthcare</p>
+                    <p class="contact">xyz@medcover.com</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card p-3">
+                    <h3 class="card-title">WellCare Insurance</h3>
+                    <p><strong>Policy Type:</strong> Premium</p>
+                    <p><strong>Coverage:</strong> $200,000</p>
+                    <p><strong>Partnered Hospitals:</strong> Global Hospital, MediPlus Center</p>
+                    <p class="contact">contact@wellcare.com</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card p-3">
+                    <h3 class="card-title">SafeLife Health</h3>
+                    <p><strong>Policy Type:</strong> Standard</p>
+                    <p><strong>Coverage:</strong> $75,000</p>
+                    <p><strong>Partnered Hospitals:</strong> City General, Life Line Clinic</p>
+                    <p class="contact">info@safelife.com</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card p-3">
+                    <h3 class="card-title">HealthSecure</h3>
+                    <p><strong>Policy Type:</strong> Gold</p>
+                    <p><strong>Coverage:</strong> $150,000</p>
+                    <p><strong>Partnered Hospitals:</strong> Apollo Hospital, Nova Medical</p>
+                    <p class="contact">support@healthsecure.com</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card p-3">
+                    <h3 class="card-title">MedShield Insurance</h3>
+                    <p><strong>Policy Type:</strong> Silver</p>
+                    <p><strong>Coverage:</strong> $80,000</p>
+                    <p><strong>Partnered Hospitals:</strong> Fortis, CareWell Hospital</p>
+                    <p class="contact">help@medshield.com</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card p-3">
+                    <h3 class="card-title">LifeCare Assurance</h3>
+                    <p><strong>Policy Type:</strong> Basic</p>
+                    <p><strong>Coverage:</strong> $60,000</p>
+                    <p><strong>Partnered Hospitals:</strong> MaxCare Hospital, MediHome</p>
+                    <p class="contact">info@lifecare.com</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card p-3">
+                    <h3 class="card-title">PrimeHealth</h3>
+                    <p><strong>Policy Type:</strong> Comprehensive</p>
+                    <p><strong>Coverage:</strong> $120,000</p>
+                    <p><strong>Partnered Hospitals:</strong> Star Hospital, HealWell Clinic</p>
+                    <p class="contact">contact@primehealth.com</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card p-3">
+                    <h3 class="card-title">SecureMed</h3>
+                    <p><strong>Policy Type:</strong> Premium</p>
+                    <p><strong>Coverage:</strong> $250,000</p>
+                    <p><strong>Partnered Hospitals:</strong> Rainbow Hospital, CureMed Center</p>
+                    <p class="contact">support@securemed.com</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card p-3">
+                    <h3 class="card-title">United Health Assurance</h3>
+                    <p><strong>Policy Type:</strong> Platinum</p>
+                    <p><strong>Coverage:</strong> $300,000</p>
+                    <p><strong>Partnered Hospitals:</strong> MediCare, Hope Hospital</p>
+                    <p class="contact">contact@unitedhealth.com</p>
+                </div>
+            </div>
+        </div>
+
+     
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+

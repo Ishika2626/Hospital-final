@@ -1,0 +1,120 @@
+﻿@{
+    ViewData["Title"] = "Financial Reports";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+<!-- Back to Dashboard Button -->
+<a asp-controller="StaffHome" asp-action="BillingStaffDashboard" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+
+<h2>📊 Financial Reports</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Report ID</th>
+                <th>Report Type</th>
+                <th>Generated On</th>
+                <th>Total Revenue</th>
+                <th>Total Expenses</th>
+                <th>Net Profit</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>FR-2025001</td>
+                <td>Monthly Report</td>
+                <td>2025-03-10</td>
+                <td>$50,000</td>
+                <td>$30,000</td>
+                <td>$20,000</td>
+                <td>
+                    <button class="btn btn-sm btn-primary view-report" data-bs-toggle="modal" data-bs-target="#reportModal"
+                            data-id="FR-2025001" data-type="Monthly Report" data-date="2025-03-10"
+                            data-revenue="$50,000" data-expenses="$30,000" data-profit="$20,000">
+                        📜 View
+                    </button>
+                    <a href="#" class="btn btn-sm btn-success">📥 Download</a>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>FR-2025002</td>
+                <td>Annual Report</td>
+                <td>2025-03-01</td>
+                <td>$600,000</td>
+                <td>$400,000</td>
+                <td>$200,000</td>
+                <td>
+                    <button class="btn btn-sm btn-primary view-report" data-bs-toggle="modal" data-bs-target="#reportModal"
+                            data-id="FR-2025002" data-type="Annual Report" data-date="2025-03-01"
+                            data-revenue="$600,000" data-expenses="$400,000" data-profit="$200,000">
+                        📜 View
+                    </button>
+                    <a href="#" class="btn btn-sm btn-success">📥 Download</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Financial Report Details Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel">Financial Report Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Report ID:</strong> <span id="modalReportID"></span></p>
+                <p><strong>Type:</strong> <span id="modalReportType"></span></p>
+                <p><strong>Generated On:</strong> <span id="modalReportDate"></span></p>
+                <p><strong>Total Revenue:</strong> <span id="modalTotalRevenue"></span></p>
+                <p><strong>Total Expenses:</strong> <span id="modalTotalExpenses"></span></p>
+                <p><strong>Net Profit:</strong> <span id="modalNetProfit"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    @@media (max-width: 768px) {
+        .table
+
+    {
+        font-size: 14px;
+    }
+
+    .btn {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".view-report").forEach(button => {
+            button.addEventListener("click", function () {
+                document.getElementById("modalReportID").textContent = this.getAttribute("data-id");
+                document.getElementById("modalReportType").textContent = this.getAttribute("data-type");
+                document.getElementById("modalReportDate").textContent = this.getAttribute("data-date");
+                document.getElementById("modalTotalRevenue").textContent = this.getAttribute("data-revenue");
+                document.getElementById("modalTotalExpenses").textContent = this.getAttribute("data-expenses");
+                document.getElementById("modalNetProfit").textContent = this.getAttribute("data-profit");
+            });
+        });
+    });
+</script>

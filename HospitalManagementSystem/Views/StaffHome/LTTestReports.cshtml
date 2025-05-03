@@ -1,0 +1,170 @@
+﻿@{
+    ViewData["Title"] = "Test Reports";
+    Layout = "_StaffLayout";
+}
+
+<!-- Back to Dashboard Button -->
+<a href="@Url.Action("LabTechnicianDashboard", "StaffHome")" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+
+<h2>📄 Test Reports</h2>
+
+<!-- Generate New Report Button -->
+<a asp-action="LTAddTestReports" class="btn btn-primary mb-3">➕ Generate New Report</a>
+
+<!-- Search Bar -->
+<input type="text" id="searchInput" class="form-control mb-3" placeholder="🔍 Search by Patient Name, Test, or Status">
+
+<!-- Table Container with Scroll -->
+<div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+    <table class="table table-bordered mt-3" id="testReportsTable">
+        <thead class="table-dark" style="position: sticky; top: 0; z-index: 1;">
+            <tr>
+                <th onclick="sortTable(0)"># ⬆⬇</th>
+                <th onclick="sortTable(1)">Patient ⬆⬇</th>
+                <th>Test</th>
+                <th onclick="sortTable(3)">Report Date ⬆⬇</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="testReportsBody">
+            <tr>
+                <td>1</td>
+                <td>John Doe</td>
+                <td>Blood Test</td>
+                <td>2025-03-13</td>
+                <td><span class="badge bg-success">Completed</span></td>
+                <td>
+                    <a asp-action="LTViewTestReports" class="btn btn-sm btn-info">ℹ View</a>
+                    <button class="btn btn-sm btn-warning" onclick="openEditModal('John Doe', 'Blood Test', '2025-03-13', 'Completed')">✏ Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="openModal('deleteModal', 'John Doe')">🗑 Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Jane Smith</td>
+                <td>X-Ray</td>
+                <td>2025-03-12</td>
+                <td><span class="badge bg-warning">Pending</span></td>
+                <td>
+                    <a asp-action="LTViewTestReports" class="btn btn-sm btn-info">ℹ View</a>
+                    <button class="btn btn-sm btn-warning" onclick="openEditModal('Jane Smith', 'X-Ray', '2025-03-12', 'Pending')">✏ Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="openModal('deleteModal', 'Jane Smith')">🗑 Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Edit Test Report Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">✏ Edit Test Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editTestReportForm">
+                    <div class="mb-3">
+                        <label for="editPatientName" class="form-label">Patient Name</label>
+                        <input type="text" id="editPatientName" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTestType" class="form-label">Test Type</label>
+                        <input type="text" id="editTestType" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editReportDate" class="form-label">Report Date</label>
+                        <input type="date" id="editReportDate" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editStatus" class="form-label">Status</label>
+                        <select id="editStatus" class="form-select">
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-warning">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Report Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">🗑 Delete Test Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteModalText">Are you sure you want to delete this test report? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-danger">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Open edit modal with relevant data
+    function openEditModal(patientName, testType, reportDate, status) {
+        document.getElementById("editPatientName").value = patientName;
+        document.getElementById("editTestType").value = testType;
+        document.getElementById("editReportDate").value = reportDate;
+        document.getElementById("editStatus").value = status;
+
+        var editModal = new bootstrap.Modal(document.getElementById("editModal"));
+        editModal.show();
+    }
+
+    // Open delete modal with relevant patient name
+    function openModal(modalId, patientName) {
+        if (modalId === "deleteModal") {
+            document.getElementById("deleteModalText").innerText = `Are you sure you want to delete the test report for ${patientName}? This action cannot be undone.`;
+        }
+        var myModal = new bootstrap.Modal(document.getElementById(modalId));
+        myModal.show();
+    }
+
+    // Search functionality
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#testReportsBody tr");
+
+        rows.forEach(row => {
+            let patientName = row.cells[1].textContent.toLowerCase();
+            let testName = row.cells[2].textContent.toLowerCase();
+            let status = row.cells[4].textContent.toLowerCase();
+
+            row.style.display = (patientName.includes(filter) || testName.includes(filter) || status.includes(filter)) ? "" : "none";
+        });
+    });
+
+    // Sorting function (sorts table by column index)
+    function sortTable(colIndex) {
+        let table = document.getElementById("testReportsTable").getElementsByTagName("tbody")[0];
+        let rows = Array.from(table.rows);
+        let sortedRows = rows.sort((a, b) => {
+            let cellA = a.cells[colIndex].textContent.trim();
+            let cellB = b.cells[colIndex].textContent.trim();
+
+            if (!isNaN(Date.parse(cellA)) && !isNaN(Date.parse(cellB))) {
+                return new Date(cellA) - new Date(cellB);
+            }
+            return cellA.localeCompare(cellB);
+        });
+
+        table.innerHTML = "";
+        sortedRows.forEach(row => table.appendChild(row));
+    }
+</script>

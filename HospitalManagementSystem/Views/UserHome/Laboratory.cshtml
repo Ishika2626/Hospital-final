@@ -1,0 +1,525 @@
+﻿@{
+    ViewBag.Title = "Careers at Our Hospital";
+    Layout = "~/Views/Shared/userlayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratory Services</title>
+
+    <!-- Bootstrap CSS (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 70px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h2.section-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #1b3b6f;
+        }
+
+        h5.section-subtitle {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #2b67f6, #4fd1c5);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .header-section h1 {
+                font-size: 50px;
+                font-weight: 600;
+            }
+
+            .header-section p {
+                font-size: 20px;
+            }
+
+            .header-section .btn {
+                background-color: #fff;
+                color: #007bff;
+                border: none;
+                padding: 15px 30px;
+                font-size: 18px;
+                font-weight: 600;
+                border-radius: 5px;
+                margin-top: 20px;
+            }
+
+                .header-section .btn:hover {
+                    background-color: #f1f1f1;
+                }
+
+        .card-deck .card {
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+            .card-deck .card:hover {
+                transform: translateY(-5px);
+            }
+
+            .card-deck .card img {
+                max-width: 100%;
+                border-radius: 10px;
+            }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #007bff;
+        }
+
+        .card-text {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .testimonials {
+            background-color: #f1f1f1;
+            padding: 60px 0;
+        }
+
+            .testimonials .card-body {
+                text-align: center;
+            }
+
+                .testimonials .card-body img {
+                    width: 80px;
+                    height: 80px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                    margin-bottom: 15px;
+                }
+
+                .testimonials .card-body .card-title {
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #333;
+                }
+
+                .testimonials .card-body .card-text {
+                    font-size: 14px;
+                    color: #777;
+                }
+
+                .testimonials .card-body .text-success {
+                    font-size: 16px;
+                    color: #28a745;
+                }
+
+        .accordion-item {
+            margin-bottom: 15px;
+        }
+
+        .accordion-button {
+            font-size: 18px;
+            font-weight: 600;
+            background-color: #007bff;
+            color: #fff;
+        }
+
+            .accordion-button:not(.collapsed) {
+                background-color: #0056b3;
+            }
+
+        .accordion-body {
+            font-size: 16px;
+        }
+
+        .certifications {
+            padding: 60px 0;
+            background-color: #ffffff;
+        }
+
+            .certifications img {
+                width: 120px;
+                margin-bottom: 20px;
+            }
+
+            .certifications .card-body {
+                text-align: center;
+            }
+
+                .certifications .card-body h5 {
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #333;
+                }
+
+                .certifications .card-body p {
+                    color: #777;
+                }
+
+        @@media (max-width: 767px) {
+            .header-section h1 {
+                font-size: 40px;
+            }
+
+            .header-section p {
+                font-size: 18px;
+            }
+
+            .card-title {
+                font-size: 18px;
+            }
+
+            .card-text {
+                font-size: 14px;
+            }
+        }
+    </style>
+    
+</head>
+
+<body>
+
+    <!-- Header Section -->
+    <div class="header-section">
+        <div class="container">
+            <h1>Your Trusted Laboratory Services</h1>
+            <p>Providing accurate and timely diagnostic services with the latest technology and expertise.</p>
+
+            <!-- Explore Services Button -->
+            <a href="#services" class="btn btn-lg">Explore Our Services</a>
+
+            <!-- New Button to Book Lab Test (opens the modal) -->
+            <button type="button" class="btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#bookTestModal">
+                Book Lab Test
+            </button>
+        </div>
+    </div>
+
+
+    <!-- Services Section -->
+    <div id="services" class="container my-5">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Our Diagnostic Services</h2>
+            <h5 class="section-subtitle">Comprehensive testing for your health needs.</h5>
+        </div>
+        <div class="row card-deck">
+            <!-- Blood Tests Card -->
+            <div class="col-md-4">
+                <div class="card shadow-lg p-4">
+                    <img src="https://via.placeholder.com/350x200" alt="Blood Tests">
+                    <div class="card-body">
+                        <h5 class="card-title">Blood Tests</h5>
+                        <p class="card-text">Accurate blood tests for various health conditions and monitoring.</p>
+                        <button class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#bloodTestsModal">View Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- X-Ray & Imaging Card -->
+            <div class="col-md-4">
+                <div class="card shadow-lg p-4">
+                    <img src="https://via.placeholder.com/350x200" alt="X-Ray & Imaging">
+                    <div class="card-body">
+                        <h5 class="card-title">X-Ray & Imaging</h5>
+                        <p class="card-text">State-of-the-art imaging services for diagnostics and treatments.</p>
+                        <button class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#xrayModal">View Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Screenings Card -->
+            <div class="col-md-4">
+                <div class="card shadow-lg p-4">
+                    <img src="https://via.placeholder.com/350x200" alt="Health Screenings">
+                    <div class="card-body">
+                        <h5 class="card-title">Health Screenings</h5>
+                        <p class="card-text">Comprehensive screenings to help prevent and manage health conditions.</p>
+                        <button class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#screeningsModal">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Blood Tests Modal -->
+    <div class="modal fade" id="bloodTestsModal" tabindex="-1" aria-labelledby="bloodTestsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bloodTestsModalLabel">Blood Tests</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Our blood testing services include complete blood count (CBC), cholesterol tests, glucose levels, and more. Results are accurate and fast, ensuring your health is always monitored.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- X-Ray & Imaging Modal -->
+    <div class="modal fade" id="xrayModal" tabindex="-1" aria-labelledby="xrayModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="xrayModalLabel">X-Ray & Imaging</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    We provide high-resolution digital X-rays, ultrasound, and other imaging services using cutting-edge equipment, assisting in precise diagnosis and treatment.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Health Screenings Modal -->
+    <div class="modal fade" id="screeningsModal" tabindex="-1" aria-labelledby="screeningsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="screeningsModalLabel">Health Screenings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Our health screening packages cover essential checks for heart disease, diabetes, liver and kidney functions, and more, helping you stay ahead of potential issues.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Testimonials Section -->
+    <div class="testimonials">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h2 class="section-title">What Our Patients Say</h2>
+                <h5 class="section-subtitle">Real experiences shared by our valued patients.</h5>
+            </div>
+
+            <div class="row">
+                <!-- Testimonial 1 -->
+                <div class="col-md-4">
+                    <div class="card shadow p-4">
+                        <div class="card-body">
+                            <img src="https://via.placeholder.com/80" alt="Patient">
+                            <p class="card-text">"The lab's services are top-notch! They provided accurate results and the home sample collection was so convenient!"</p>
+                            <h5 class="card-title">Jane Doe</h5>
+                            <p class="text-success">Satisfied Customer</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="col-md-4">
+                    <div class="card shadow p-4">
+                        <div class="card-body">
+                            <img src="https://via.placeholder.com/80" alt="Patient">
+                            <p class="card-text">"Excellent service! The digital report system made it easy for me to track my results in real time."</p>
+                            <h5 class="card-title">John Smith</h5>
+                            <p class="text-success">Happy Patient</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="col-md-4">
+                    <div class="card shadow p-4">
+                        <div class="card-body">
+                            <img src="https://via.placeholder.com/80" alt="Patient">
+                            <p class="card-text">"I got my reports on time, and the staff was so helpful in explaining the results. Highly recommended!"</p>
+                            <h5 class="card-title">Sarah Lee</h5>
+                            <p class="text-success">Grateful Patient</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="container my-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <h5 class="section-subtitle text-muted">Have questions? We've got answers.</h5>
+        </div>
+
+        <div class="accordion" id="faqAccordion">
+            <!-- FAQ Item 1 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        What are the lab hours?
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Our lab operates 24x7 for sample collection, and we offer flexible timings for test results.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Item 2 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        How do I receive my test reports?
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Test reports can be viewed and downloaded from our online portal or sent directly to your registered email.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certifications Section -->
+    <div class="certifications">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h2 class="section-title">Our Certifications & Accreditations</h2>
+                <h5 class="section-subtitle text-muted">We are committed to providing the highest quality diagnostics services.</h5>
+            </div>
+
+            <div class="row">
+                <!-- Certification 1 -->
+                <div class="col-md-4">
+                    <div class="card shadow-lg p-4">
+                        <img src="./img/download.jpg" alt="Certification">
+                        <div class="card-body">
+                            <h5>Certified Laboratory</h5>
+                            <p>Our lab follows the highest standards, including certification from NABL, ensuring world-class testing procedures.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Certification 2 -->
+                <div class="col-md-4">
+                    <div class="card shadow-lg p-4">
+                        <img src="./img/iso.png" alt="Certification">
+                        <div class="card-body">
+                            <h5>ISO 9001 Certified</h5>
+                            <p>We adhere to ISO 9001 standards for quality management, ensuring consistent and reliable results.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Certification 3 -->
+                <div class="col-md-4">
+                    <div class="card shadow-lg p-4">
+                        <img src="https://via.placeholder.com/150x100" alt="Certification">
+                        <div class="card-body">
+                            <h5>Additional Accreditations</h5>
+                            <p>Our laboratory holds various certifications from renowned healthcare organizations, ensuring trust and quality.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Book Lab Test Modal -->
+    <div class="modal fade" id="bookTestModal" tabindex="-1" aria-labelledby="bookTestModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="bookTestForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bookTestModalLabel">Book a Lab Test</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="patientId" class="form-label">Patient ID</label>
+                                <input type="number" class="form-control" id="patientId" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="doctorId" class="form-label">Doctor ID</label>
+                                <input type="number" class="form-control" id="doctorId">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="testId" class="form-label">Test ID</label>
+                                <input type="number" class="form-control" id="testId" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="testType" class="form-label">Test Type</label>
+                                <input type="text" class="form-control" id="testType" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="testDate" class="form-label">Test Date</label>
+                                <input type="date" class="form-control" id="testDate" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="sampleDate" class="form-label">Sample Collected Date</label>
+                                <input type="date" class="form-control" id="sampleDate" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="bookingStatus" class="form-label">Booking Status</label>
+                                <select class="form-select" id="bookingStatus" required>
+                                    <option value="">Select Status</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Confirmed">Confirmed</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label for="additionalNotes" class="form-label">Additional Notes</label>
+                                <textarea class="form-control" id="additionalNotes" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit Booking</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS (required for modals to work) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

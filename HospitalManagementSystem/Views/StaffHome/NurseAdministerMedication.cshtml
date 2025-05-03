@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "_stafflayout";
+}
+<div class="mt-3 text-center">
+    <a href="@Url.Action("NurseDashboard", "StaffHome")" class="btn btn-secondary mb-3"
+       style="background-color: #6c757d; color: white; padding: 10px 15px;
+              border-radius: 5px; text-decoration: none; display: inline-block;">
+        🔙 Back to Dashboard
+    </a>
+</div>
+
+<div class="container mt-4">
+    <div class="card p-4">
+        <h3 class="text-center mb-4">Nurse's Administered Medication Records</h3>
+
+        <div class="table-responsive">
+            <!-- Enables horizontal scrolling on small screens -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Medication</th>
+                        <th>Dosage</th>
+                        <th>Administered Time</th>
+                        <th>Nurse Signature</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>Antibiotics</td>
+                        <td>500mg</td>
+                        <td>2025-03-12 10:30 AM</td>
+                        <td>Nurse A</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>Jane Smith</td>
+                        <td>Painkillers</td>
+                        <td>250mg</td>
+                        <td>2025-03-12 2:00 PM</td>
+                        <td>Nurse A</td>
+                        <td>Patient reported relief</td>
+                    </tr>
+                    <tr>
+                        <td>Mike Johnson</td>
+                        <td>IV Fluids</td>
+                        <td>1L</td>
+                        <td>2025-03-12 4:45 PM</td>
+                        <td>Nurse A</td>
+                        <td>Hydration improved</td>
+                    </tr>
+                    <tr>
+                        <td>Sarah Lee</td>
+                        <td>Insulin</td>
+                        <td>10 units</td>
+                        <td>2025-03-12 6:00 PM</td>
+                        <td>Nurse A</td>
+                        <td>Blood sugar stable</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

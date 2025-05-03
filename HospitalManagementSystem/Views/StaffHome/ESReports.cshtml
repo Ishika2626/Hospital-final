@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "Reports Management";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+<!-- Back to Dashboard Button -->
+<a asp-controller="StaffHome" asp-action="EmergencyStaffDashboard" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+
+
+<h2>📊 Reports Management</h2>
+
+<div class="row">
+    <!-- Reports Filters Panel -->
+    <div class="col-md-4">
+        <div class="card p-3 shadow-sm">
+            <h5>🔍 Filter Reports</h5>
+            <form>
+                <div class="mb-2">
+                    <label>📅 Date Range</label>
+                    <input type="date" id="startDate" class="form-control mb-1">
+                    <input type="date" id="endDate" class="form-control">
+                </div>
+                <div class="mb-2">
+                    <label>📂 Report Type</label>
+                    <select id="reportType" class="form-control">
+                        <option value="">All Reports</option>
+                        <option>Financial Reports</option>
+                        <option>Medical Reports</option>
+                        <option>Billing Reports</option>
+                        <option>Staff Performance</option>
+                        <option>Patient Statistics</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="filterReports()">📄 Generate Report</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reports List Panel -->
+    <div class="col-md-8">
+        <div class="card p-3 shadow-sm">
+            <h5>📋 Report List</h5>
+            <input type="text" id="searchInput" class="form-control w-50 mb-2" placeholder="🔍 Search Reports">
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="reportTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Report Name</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Monthly Financial Summary</td>
+                            <td>Financial Reports</td>
+                            <td>2025-03-01</td>
+                            <td>
+                                <button class="btn btn-sm btn-success" onclick="viewReport(1)">📂 View</button>
+                                <button class="btn btn-sm btn-warning" onclick="downloadReport(1)">⬇ Download</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteReport(1)">🗑 Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Patient Admission Statistics</td>
+                            <td>Medical Reports</td>
+                            <td>2025-02-28</td>
+                            <td>
+                                <button class="btn btn-sm btn-success" onclick="viewReport(2)">📂 View</button>
+                                <button class="btn btn-sm btn-warning" onclick="downloadReport(2)">⬇ Download</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteReport(2)">🗑 Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function viewReport(id) {
+        alert("Opening report ID: " + id);
+    }
+
+    function deleteReport(id) {
+        if (confirm("Are you sure you want to delete this report?")) {
+            alert("Report deleted successfully.");
+        }
+    }
+
+    function downloadReport(id) {
+        alert("Downloading report ID: " + id);
+    }
+
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#reportTable tbody tr");
+
+        rows.forEach(row => {
+            let name = row.cells[1].textContent.toLowerCase();
+            let type = row.cells[2].textContent.toLowerCase();
+            let date = row.cells[3].textContent.toLowerCase();
+            row.style.display = name.includes(filter) || type.includes(filter) || date.includes(filter) ? "" : "none";
+        });
+    });
+
+    function filterReports() {
+        let startDate = document.getElementById("startDate").value;
+        let endDate = document.getElementById("endDate").value;
+        let reportType = document.getElementById("reportType").value.toLowerCase();
+
+        let rows = document.querySelectorAll("#reportTable tbody tr");
+
+        rows.forEach(row => {
+            let rowDate = row.cells[3].textContent;
+            let rowType = row.cells[2].textContent.toLowerCase();
+
+            let withinDateRange = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
+            let matchesType = reportType === "" || rowType.includes(reportType);
+
+            row.style.display = withinDateRange && matchesType ? "" : "none";
+        });
+    }
+</script>

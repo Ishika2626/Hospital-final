@@ -1,0 +1,50 @@
+﻿@model List<HospitalManagementSystem.Models.AttendanceModel>
+
+@{
+    ViewData["Title"] = "Attendance List";
+    Layout = "~/Views/Shared/_stafflayout.cshtml";
+}
+
+<h2 class="text-center mb-4">Attendance Records</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Employee Name</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Punch In</th>
+            <th>Punch Out</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var record in Model)
+        {
+            <tr>
+                <td>@record.EmployeeName</td>
+                <td>@record.Date.ToString("yyyy-MM-dd")</td>
+                <td>@record.AttendanceStatus</td>
+                <td>
+                    @if (record.PunchInTime != null)
+                    {
+                        @record.PunchInTime.Value.ToString(@"hh\:mm")
+                    }
+                    else
+                    {
+                        @: "Not Yet"
+                    }
+                </td>
+                <td>
+                    @if (record.PunchOutTime.HasValue)
+                    {
+                        @record.PunchOutTime.Value.ToString(@"hh\:mm")
+                    }
+                    else
+                    {
+                        @: "Not Yet"
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

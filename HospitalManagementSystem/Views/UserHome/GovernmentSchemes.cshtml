@@ -1,0 +1,108 @@
+﻿@{
+    
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+@{
+    ViewBag.Title = "Government Schemes";
+} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Schemes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            text-align: center;
+            padding: 20px;
+            margin-top:100px;
+        }
+
+        .schemes-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .scheme-card {
+            width: 300px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+        }
+
+            .scheme-card img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 5px;
+            }
+
+        .heading-container {
+            margin-top: 100px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .heading-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .heading-underline {
+            width: 120px;
+            height: 4px;
+            background: #ffc107;
+            margin: 8px auto 0;
+            border-radius: 2px;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="heading-container">
+        <h2 class="heading-title">Government Schemes</h2>
+        <div class="heading-underline"></div>
+    </div>
+
+    <div class="schemes-container">
+        <div class="scheme-card">
+            <img src="~/img/government/g1.jpg" alt="Health and Family Welfare">
+            <p>Health and Family Welfare Department</p>
+        </div>
+
+        <div class="scheme-card">
+            <img src="~/img/government/g2.jpg" alt="Ayushman Bharat">
+            <p>Ayushman Bharat</p>
+        </div>
+
+        <div class="scheme-card">
+            <img src="~/img/government/g3.jpg" alt="CM Relief Fund">
+            <p>Chief Minister's Relief Fund</p>
+        </div>
+
+        <div class="scheme-card">
+            <img src="~/img/government/g4.png" alt="Biju Swasthya Kalyan Yojana">
+            <p>Biju Swasthya Kalyan Yojana</p>
+        </div>
+
+        <div class="scheme-card">
+            <img src="~/img/government/g5.jpg" alt="PM National Relief Fund">
+            <p>Prime Minister’s National Relief Fund</p>
+        </div>
+    </div>
+
+</body>
+</html>

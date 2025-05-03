@@ -1,0 +1,215 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+@model IEnumerable<HospitalManagementSystem.Models.PharmacyPrescriptionEntity>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Prescriptions - Hospital System</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+        }
+
+        .table td, .table th {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .btn {
+            padding: 5px 10px;
+        }
+
+        .search-bar {
+            width: 300px;
+        }
+
+        .action-icons i {
+            font-size: 18px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+            .action-icons i:hover {
+                color: #007bff;
+            }
+
+        .gradient-text {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card p-3">
+            <h2 class="text-center mb-3 gradient-text">
+                <i class="fa-solid fa-prescription"></i> All Prescriptions
+            </h2>
+
+            <!-- Search & Add Prescription -->
+            <div class="d-flex justify-content-between mb-3">
+                <input type="text" class="form-control search-bar" placeholder="🔍 Search Prescriptions..." id="searchPrescription" onkeyup="searchPrescriptions()">
+                <a href="@Url.Action("Prescriptions","Pharmacy")" class="btn btn-success">
+                    <i class="fa-solid fa-plus"></i> Add New Prescription
+                </a>
+            </div>
+
+            <!-- Prescriptions Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>Doctor ID</th>
+                            <th>Prescription Date</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prescriptionTable">
+                        @foreach (var pharmacyPrescriptionEntity in Model)
+                        {
+                            <tr class="prescription-row">
+                                <td>@pharmacyPrescriptionEntity.PatientId</td>
+                                <td>@pharmacyPrescriptionEntity.DoctorId</td>
+                                <td>@pharmacyPrescriptionEntity.PrescriptionDate.ToString("yyyy-MM-dd")</td>
+                                <td>@pharmacyPrescriptionEntity.TotalAmount.ToString("C")</td>
+                                <td>@pharmacyPrescriptionEntity.Status</td>
+                                <td class="action-icons">
+                                    <button class="btn btn-warning edit-btn"
+                                            data-id="@pharmacyPrescriptionEntity.PrescriptionId"
+                                            data-patient="@pharmacyPrescriptionEntity.PatientId"
+                                            data-doctor="@pharmacyPrescriptionEntity.DoctorId"
+                                            data-date="@pharmacyPrescriptionEntity.PrescriptionDate.ToString("yyyy-MM-dd")"
+                                            data-amount="@pharmacyPrescriptionEntity.TotalAmount"
+                                            data-status="@pharmacyPrescriptionEntity.Status"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editModal">
+                                        <i class="fa-solid fa-edit"></i>
+                                    </button>
+                                    <a href="@Url.Action("DeletePrescriptions", "Pharmacy", new { id = pharmacyPrescriptionEntity.PrescriptionId })" class="btn btn-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this prescription?')">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Prescription Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Prescription</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPrescriptionForm" method="post" action="@Url.Action("EditPrescriptions", "Pharmacy")">
+                        <input type="hidden" id="prescriptionId" name="PrescriptionId" />
+                        <div class="mb-3">
+                            <label for="patientId" class="form-label">Patient ID</label>
+                            <input type="text" class="form-control" id="patientId" name="PatientId" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="doctorId" class="form-label">Doctor ID</label>
+                            <input type="text" class="form-control" id="doctorId" name="DoctorId" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="prescriptionDate" class="form-label">Prescription Date</label>
+                            <input type="date" class="form-control" id="prescriptionDate" name="PrescriptionDate" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="totalAmount" class="form-label">Total Amount</label>
+                            <input type="text" class="form-control" id="totalAmount" name="TotalAmount" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <input type="text" class="form-control" id="status" name="Status" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Search Functionality Script -->
+    <script>
+        function searchPrescriptions() {
+            let input = document.getElementById('searchPrescription').value.toLowerCase();
+            let rows = document.getElementsByClassName('prescription-row');
+
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+                let cells = row.getElementsByTagName('td');
+                let matchFound = false;
+
+                // Check if any cell in the row contains the search text
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j].innerText.toLowerCase().includes(input)) {
+                        matchFound = true;
+                        break;
+                    }
+                }
+
+                // Show or hide the row based on whether a match was found
+                if (matchFound) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+
+        // Populate the edit modal with prescription data
+        const editButtons = document.querySelectorAll('.edit-btn');
+        editButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                document.getElementById('prescriptionId').value = button.getAttribute('data-id');
+                document.getElementById('patientId').value = button.getAttribute('data-patient');
+                document.getElementById('doctorId').value = button.getAttribute('data-doctor');
+                document.getElementById('prescriptionDate').value = button.getAttribute('data-date');
+                document.getElementById('totalAmount').value = button.getAttribute('data-amount');
+                document.getElementById('status').value = button.getAttribute('data-status');
+            });
+        });
+    </script>
+
+</body>
+</html>

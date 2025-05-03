@@ -1,0 +1,146 @@
+﻿@{
+    ViewData["Title"] = "Emergency Dispatch";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<!-- Back to Dashboard Button -->
+<a asp-controller="StaffHome" asp-action="EmergencyStaffDashboard" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+
+<h2>🚑 Emergency Dispatch</h2>
+
+<div class="row">
+    <!-- Add Dispatch Panel -->
+    <div class="col-md-4">
+        <div class="card p-3 shadow-sm">
+            <h5>➕ Add Dispatch</h5>
+            <form>
+                <div class="mb-2">
+                    <label>🚑 Dispatch ID</label>
+                    <input type="text" class="form-control" placeholder="Enter ID">
+                </div>
+                <div class="mb-2">
+                    <label>🏥 Destination</label>
+                    <input type="text" class="form-control" placeholder="Enter hospital/location">
+                </div>
+                <div class="mb-2">
+                    <label>⏱ Dispatch Time</label>
+                    <input type="datetime-local" class="form-control">
+                </div>
+                <div class="mb-2">
+                    <label>👨‍⚕️ Assigned Team</label>
+                    <input type="text" class="form-control" placeholder="Enter team details">
+                </div>
+                <button type="submit" class="btn btn-success">✔ Add Dispatch</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dispatch List Panel -->
+    <div class="col-md-8">
+        <div class="card p-3 shadow-sm">
+            <h5>📋 Dispatch List</h5>
+            <input type="text" id="searchInput" class="form-control w-50 mb-2" placeholder="🔍 Search Dispatch">
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="dispatchTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Dispatch ID</th>
+                            <th>Destination</th>
+                            <th>Dispatch Time</th>
+                            <th>Assigned Team</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>DSP-001</td>
+                            <td>City Hospital</td>
+                            <td>2025-03-13 10:30 AM</td>
+                            <td>Team Alpha</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="editDispatch('DSP-001', 'City Hospital', '2025-03-13T10:30', 'Team Alpha')">✏ Edit</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteDispatch()">🗑 Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>DSP-002</td>
+                            <td>Central Clinic</td>
+                            <td>2025-03-13 11:15 AM</td>
+                            <td>Team Bravo</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="editDispatch('DSP-002', 'Central Clinic', '2025-03-13T11:15', 'Team Bravo')">✏ Edit</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteDispatch()">🗑 Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Dispatch Modal -->
+<div class="modal fade" id="editDispatchModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">✏ Edit Dispatch</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-2">
+                        <label>🚑 Dispatch ID</label>
+                        <input type="text" id="editDispatchID" class="form-control" disabled>
+                    </div>
+                    <div class="mb-2">
+                        <label>🏥 Destination</label>
+                        <input type="text" id="editDestination" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label>⏱ Dispatch Time</label>
+                        <input type="datetime-local" id="editDispatchTime" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label>👨‍⚕️ Assigned Team</label>
+                        <input type="text" id="editAssignedTeam" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">✔ Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function editDispatch(dispatchID, destination, time, team) {
+        document.getElementById("editDispatchID").value = dispatchID;
+        document.getElementById("editDestination").value = destination;
+        document.getElementById("editDispatchTime").value = time;
+        document.getElementById("editAssignedTeam").value = team;
+
+        let modal = new bootstrap.Modal(document.getElementById("editDispatchModal"));
+        modal.show();
+    }
+
+    function deleteDispatch() {
+        if (confirm("Are you sure you want to delete this dispatch?")) {
+            alert("Dispatch record deleted.");
+        }
+    }
+
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#dispatchTable tbody tr");
+
+        rows.forEach(row => {
+            let dispatchID = row.cells[1].textContent.toLowerCase();
+            let destination = row.cells[2].textContent.toLowerCase();
+            row.style.display = dispatchID.includes(filter) || destination.includes(filter) ? "" : "none";
+        });
+    });
+</script>

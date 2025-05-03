@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "_stafflayout";
+}
+
+<div class="container mt-4">
+    <div class="card p-4">
+        <h3 class="text-center mb-4">Add New Appointment</h3>
+
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Patient Name</label>
+                <input type="text" name="PatientName" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Doctor</label>
+                <select name="Doctor" class="form-control" required>
+                    <option value="">Select Doctor</option>
+                    <option value="Dr. Smith">Dr. Smith - Cardiology</option>
+                    <option value="Dr. Brown">Dr. Brown - Orthopedics</option>
+                    <option value="Dr. Johnson">Dr. Johnson - Pediatrics</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Date & Time</label>
+                <input type="datetime-local" name="AppointmentDate" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select name="Status" class="form-control">
+                    <option value="Pending">Pending</option>
+                    <option value="Confirmed">Confirmed</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Save Appointment</button>
+        </form>
+
+        <a href="/StaffHome/ReceptionistManageAppointments" class="btn btn-secondary mt-3">Back</a>
+    </div>
+</div>

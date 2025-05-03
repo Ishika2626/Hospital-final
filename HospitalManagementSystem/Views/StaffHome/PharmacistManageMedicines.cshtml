@@ -1,0 +1,51 @@
+﻿@{
+    Layout = "_stafflayout";
+}
+<div style="margin-top: 20px; align-content:center">
+    <a href="@Url.Action("PharmacistDashboard", "StaffHome")" class="btn btn-secondary mb-3"
+       style="background-color: #6c757d; color: white; padding: 10px 15px;
+              border-radius: 5px; text-decoration: none; display: inline-block;">
+        🔙 Back to Dashboard
+    </a>
+</div>
+<div class="container mt-4">
+    <div class="card p-4">
+        <h3 class="text-center mb-4">Manage Medicines</h3>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Medicine Name</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Paracetamol</td>
+                    <td>Painkiller</td>
+                    <td>50</td>
+                    <td>$5</td>
+                    <td>
+                        <a href="#" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Amoxicillin</td>
+                    <td>Antibiotic</td>
+                    <td>30</td>
+                    <td>$10</td>
+                    <td>
+                        <a href="#" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a asp-controller="StaffHome" asp-action="PharmacistAddMedicines" class="btn btn-success mt-3">Add New Medicine</a>
+    </div>
+</div>

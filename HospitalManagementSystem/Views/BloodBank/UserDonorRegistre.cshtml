@@ -1,0 +1,294 @@
+﻿@{
+    ViewData["Title"] = "Donor Request b";
+}
+@{
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LifeStream Blood Bank - Donor Registration</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        /* Color scheme and variables */
+        :root {
+            --primary-color: #ff6b6b; /* Vibrant red */
+            --secondary-color: #ffe66d; /* Bright yellow */
+            --accent-color: #4ecdc4; /* Turquoise */
+            --dark-color: #1a1a1d; /* Dark background */
+            --light-color: #f7f7f7; /* Light background */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        /* Form section styling */
+        .form-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+            .form-header h3 {
+                margin: 0;
+            }
+
+        .required-label::after {
+            content: "*";
+            color: var(--primary-color);
+            margin-left: 3px;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+        }
+        /* Blood type button styling */
+        .blood-type-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .blood-type-btn {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .blood-type-btn.active {
+                background-color: var(--primary-color);
+                color: white;
+                border-color: var(--primary-color);
+            }
+    </style>
+</head>
+<body>
+    <div class="container py-5" style="margin-top:80px">
+        <div class="row justify-content-center">
+            <!-- Sidebar Section -->
+            <div class="col-lg-4">
+                <!-- Donor Guidelines Card -->
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-header text-white bg-danger">
+                        <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> Donor Guidelines</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><i class="fas fa-check-circle text-success"></i> <strong>Eligibility Criteria</strong></p>
+                        <ul class="small">
+                            <li>Must be between <strong>18-65 years</strong> old.</li>
+                            <li>Should weigh at least <strong>50kg (110 lbs)</strong>.</li>
+                            <li>No recent illnesses or infections.</li>
+                            <li>Minimum <strong>3-month gap</strong> between donations.</li>
+                        </ul>
+                        <hr>
+                        <p><i class="fas fa-heart text-danger"></i> <strong>Why Donate?</strong></p>
+                        <ul class="small">
+                            <li><strong>Save lives</strong> by providing essential blood.</li>
+                            <li>Improve your <strong>own health</strong> through controlled blood donation.</li>
+                            <li>Receive <strong>free health check-ups</strong>.</li>
+                        </ul>
+                        <hr>
+                        <p class="text-muted small text-center">For more details, contact us at <strong>(123) 456-7890</strong>.</p>
+                    </div>
+                </div>
+
+                <!-- Why Your Blood Matters Card -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-hand-holding-heart me-2"></i> Why Your Blood Matters</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-center text-danger fw-bold">
+                            <i class="fas fa-tint"></i> <strong>Every 2 seconds, someone needs blood.</strong>
+                        </p>
+                        <p class="text-muted small">
+                            Your <strong>1 donation</strong> can save <strong>up to 3 lives</strong>. Blood is always in demand, but supplies are often low.
+                        </p>
+                        <hr>
+                        <p><i class="fas fa-medkit text-success"></i> <strong>Donation Process</strong></p>
+                        <ol class="small">
+                            <li>Register and complete a <strong>health screening</strong>.</li>
+                            <li>Donate <strong>one unit</strong> of blood (10 minutes).</li>
+                            <li>Enjoy <strong>refreshments</strong> & feel great for helping!</li>
+                        </ol>
+                        <hr>
+                        <blockquote class="blockquote text-center">
+                            <footer class="blockquote-footer">A Grateful Recipient</footer>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="form-section">
+                    <div class="form-header">
+                        <h3>
+                            <i class="fas fa-user-plus me-2"></i> Donor Registration
+                        </h3>
+                    </div>
+                    <div class="p-4">
+                        <form id="registrationForm">
+                            <!-- Campaign Selection -->
+                            <div class="mb-3">
+                                <label for="campaign" class="form-label">Select Campaign</label>
+                                <select class="form-select" id="campaign">
+                                    <option value="">None</option>
+                                    <option value="Campaign 1">Campaign 1</option>
+                                    <option value="Campaign 2">Campaign 2</option>
+                                    <option value="Campaign 3">Campaign 3</option>
+                                </select>
+                            </div>
+                            <!-- Full Name -->
+                            <div class="mb-3">
+                                <label for="fullName" class="form-label required-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullName" placeholder="John Doe" required />
+                            </div>
+                            <!-- Date of Birth -->
+                            <div class="mb-3">
+                                <label for="dateOfBirth" class="form-label required-label">Date of Birth</label>
+                                <input type="date" class="form-control" id="dateOfBirth" required />
+                            </div>
+                            <!-- Gender -->
+                            <div class="mb-3">
+                                <label for="gender" class="form-label required-label">Gender</label>
+                                <select class="form-select" id="gender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <!-- Blood Type -->
+                            <div class="mb-4">
+                                <label class="form-label required-label">Blood Type</label>
+                                <div class="blood-type-selector">
+                                    <button type="button" class="blood-type-btn" data-blood-type="A+">A+</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="A-">A-</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="B+">B+</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="B-">B-</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="AB+">AB+</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="AB-">AB-</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="O+">O+</button>
+                                    <button type="button" class="blood-type-btn" data-blood-type="O-">O-</button>
+                                </div>
+                                <input type="hidden" id="selectedBloodType" required />
+                            </div>
+                            <!-- Phone Number -->
+                            <div class="mb-3">
+                                <label for="phoneNumber" class="form-label required-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phoneNumber" placeholder="(123) 456-7890" required />
+                            </div>
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" placeholder="email@example.com" />
+                            </div>
+                            <!-- Address -->
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <textarea class="form-control" id="address" rows="2" placeholder="Your full address"></textarea>
+                            </div>
+                            <!-- Last Donation Date -->
+                            <div class="mb-3">
+                                <label for="lastDonationDate" class="form-label">Last Donation Date</label>
+                                <input type="date" class="form-control" id="lastDonationDate" />
+                            </div>
+                            <!-- Terms and Conditions -->
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="termsCheck" required />
+                                <label class="form-check-label" for="termsCheck">
+                                    I confirm that the information provided is accurate.
+                                </label>
+                            </div>
+                            <!-- Submit Button -->
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    Register
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Registration Confirmation Modal -->
+    <div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registrationModalLabel">Registration Successful</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Your registration has been submitted. Thank you for joining our donor community.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script>
+        // Blood type button selection functionality
+        document.querySelectorAll('.blood-type-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                document.querySelectorAll('.blood-type-btn').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('selectedBloodType').value = this.getAttribute('data-blood-type');
+            });
+        });
+
+        // Form submission handling
+        document.getElementById('registrationForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Ensure a blood type is selected
+            if (!document.getElementById('selectedBloodType').value) {
+                alert('Please select a blood type.');
+                return;
+            }
+            // Show registration confirmation modal
+            var registrationModal = new bootstrap.Modal(document.getElementById('registrationModal'));
+            registrationModal.show();
+
+            // Optionally, you can send form data to your server via AJAX here.
+            setTimeout(() => {
+                this.reset();
+                document.querySelectorAll('.blood-type-btn').forEach(btn => btn.classList.remove('active'));
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

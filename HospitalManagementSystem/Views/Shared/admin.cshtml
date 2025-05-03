@@ -1,0 +1,538 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="~/img/hospital.png">
+    <title>CureLife Hospital</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        html, body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Content takes up available space */
+        .content {
+            flex: 1;
+            margin-left: 250px; /* Matches sidebar width */
+            padding: 20px;
+        }
+
+        
+
+        /* Sidebar Styling */
+        .sidebar {
+            height: 100vh;
+            width: 300px;
+            position: fixed;
+            background: linear-gradient(to right, #1e3c72, #2a5298); /* Gradient blue */
+            padding-top: 10px;
+            color: white;
+            overflow-y: auto;
+            transition: width 0.3s;
+        }
+
+            .sidebar a {
+                color: white;
+                
+                display: flex;
+                align-items: center;
+               
+                text-decoration: none;
+                font-size: 17px;
+            }
+
+                .sidebar a:hover {
+                    background-color: #5bc0de;
+                    border-radius: 5px;
+                }
+
+            .sidebar .logo {
+                text-align: center;
+                font-size: 22px;
+                font-weight: bold;
+                padding: 15px 0;
+                background: linear-gradient(to right, #1e3c72, #2a5298); /* Gradient blue */
+                margin-bottom: 10px;
+            }
+
+        /* Sidebar Menu */
+        .menu {
+            list-style: none;
+
+        }
+
+            .menu li {
+                padding: 12px 10px;
+            }
+
+                .menu li a {
+                    color: white;
+                    text-decoration: none;
+                    display: flex;
+                    align-items: center;
+                    font-size: 17px;
+                    transition: background 0.3s;
+                    justify-content: space-between;
+                }
+
+                    .menu li a i {
+                        margin-right: 20px;
+                        font-size: 17px;
+                       
+                    }
+
+                    /* Hover Effect */
+                    .menu li a:hover {
+                        background-color: #0275d8;
+                    }
+
+        /* Dropdown Menu */
+        .submenu {
+            list-style: none;
+            padding-left: 20px;
+            display: none;
+        }
+
+            .submenu li {
+                padding: 8px 0;
+            }
+
+                .submenu li a {
+                    font-size: 16px;
+                    color: #bfc9d3;
+                    text-decoration: none;
+                    display: block;
+                    padding-left: 15px;
+                }
+
+        /* Show Dropdown */
+        .menu li.active .submenu {
+            display: block;
+        }
+
+        /* Chevron Styling */
+        .arrow {
+            font-size: 14px;
+            transition: transform 0.3s;
+        }
+
+        /* Rotate arrow when active */
+        .menu li.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px; /* Same as sidebar width */
+            padding: 20px;
+            padding-top: 80px; /* Prevents navbar overlap */
+            background-color: #ecf0f1;
+            min-height: 100vh;
+        }
+
+        
+
+        /* Responsive Adjustments */
+        @@media screen and (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+            }
+        }
+
+        @@media screen and (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        /* Modern Navbar */
+        .custom-navbar {
+            margin-left: 300px; /* Adjust if sidebar width changes */
+            background: linear-gradient(to right, #1e3c72, #2a5298); /* Gradient blue */
+            padding: 12px 24px;
+            border-bottom: 3px solid #1c2b4a;
+            z-index: 1000;
+        }
+
+            .custom-navbar .nav-link {
+                color: #ffffff;
+                font-weight: 500;
+                transition: color 0.3s ease, background 0.3s ease;
+                border-radius: 5px;
+                padding: 8px 12px;
+            }
+
+                .custom-navbar .nav-link:hover {
+                    background-color: rgba(255, 255, 255, 0.15);
+                    color: #ffffff;
+                    text-decoration: none;
+                }
+
+            .custom-navbar .logout-link:hover {
+                background-color: rgba(255, 0, 0, 0.2);
+            }
+
+        /* Optional icon margin */
+        .navbar .fa-solid {
+            margin-right: 6px;
+        }
+
+      
+        /* Dropdown Menu */
+        .dropdown-content {
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background: white;
+            color: black;
+            width: 150px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+            /* Dropdown Items */
+            .dropdown-content a {
+                padding: 12px;
+                text-decoration: none;
+                color: black;
+                display: block;
+                font-size: 14px;
+                transition: background 0.3s;
+            }
+
+                .dropdown-content a:hover {
+                    background: #f0f0f0;
+                }
+
+        /* Show Dropdown on Hover */
+        .profile-dropdown:hover .dropdown-content {
+            display: flex;
+        }
+
+        /* Footer always at the bottom */
+        footer {
+            background-color: #0275d8;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+            margin-left: 200px;
+        }
+
+        /* Responsive Footer for Smaller Screens */
+        @@media screen and (max-width: 768px) {
+            .footer {
+                left: 200px;
+                width: calc(100% - 200px);
+            }
+        }
+
+        @@media screen and (max-width: 480px) {
+            .footer {
+                left: 0;
+                width: 100%;
+                position: relative; /* Moves footer down when sidebar collapses */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-hospital"></i> <span>CureLife Hospital </span>
+        </div>
+        <ul class="menu">
+
+            <li>
+                <a href="@Url.Action("adminDashBoard", "DashBoard")">Dashboard</a>
+            </li>
+            <li class="dropdown">
+                <a>Patient Management  <i class="fa-solid fa-chevron-down"></i></a>
+                <ul class="submenu">
+                    <li><a class="nav-link text-white" href="@Url.Action("DisplayPatient", "Patient")">Patient</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("AdmissionDischarge", "Patient")">Admission/Discharge</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("PatientRecords", "Patient")">Patient Records</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("PatientVisits", "Patient")">Patient Visits</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("PatientInsurance", "Patient")">Patient Insurance</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("DisplayPatientDocuments", "Patient")">Patient Documents</a></li>
+                </ul>
+            </li>
+            <!-- Appointments -->
+            <li class="dropdown">
+                <a>Appointments<i class="fa-solid fa-chevron-down"></i></a>
+                <ul class="submenu">
+                    <li><a class="nav-link text-white" href="@Url.Action("DisplayAppointmentScheduling", "Appointment")">All Appointments</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("DoctorAvailability", "Appointment")">Doctor Availability</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("AppointmentAlerts", "Appointment")">Appointment Alerts</a></li>
+                </ul>
+            </li>
+
+
+            <!-- Pharmacy Management Section -->
+            <li class="dropdown">
+                <a>Pharmacy Management <i class="fa-solid fa-chevron-down"></i></a>
+                <ul class="submenu">
+                    <li><a class="nav-link text-white" href="@Url.Action("Medicines","Pharmacy")">Medicines</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Prescriptions","Pharmacy")">Prescriptions</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("PharmacyOrders","Pharmacy")">Pharmacy Orders</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("PharmacyStock","Pharmacy")">Pharmacy Stock</a></li>
+                </ul>
+            </li>
+
+            <!-- Doctors Management Section -->
+            <li class="dropdown">
+                <a>Doctors Management<i class="fa-solid fa-chevron-down"></i> </a>
+                <ul class="submenu">
+                    <li><a class="nav-link text-white" href="@Url.Action("Doctors", "Doctors")">Doctors</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Specialization", "Doctors")">Specializations</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Schedule", "Doctors")">Schedule</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Appointment", "Doctors")">Appointments</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Prescription", "Doctors")">Prescriptions</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Notes", "Doctors")">Notes</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Reviews", "Doctors")">Reviews</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Payments", "Doctors")">Payments</a></li>
+                </ul>
+            </li>
+
+            <!-- Staff Management Section -->
+            <li class="dropdown">
+                <a>Staff Management <i class="fa-solid fa-chevron-down"></i></a>
+                <ul class="submenu">
+                    <li><a class="nav-link text-white" href="@Url.Action("DisplayStaffRecords", "Staff")">Staff Records</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Payroll", "Staff")">Payroll</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Scheduling", "Staff")">Scheduling</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("DisplayRoles", "Staff")">Staff Roles</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("DisplayDepartments", "Staff")">Departments</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Attendance", "Staff")">Attendance</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("LeaveRequests", "Staff")">Leave Requests</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("PerformanceReviews", "Staff")">Performance Reviews</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Training", "Staff")">Staff Training</a></li>
+                </ul>
+            </li>
+
+         
+            <!-- Laboratory Management Section -->
+            <li class="dropdown">
+                <a>Laboratory Management  <i class="fa-solid fa-chevron-down"></i></a>
+                <ul class="submenu">
+                    <li><a class="nav-link text-white" href="@Url.Action("LabTests","Laboratory")">Lab Tests</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("PatientTests","Laboratory")">Patient Tests</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("LabReports","Laboratory")">Lab Reports</a></li>
+                </ul>
+            </li>
+
+            <!-- Reports and Analytics Section -->
+            <li class="dropdown">
+                <a>Reports & Analytics <i class="fa-solid fa-chevron-down"></i></a>
+                <ul class="submenu">
+                    <li><a class="nav-link text-white" href="@Url.Action("ClinicalReports", "ReportsAnalytics")">Clinical Reports</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("FinancialReports","ReportsAnalytics")">Financial Reports</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("PerformanceMonitoring","ReportsAnalytics")">Performance Monitoring</a></li>
+                </ul>
+            </li>
+
+
+            <!-- Billing & Payments Section -->
+            <li class="dropdown">
+                <a>Billing & Payments<i class="fa-solid fa-chevron-down"></i> </a>
+                <ul class="submenu">
+                    <li><a class="nav-link text-white" href="@Url.Action("Invoicing","BillingPayments")">Invoicing</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("InsuranceIntegration","BillingPayments")">Insurance Integration</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("PaymentTracking","BillingPayments")">Payment Tracking</a></li>
+                </ul>
+            </li>
+
+            <!-- Inventory Management Section -->
+            <li class="dropdown">
+                <a>Inventory Management<i class="fa-solid fa-chevron-down"></i></a>
+                <ul class="submenu">
+                    <li><a class="nav-link text-white" href="@Url.Action("InventoryRecords", "InventoryManagement")">Inventory Records</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("InventoryUsage", "InventoryManagement")">Inventory Usage</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Suppliers", "InventoryManagement")">Suppliers</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Procurements", "InventoryManagement")">Inventory Procurements</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Returns", "InventoryManagement")">Inventory Returns</a></li>
+                </ul>
+            </li>
+
+            <!-- Blood Bank Section -->
+            <li class="dropdown">
+                <a>Blood Bank<i class="fa-solid fa-chevron-down"></i></a>
+                <ul class="submenu">
+                    <li><a class="nav-link text-white" href="@Url.Action("Donors", "BloodBank")">Donors</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("BloodBags", "BloodBank")">Blood Bags</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("BloodRequests", "BloodBank")">Blood Requests</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("BloodTransfusions", "BloodBank")">Blood Transfusions</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("BloodDonationHistory", "BloodBank")">Donation History</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Inventory", "BloodBank")">Inventory</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("BloodTests", "BloodBank")">Blood Tests</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("BloodStorage", "BloodBank")">Blood Storage</a></li>
+                </ul>
+            </li>
+
+            <!-- Emergency and Ambulance Management Section -->
+            <li class="dropdown">
+                <a>Emergency & Ambulance<i class="fa-solid fa-chevron-down"></i></a>
+                <ul class="submenu">
+                    <li><a class="nav-link text-white" href="@Url.Action("AmbulanceRequests", "EmergencyAmbulance")">Ambulance Requests</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("EmergencyCases", "EmergencyAmbulance")">Emergency Cases</a></li>
+                </ul>
+            </li>
+
+            <!-- Help Desk Section -->
+            <li class="dropdown">
+                <a>Help Desk <i class="fa-solid fa-chevron-down"></i></a>
+                <ul class="submenu">
+                    <li><a class="nav-link text-white" href="@Url.Action("TicketSystem", "HelpDesk")">Ticket System</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("FAQ", "HelpDesk")">FAQs</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("KnowledgeBase", "HelpDesk")">Knowledge Base</a></li>
+                </ul>
+            </li>
+
+        
+
+        <!-- Bed Management Section -->
+        <li class="dropdown">
+            <a>
+                Bed Management
+                <i class="fa-solid fa-chevron-down"></i>
+            </a>
+            <ul class="submenu">
+                <li><a class="nav-link text-white" href="@Url.Action("Beds", "BedManagement")">Beds</a></li>
+                <li><a class="nav-link text-white" href="@Url.Action("Rooms", "BedManagement")">Rooms</a></li>
+                <li><a class="nav-link text-white" href="@Url.Action("PatientBedAllocation", "BedManagement")">Patient Bed Allocation</a></li>
+                <li><a class="nav-link text-white" href="@Url.Action("BedTransfers", "BedManagement")">Bed Transfers</a></li>
+                <li><a class="nav-link text-white" href="@Url.Action("BedMaintenance", "BedManagement")">Bed Maintenance</a></li>
+                <li><a class="nav-link text-white" href="@Url.Action("BedOccupancyHistory", "BedManagement")">Bed Occupancy History</a></li>
+                <li><a class="nav-link text-white" href="@Url.Action("RoomOccupancy", "BedManagement")">Room Occupancy</a></li>
+                <li><a class="nav-link text-white" href="@Url.Action("BedReservation", "BedManagement")">Bed Reservation</a></li>
+            </ul>
+        </li>
+
+        <!-- Security and Compliance Section -->
+        <li class="dropdown">
+            <a>
+                Security & Compliance
+                <i class="fa-solid fa-chevron-down"></i>
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a class="nav-link text-white" href="@Url.Action("UserRoles", "Security")">User Roles</a>
+                </li>
+                <li>
+                    <a class="nav-link text-white" href="@Url.Action("AuditLogs", "Security")">Audit Logs</a>
+                </li>
+                <li>
+                    <a class="nav-link text-white" href="@Url.Action("DataSecurity", "Security")">Data Security</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a>
+                Telemedicine
+                <i class="fa-solid fa-chevron-down"></i>
+            </a>
+            <ul class="submenu">
+                <li><a class="nav-link text-white" href="@Url.Action("TelemedicineSessions", "Telemedicine")">Telemedicine Sessions</a></li>
+                <li><a class="nav-link text-white" href="@Url.Action("VideoCallLogs", "Telemedicine")">Video Call Logs</a></li>
+                <li><a class="nav-link text-white" href="@Url.Action("OnlinePrescriptions", "Telemedicine")">Online Prescriptions</a></li>
+            </ul>
+        </li>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <!-- Notifications -->
+                    <li class="nav-item px-2">
+                        <a class="nav-link" href="@Url.Action("adminNotification", "DashBoard")">
+                            <i class="fa-solid fa-bell me-1"></i> Notifications
+                        </a>
+                    </li>
+
+                    <!-- Profile -->
+                    <li class="nav-item px-2">
+                        <a class="nav-link" href="@Url.Action("adminProfile", "DashBoard")">
+                            <i class="fa-solid fa-user me-1"></i> Profile
+                        </a>
+                    </li>
+
+                    <!-- Settings -->
+                    <li class="nav-item px-2">
+                        <a class="nav-link" href="@Url.Action("adminSetting", "DashBoard")">
+                            <i class="fa-solid fa-gear me-1"></i> Settings
+                        </a>
+                    </li>
+
+                    <!-- Logout -->
+                    <li class="nav-item px-2">
+                        <a class="nav-link logout-link" href="@Url.Action("Login", "RegisterLogin")">
+                            <i class="fa-solid fa-sign-out-alt me-1"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Main Dashboard Content -->
+    <!-- Main Content -->
+    <div class="content">
+        @RenderBody()
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        © 2025 CureLife Hospital
+    </footer>
+    <script>
+              // Sidebar Dropdown Toggle with Auto-Close Functionality
+        document.querySelectorAll(".dropdown > a").forEach((menu) => {
+            menu.addEventListener("click", function (e) {
+                e.preventDefault();
+                let parent = this.parentElement;
+
+                // Close all other open dropdowns
+                document.querySelectorAll(".dropdown").forEach((item) => {
+                    if (item !== parent) {
+                        item.classList.remove("active");
+                    }
+                });
+
+                // Toggle the clicked dropdown
+                parent.classList.toggle("active");
+            });
+        });
+
+
+    </script>
+</body>
+</html>
+

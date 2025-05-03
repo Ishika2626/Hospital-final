@@ -1,0 +1,328 @@
+﻿@{
+    Layout = "~/Views/Shared/userLayout.cshtml";
+    ViewBag.Title = "Patient Dashboard";
+}
+@using System.IO
+
+
+
+@model HospitalManagementSystem.Models.DashboardViewModel
+
+<style>
+    .dashboard-wrapper {
+        margin-top: 80px;
+        padding: 30px;
+    }
+
+    .dashboard-header {
+        background: linear-gradient(to right, #007bff, #6610f2);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+    }
+
+    .dashboard-card {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .card-title {
+        font-weight: bold;
+    }
+
+    .card-header {
+        padding: 15px;
+        font-weight: 600;
+        font-size: 18px;
+        color: white;
+    }
+
+    .card-body {
+        padding: 20px;
+        background-color: #fff;
+    }
+
+    .no-data-text {
+        color: #aaa;
+        font-style: italic;
+    }
+
+    .btn-sm {
+        margin-top: 10px;
+    }
+
+    .bg-dark {
+        background-color: #343a40 !important;
+    }
+
+    .bg-primary {
+        background-color: #007bff !important;
+    }
+
+    .bg-success {
+        background-color: #28a745 !important;
+    }
+
+    .bg-warning {
+        background-color: #ffc107 !important;
+        color: black !important;
+    }
+
+    .bg-danger {
+        background-color: #dc3545 !important;
+    }
+</style>
+<div class="container dashboard-wrapper">
+    <div class="dashboard-header">
+        <h2>Welcome, @ViewBag.PatientName 👋</h2>
+        <p>Your health at a glance.</p>
+        <a href="@Url.Action("AppointmentScheduling", "Appointment")" class="btn btn-light mt-2">📅 Book Appointment</a>
+
+        <!-- Logout Button -->
+        <a href="@Url.Action("Logout", "Patient")" class="btn btn-danger mt-2 ml-2">🚪 Logout</a>
+    </div>
+
+
+    <div class="row">      
+        <!-- Left Column: Profile -->
+        <div class="col-md-4">
+            <div class="dashboard-card">
+                <div class="card-header bg-dark text-white">👤 Your Profile</div>
+                <div class="card-body">
+                
+                    <div class="text-center mb-4">
+                        <img src="@Url.Content(ViewBag.ProfileImage)" alt="Patient Image" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                    </div>
+                    <p><strong>Full Name:</strong> @ViewBag.PatientName</p>
+                    <p><strong>Date of Birth:</strong> @(ViewBag.DOB != null ? ((DateTime)ViewBag.DOB).ToString("dd MMM yyyy") : "N/A")</p>
+                    <p><strong>Gender:</strong> @ViewBag.Gender</p>
+                    <p><strong>Marital Status:</strong> @ViewBag.MaritalStatus</p>
+                    <p><strong>Email:</strong> @ViewBag.Email</p>
+                    <p><strong>Phone Number:</strong> @ViewBag.PhoneNumber</p>
+                    <p><strong>Address:</strong> @ViewBag.Address</p>
+                    <hr />
+                    <p><strong>Emergency Contact Name:</strong> @ViewBag.EmergencyContactName</p>
+                    <p><strong>Emergency Contact Phone:</strong> @ViewBag.EmergencyContactPhone</p>
+                    <hr />
+                    <p><strong>Insurance Provider:</strong> @ViewBag.Insurance?.Provider</p>
+                    <p><strong>Policy Number:</strong> @ViewBag.Insurance?.PolicyNumber</p>
+                    <p><strong>Valid Till:</strong> @ViewBag.Insurance?.ValidTill</p>
+                    <hr />
+                    <p><strong>Registered On:</strong> @(ViewBag.RegisteredAt != null ? ((DateTime)ViewBag.RegisteredAt).ToString("dd MMM yyyy") : "N/A")</p>
+                    <p><strong>Last Updated:</strong> @(ViewBag.UpdatedAt != null ? ((DateTime)ViewBag.UpdatedAt).ToString("dd MMM yyyy HH:mm") : "N/A")</p>
+@* 
+                    <a href="@Url.Action("EditProfile", "Patient", new { patientId = ViewBag.PatientId })" class="btn btn-sm bg-primary mt-2">✏️ Edit Profile</a> *@
+                </div>
+            </div>
+        </div>
+       
+        <!-- Right Column: Cards in rows of 2 -->
+        <div class="col-md-8">
+            <div class="row">
+                <!-- Card 1: Appointments -->
+                <div class="col-md-6 mb-4">
+                    <div class="dashboard-card">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">📅 Upcoming Appointments</h5>
+                                <a href="@Url.Action("AppointmentDetails", "Patient")" class="btn btn-outline-light btn-sm">View All</a>
+                            </div>
+                            <div class="card-body">
+                                @if (Model.UpcomingAppointments != null && Model.UpcomingAppointments.Any())
+                                {
+                                    <ul class="list-group">
+                                        @foreach (var appt in Model.UpcomingAppointments)
+                                        {
+                                            <li class="list-group-item">
+                                                <strong>Date:</strong> @appt.AppointmentDate.ToString("dd-MMM-yyyy")<br />
+                                                <strong>Doctor:</strong> @appt.DoctorName<br />
+                                                <strong>Reason:</strong> @appt.Reason
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p>No upcoming appointments found.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Recent Visits -->
+                <div class="col-md-6 mb-4">
+                    <div class="dashboard-card">
+
+                        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">🏥 Recent Visits</h5>
+                            <a href="@Url.Action("visitsDetails", "Patient")" class="btn btn-outline-light btn-sm">View All</a>
+                        </div>
+                        <div class="card-body">
+                            @if (ViewBag.Visits != null && ViewBag.Visits.Count > 0)
+                            {
+
+                                foreach (var visit in ViewBag.Visits)
+                                {
+                                    <div>
+                                        <strong>@visit.Date</strong><br />
+                                        Dept: @visit.Department<br />
+                                        Summary: @visit.Summary
+                                        <hr />
+                                    </div>
+                                }
+
+                                
+                            }
+                            else
+                            {
+                                <p class="no-data-text">No visits found.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Prescriptions -->
+                <div class="col-md-6 mb-4">
+                    <div class="dashboard-card">
+                        <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">💊 Prescriptions</h5>
+                            <a href="@Url.Action("PrescriptionDetails", "Patient")" class="btn btn-outline-light btn-sm">View All</a>
+                        </div>
+                   
+                        <div class="card-body">
+                            @if (ViewBag.Prescriptions != null && (ViewBag.Prescriptions as List<HospitalManagementSystem.Models.PrescriptionViewModel>).Count > 0)
+                            {
+                                var prescriptions = (ViewBag.Prescriptions as List<HospitalManagementSystem.Models.PrescriptionViewModel>)
+                                .OrderByDescending(p => p.Date) // Optional: show most recent
+                                .Take(2);
+
+                                foreach (var prescription in prescriptions)
+                                {
+                                    <div>
+                                        <strong>Date:</strong> @prescription.Date<br />
+                                        <strong>Doctor:</strong> @prescription.DoctorName<br />
+                                        <strong>Status:</strong> @prescription.Status<br />
+                                        <strong>Total Amount:</strong> ₹@prescription.Amount
+                                        <hr />
+                                    </div>
+                                }
+
+                                
+                            }
+                            else
+                            {
+                                <p class="no-data-text">No prescriptions available.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5: Insurance Details -->
+                <div class="col-md-6 mb-4">
+                    <div class="dashboard-card">
+                        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">🛡️ Insurance Details</h5>
+                            <a href="@Url.Action("InsuranceDetails", "Patient")" class="btn btn-outline-light btn-sm">View All</a>
+                        </div>
+                        <div class="card-body">
+                            @if (ViewBag.Insurance != null)
+                            {
+                                <p><strong>Insurance Provider:</strong> @ViewBag.Insurance.Provider</p>
+                                <p><strong>Policy Number:</strong> @ViewBag.Insurance.PolicyNumber</p>
+                                <p><strong>Coverage Type:</strong> @ViewBag.Insurance.CoverageType</p>
+                                <p><strong>Coverage Amount:</strong> ₹@ViewBag.Insurance.CoverageAmount</p>
+                                <p><strong>Valid From:</strong> @ViewBag.Insurance.ValidFrom</p>
+                                <p><strong>Valid Till:</strong> @ViewBag.Insurance.ValidTill</p>
+                            }
+                            else
+                            {
+                                <p class="no-data-text">No insurance details found.</p>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6: Document Details -->
+                <div class="col-md-6 mb-4">
+                    <div class="dashboard-card">
+                        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">📄 Document Details</h5>
+                            <a href="@Url.Action("DocumentsDetails", "Patient")" class="btn btn-outline-light btn-sm">View All</a>
+                        </div>
+                        <div class="card-body">
+                            @if (ViewBag.PatientDocuments != null && ((List<HospitalManagementSystem.Models.patient_documents>)ViewBag.PatientDocuments).Count > 0)
+                            {
+                                var documents = (List<HospitalManagementSystem.Models.patient_documents>)ViewBag.PatientDocuments;
+                                var document = documents.First();  // Show only the first document
+
+                                <div class="card mb-3 shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary">📄 @document.DocumentName</h5>
+                                        <p class="card-text"><strong>Document Number:</strong> @document.DocumentNumber</p>
+                                        <p class="card-text"><strong>Upload Date:</strong> @document.UploadDate.ToString("dd MMM yyyy")</p>
+
+
+                                        <a href="@Url.Action("ViewDocument", "Patient", new { filename = System.IO.Path.GetFileName(document.DocumentPath) })"
+                                            class="btn btn-outline-primary btn-sm" target="_blank">View Document</a>
+
+                                      
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-info">No documents uploaded yet.</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Card 3: Billing Info -->
+                <div class="col-md-6 mb-4">
+                    <div class="dashboard-card">
+                        <div class="card-header bg-danger text-white">💳 Billing Info</div>
+                        <div class="card-body">
+                            @if (ViewBag.Bills != null && ViewBag.Bills.Count > 0)
+                            {
+                                foreach (var bill in ViewBag.Bills)
+                                {
+                                    <div>
+                                        <strong>Date:</strong> @bill.Date<br />
+                                        <strong>Amount:</strong> ₹@bill.Amount<br />
+                                        <strong>Description:</strong> @bill.Description
+                                        <hr />
+                                    </div>
+                                }
+                                <a href="@Url.Action("PayBill", "Patient")" class="btn btn-sm btn-outline-danger">Pay Now</a>
+                            }
+                            else
+                            {
+                                <p class="no-data-text">No bills to show.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add more cards here as needed -->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,243 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+@model IEnumerable<HospitalManagementSystem.Models.Invoice>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Invoicing - Hospital System</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+        }
+
+        .table td, .table th {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .btn {
+            padding: 5px 10px;
+        }
+
+        .search-bar {
+            width: 300px;
+        }
+
+        .action-icons i {
+            font-size: 18px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+            .action-icons i:hover {
+                color: #007bff;
+            }
+
+        .gradient-text {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card p-3">
+            <h2 class="text-center mb-3 gradient-text">
+                <i class="fa-solid fa-file-invoice"></i> Invoice List
+            </h2>
+
+            <div class="d-flex justify-content-between mb-3">
+                <input type="text" class="form-control search-bar" placeholder="🔍 Search Invoices..." id="searchInvoice">
+                <a href="@Url.Action("Invoicing", "BillingPayments")" class="btn btn-success">
+                    <i class="fa-solid fa-plus"></i> Add New Invoice
+                </a>
+            </div>
+
+            <!-- Invoice Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Discount</th>
+                            <th>Tax</th>
+                            <th>Total Amount</th>
+                            <th>Invoice Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoiceTable">
+                        @foreach (var invoice in Model)
+                        {
+                            <tr data-id="@invoice.InvoiceId"
+                                data-patientid="@invoice.PatientId"
+                                data-description="@invoice.Description"
+                                data-amount="@invoice.Amount"
+                                data-discount="@invoice.Discount"
+                                data-tax="@invoice.Tax"
+                                data-invoicedate="@invoice.InvoiceDate.ToString("yyyy-MM-dd")"
+                                data-duedate="@invoice.DueDate.ToString("yyyy-MM-dd")"
+                                data-status="@invoice.Status">
+                                <td>@invoice.PatientId</td>
+                                <td>@invoice.Description</td>
+                                <td>@invoice.Amount.ToString("C2")</td>
+                                <td>@invoice.Discount.ToString("C2")</td>
+                                <td>@invoice.Tax.ToString("C2")</td>
+                                <td>@invoice.TotalAmount.ToString("C2")</td>
+                                <td>@invoice.InvoiceDate.ToString("yyyy-MM-dd")</td>
+                                <td>@invoice.DueDate.ToString("yyyy-MM-dd")</td>
+                                <td>@invoice.Status</td>
+                                <td class="action-icons">
+                                    <a href="javascript:void(0);" class="btn btn-warning edit-btn" title="Edit">
+                                        <i class="fa-solid fa-edit"></i>
+                                    </a>
+                                    <a href="@Url.Action("DeleteInvoicing", "BillingPayments", new { id = invoice.InvoiceId })" class="btn btn-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this invoice?')">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Invoice Modal -->
+    <div class="modal fade" id="editInvoiceModal" tabindex="-1" aria-labelledby="editInvoiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="editInvoiceForm" method="post" action="@Url.Action("EditInvoicing", "BillingPayments")">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editInvoiceModalLabel">Edit Invoice</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body row g-3">
+                        <input type="hidden" id="editInvoiceId" name="InvoiceId" />
+
+                        <div class="col-md-6">
+                            <label for="editPatientId" class="form-label">Patient ID</label>
+                            <input type="number" class="form-control" id="editPatientId" name="PatientId" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editDescription" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="editDescription" name="Description" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="editAmount" class="form-label">Amount</label>
+                            <input type="number" step="0.01" class="form-control" id="editAmount" name="Amount" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="editDiscount" class="form-label">Discount</label>
+                            <input type="number" step="0.01" class="form-control" id="editDiscount" name="Discount" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="editTax" class="form-label">Tax</label>
+                            <input type="number" step="0.01" class="form-control" id="editTax" name="Tax" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editInvoiceDate" class="form-label">Invoice Date</label>
+                            <input type="date" class="form-control" id="editInvoiceDate" name="InvoiceDate" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editDueDate" class="form-label">Due Date</label>
+                            <input type="date" class="form-control" id="editDueDate" name="DueDate" required />
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="editStatus" class="form-label">Status</label>
+                            <select class="form-select" id="editStatus" name="Status" required>
+                                <option value="Unpaid">Unpaid</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Update Invoice</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.querySelectorAll(".edit-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const row = this.closest("tr");
+
+                document.getElementById("editInvoiceId").value = row.dataset.id;
+                document.getElementById("editPatientId").value = row.dataset.patientid;
+                document.getElementById("editDescription").value = row.dataset.description;
+                document.getElementById("editAmount").value = row.dataset.amount;
+                document.getElementById("editDiscount").value = row.dataset.discount;
+                document.getElementById("editTax").value = row.dataset.tax;
+                document.getElementById("editInvoiceDate").value = row.dataset.invoicedate;
+                document.getElementById("editDueDate").value = row.dataset.duedate;
+                document.getElementById("editStatus").value = row.dataset.status;
+
+                new bootstrap.Modal(document.getElementById("editInvoiceModal")).show();
+            });
+        });
+    </script>
+    <script>
+        // Search Invoice Table
+        document.getElementById("searchInvoice").addEventListener("keyup", function () {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#invoiceTable tr");
+
+            rows.forEach(row => {
+                const rowText = row.innerText.toLowerCase();
+                if (rowText.includes(searchValue)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

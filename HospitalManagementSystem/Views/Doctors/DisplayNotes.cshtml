@@ -1,0 +1,131 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Doctor Notes - Hospital System</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .table td, .table th {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .btn {
+            padding: 5px 10px;
+        }
+
+        .search-bar {
+            width: 300px;
+        }
+
+        .action-icons i {
+            font-size: 18px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+            .action-icons i:hover {
+                color: #007bff;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card p-3">
+            <h2 class="text-center text-primary mb-3">
+                <i class="fa-solid fa-notes-medical"></i> Doctor Notes
+            </h2>
+
+            <!-- Search & Add Note -->
+            <div class="d-flex justify-content-between mb-3">
+                <input type="text" class="form-control search-bar" placeholder="🔍 Search Notes..." id="searchNotes">
+                <a href="@Url.Action("Notes", "Doctors")" class="btn btn-success">
+                    <i class="fa-solid fa-plus"></i> Add New Note
+                </a>
+            </div>
+
+            <!-- Doctor Notes Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Patient ID</th>
+                            <th>Doctor ID</th>
+                            <th>Appointment ID</th>
+                            <th>Notes</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notesTable">
+                        @* Sample Data *@
+                        <tr>
+                            <td>1</td>
+                            <td>101</td>
+                            <td>22</td>
+                            <td>3001</td>
+                            <td>Patient advised to take rest and follow up after one week.</td>
+                            <td>2025-03-10</td>
+                            <td class="action-icons">
+                                <i class="fa-solid fa-eye text-primary" title="View"></i>
+                                <i class="fa-solid fa-pen text-warning" title="Edit"></i>
+                                <i class="fa-solid fa-trash text-danger" title="Delete"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>102</td>
+                            <td>18</td>
+                            <td>3002</td>
+                            <td>Prescribed new medication for better recovery.</td>
+                            <td>2025-03-11</td>
+                            <td class="action-icons">
+                                <i class="fa-solid fa-eye text-primary" title="View"></i>
+                                <i class="fa-solid fa-pen text-warning" title="Edit"></i>
+                                <i class="fa-solid fa-trash text-danger" title="Delete"></i>
+                            </td>
+                        </tr>
+                        <!-- More Notes Can Be Added Here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

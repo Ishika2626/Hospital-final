@@ -1,0 +1,42 @@
+﻿@{
+    Layout = "_stafflayout";
+}
+<div style="margin-top: 20px; align-content:center">
+    <a href="@Url.Action("PharmacistDashboard", "StaffHome")" class="btn btn-secondary mb-3"
+       style="background-color: #6c757d; color: white; padding: 10px 15px;
+              border-radius: 5px; text-decoration: none; display: inline-block;">
+        🔙 Back to Dashboard
+    </a>
+</div>
+<div class="container mt-4">
+    <div class="card p-4">
+        <h3 class="text-center mb-4">Inventory Management</h3>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Medicine Name</th>
+                    <th>Stock Available</th>
+                    <th>Reorder Level</th>
+                    <th>Supplier</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Ibuprofen</td>
+                    <td>20</td>
+                    <td>10</td>
+                    <td>XYZ Pharma</td>
+                </tr>
+                <tr>
+                    <td>Metformin</td>
+                    <td>15</td>
+                    <td>5</td>
+                    <td>ABC Pharma</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a asp-controller="StaffHome" asp-action="PharmacistOrderStockInventory" class="btn btn-primary mt-3">Order Stock</a>
+    </div>
+</div>

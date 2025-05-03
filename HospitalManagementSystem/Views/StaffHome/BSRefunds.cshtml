@@ -1,0 +1,139 @@
+﻿@{
+    ViewData["Title"] = "Refunds";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<!-- Back to Dashboard Button -->
+<a asp-controller="StaffHome" asp-action="BillingStaffDashboard" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+
+<h2>🔄 Refunds</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Refund ID</th>
+                <th>Patient</th>
+                <th>Amount</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>RFND-2025001</td>
+                <td>John Doe</td>
+                <td>$200</td>
+                <td>Overpayment</td>
+                <td><span class="badge bg-success">Approved</span></td>
+                <td>
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#viewRefundModal">📜 View</button>
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteRefundModal">🗑 Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>RFND-2025002</td>
+                <td>Jane Smith</td>
+                <td>$150</td>
+                <td>Service Cancellation</td>
+                <td><span class="badge bg-warning">Pending</span></td>
+                <td>
+                    <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#approveRefundModal">✔ Approve</button>
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectRefundModal">❌ Reject</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- View Refund Modal -->
+<div class="modal fade" id="viewRefundModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 class="modal-title">📜 View Refund Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Refund ID:</strong> RFND-2025001</p>
+                <p><strong>Patient:</strong> John Doe</p>
+                <p><strong>Amount:</strong> $200</p>
+                <p><strong>Reason:</strong> Overpayment</p>
+                <p><strong>Status:</strong> Approved</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Approve Refund Modal -->
+<div class="modal fade" id="approveRefundModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 class="modal-title">✔ Approve Refund</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to approve this refund?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success">✔ Approve</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Refund Modal -->
+<div class="modal fade" id="rejectRefundModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 class="modal-title">❌ Reject Refund</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to reject this refund?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger">❌ Reject</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Refund Modal -->
+<div class="modal fade" id="deleteRefundModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 class="modal-title">🗑 Delete Refund</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this refund?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger">🗑 Delete</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap CSS & JS (Ensure these are in _StaffLayout.cshtml) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Responsive Table Styling -->
+<style>
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+</style>

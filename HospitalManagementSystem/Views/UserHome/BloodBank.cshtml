@@ -1,0 +1,753 @@
+﻿@{
+    ViewData["Title"] = "Blood Bank";
+}
+@{
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeStream Blood Bank</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #e63946;
+            --secondary-color: #f1faee;
+            --dark-color: #1d3557;
+            --light-color: #a8dadc;
+        }
+
+
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/api/placeholder/1200/800') center/cover no-repeat;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .feature-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            overflow: hidden;
+        }
+
+            .feature-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .blood-type-card {
+            text-align: center;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .blood-type {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .status-available {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-low {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .status-critical {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+            .btn-primary:hover {
+                background-color: #c1121f;
+                border-color: #c1121f;
+            }
+
+        .stat-card {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .testimonial-card {
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .testimonial-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 40px 0;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+
+        .campaign-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .campaign-img {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .emergency-alert {
+            background-color: rgba(220, 53, 69, 0.1);
+            border-left: 5px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero-section" style="margin-top:70px">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-4">Every Drop Counts</h1>
+            <p class="lead mb-5">Your donation can save up to three lives. Be a hero - donate blood today!</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a asp-controller="BloodBank" asp-action="UserDonorRegistre" class="btn btn-primary btn-lg">Donate Now</a>
+                <a asp-controller="BloodBank" asp-action="UserBloodRequest" class="btn btn-outline-light btn-lg">Request Blood</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Alert -->
+    <div class="container mt-4">
+        <div class="alert emergency-alert d-flex align-items-center" role="alert">
+            <i class="fas fa-exclamation-circle fs-4 me-3 text-danger"></i>
+            <div>
+                <strong>URGENT:</strong> Critical shortage of O- blood type. Immediate donors needed. Please contact us at <strong>1-800-DONATE</strong> if you can help.
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Features Section -->
+    <section class="py-5" id="services">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Our Services</h2>
+                <p class="lead text-muted">Supporting the community through life-saving blood services</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Donor Registration Card -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card card h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="card-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <h4 class="card-title">Donor Registration</h4>
+                            <p class="card-text">Register as a blood donor and help save lives in your community.</p>
+                            <a asp-controller="BloodBank" asp-action="UserDonorRegistre" class="btn btn-primary mt-3">Register Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request Blood Card -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card card h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="card-icon">
+                                <i class="fas fa-hand-holding-medical"></i>
+                            </div>
+                            <h4 class="card-title">Request Blood</h4>
+                            <p class="card-text">Need blood for a medical procedure? Submit your request here.</p>
+                            <a asp-controller="BloodBank" asp-action="UserBloodRequest" class="btn btn-primary mt-3">Request Blood</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blood Drive Card -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card card h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="card-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <h4 class="card-title">Blood Drives</h4>
+                            <p class="card-text">Find upcoming blood drives in your area and schedule an appointment.</p>
+                            <a asp-controller="BloodBank" asp-action="campaign" class="btn btn-primary mt-3">Find Drives</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education Card -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card card h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="card-icon">
+                                <i class="fas fa-book-medical"></i>
+                            </div>
+                            <h4 class="card-title">Education</h4>
+                            <p class="card-text">Learn about the donation process and how your blood helps others.</p>
+                            <a asp-controller="BloodBank" asp-action="EductionBloodBank" class="btn btn-primary mt-3">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-5 bg-light" id="about">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <img src="/img/Blood.jpg" alt="About LifeStream Blood Bank" class="img-fluid rounded">
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="fw-bold mb-4">About LifeStream Blood Bank</h2>
+                    <p class="lead">We are committed to providing safe, quality blood products to hospitals and medical facilities throughout the region.</p>
+                    <p>Founded in 1985, LifeStream has been a trusted provider of blood services for over three decades. Our state-of-the-art facilities ensure that all blood donations are processed with the highest standards of safety and efficiency.</p>
+                    <div class="d-flex mt-4">
+                        <div class="me-4">
+                            <h4 class="fw-bold text-primary">35+</h4>
+                            <p>Years of Service</p>
+                        </div>
+                        <div class="me-4">
+                            <h4 class="fw-bold text-primary">50k+</h4>
+                            <p>Lives Saved</p>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold text-primary">100+</h4>
+                            <p>Hospitals Served</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blood Inventory Section -->
+    <section class="py-5" id="blood-inventory">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Blood Inventory Status</h2>
+                <p class="lead text-muted">Current blood supply levels at our facilities</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- A+ Blood Type -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="blood-type-card">
+                        <div class="blood-type">A+</div>
+                        <div class="status-available mt-2">Available</div>
+                        <div class="progress mt-3">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- B+ Blood Type -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="blood-type-card">
+                        <div class="blood-type">B+</div>
+                        <div class="status-low mt-2">Low Supply</div>
+                        <div class="progress mt-3">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- O+ Blood Type -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="blood-type-card">
+                        <div class="blood-type">O+</div>
+                        <div class="status-available mt-2">Available</div>
+                        <div class="progress mt-3">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 70%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- O- Blood Type -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="blood-type-card">
+                        <div class="blood-type">O-</div>
+                        <div class="status-critical mt-2">Critical</div>
+                        <div class="progress mt-3">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 15%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- A- Blood Type -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="blood-type-card">
+                        <div class="blood-type">A-</div>
+                        <div class="status-low mt-2">Low Supply</div>
+                        <div class="progress mt-3">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 45%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- B- Blood Type -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="blood-type-card">
+                        <div class="blood-type">B-</div>
+                        <div class="status-critical mt-2">Critical</div>
+                        <div class="progress mt-3">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AB+ Blood Type -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="blood-type-card">
+                        <div class="blood-type">AB+</div>
+                        <div class="status-available mt-2">Available</div>
+                        <div class="progress mt-3">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 90%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AB- Blood Type -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="blood-type-card">
+                        <div class="blood-type">AB-</div>
+                        <div class="status-low mt-2">Low Supply</div>
+                        <div class="progress mt-3">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 35%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Campaigns Section -->
+    <section class="py-5 bg-light" id="campaigns">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Upcoming Blood Donation Campaigns</h2>
+                <p class="lead text-muted">Join our community events and help save lives</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Campaign 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card campaign-card h-100">
+                        <img src="/img/b2.jpg" class="campaign-img" alt="Campaign Image">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary">Upcoming</span>
+                                <small class="text-muted">March 20, 2025</small>
+                            </div>
+                            <h5 class="card-title">University Blood Drive</h5>
+                            <p class="card-text">Join us at Central University Campus for our biannual blood drive. Free refreshments for all donors!</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                <small>Central University, Main Hall</small>
+                            </div>
+                            <div class="d-flex align-items-center mt-2">
+                                <i class="fas fa-clock text-primary me-2"></i>
+                                <small>9:00 AM - 4:00 PM</small>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-0 pt-0">
+                            <a asp-controller="BloodBank" asp-action="UserDonorRegistre" class="btn btn-primary w-100">Register</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campaign 2 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card campaign-card h-100">
+                        <img src="/img/b3.jpg" class="campaign-img" alt="Campaign Image">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary">Upcoming</span>
+                                <small class="text-muted">April 5, 2025</small>
+                            </div>
+                            <h5 class="card-title">Corporate Heroes Day</h5>
+                            <p class="card-text">Special blood donation drive for corporate employees. Donate during lunch break and receive a special gift.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                <small>Downtown Business District</small>
+                            </div>
+                            <div class="d-flex align-items-center mt-2">
+                                <i class="fas fa-clock text-primary me-2"></i>
+                                <small>11:00 AM - 2:00 PM</small>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-0 pt-0">
+                            <a asp-controller="BloodBank" asp-action="UserDonorRegistre" class="btn btn-primary w-100">Register</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campaign 3 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card campaign-card h-100">
+                        <img src="/img/b4.jpg" class="campaign-img" alt="Campaign Image">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary">Upcoming</span>
+                                <small class="text-muted">April 15, 2025</small>
+                            </div>
+                            <h5 class="card-title">Community Blood Drive</h5>
+                            <p class="card-text">A family-friendly event with activities for kids while parents donate. Refreshments provided.</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                <small>Westside Community Center</small>
+                            </div>
+                            <div class="d-flex align-items-center mt-2">
+                                <i class="fas fa-clock text-primary me-2"></i>
+                                <small>10:00 AM - 5:00 PM</small>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-0 pt-0">
+                            <a asp-controller="BloodBank" asp-action="UserDonorRegistre" class="btn btn-primary w-100">Register</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a asp-controller="BloodBank" asp-action="campaign" class="btn btn-outline-primary">View All Campaigns</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <i class="fas fa-user-friends fs-1 text-primary mb-3"></i>
+                        <div class="stat-number">10,000+</div>
+                        <p class="mb-0">Regular Donors</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <i class="fas fa-tint fs-1 text-primary mb-3"></i>
+                        <div class="stat-number">50,000+</div>
+                        <p class="mb-0">Blood Units Collected</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <i class="fas fa-hospital fs-1 text-primary mb-3"></i>
+                        <div class="stat-number">100+</div>
+                        <p class="mb-0">Hospitals Served</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <i class="fas fa-heartbeat fs-1 text-primary mb-3"></i>
+                        <div class="stat-number">150,000+</div>
+                        <p class="mb-0">Lives Saved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Donor Testimonials</h2>
+                <p class="lead text-muted">Hear from those who have donated and those who have received</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="testimonial-card h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="/api/placeholder/80/80" class="testimonial-img me-3" alt="Testimonial">
+                            <div>
+                                <h5 class="mb-0">Sarah Johnson</h5>
+                                <small class="text-muted">Regular Donor</small>
+                            </div>
+                        </div>
+                        <p class="mb-0">"I've been donating blood every three months for the past five years. It's such a simple thing to do, but it makes a huge difference. The staff at LifeStream are always friendly and professional."</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="testimonial-card h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="/api/placeholder/80/80" class="testimonial-img me-3" alt="Testimonial">
+                            <div>
+                                <h5 class="mb-0">Michael Chen</h5>
+                                <small class="text-muted">Blood Recipient</small>
+                            </div>
+                        </div>
+                        <p class="mb-0">"After my accident, I needed multiple blood transfusions. I'm forever grateful to the anonymous donors who saved my life. Now I organize blood drives in my community to give back."</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="testimonial-card h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="/api/placeholder/80/80" class="testimonial-img me-3" alt="Testimonial">
+                            <div>
+                                <h5 class="mb-0">Dr. Emma Rodriguez</h5>
+                                <small class="text-muted">Emergency Physician</small>
+                            </div>
+                        </div>
+                        <p class="mb-0">"In emergency medicine, we rely on blood products every day to save lives. LifeStream's reliable supply and quick response times help us provide the best care possible for our patients."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-5 bg-primary text-white text-center">
+        <div class="container">
+            <h2 class="fw-bold mb-3">Ready to Make a Difference?</h2>
+            <p class="lead mb-4">Join thousands of donors who help save lives every day</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a asp-controller="BloodBank" asp-action="UserDonorRegistre" class="btn btn-light btn-lg">Donate Now</a>
+                <a asp-controller="BloodBank" asp-action="EductionBloodBank" class="btn btn-outline-light btn-lg">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-5" id="contact">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6">
+                    <h2 class="fw-bold mb-4">Contact Us</h2>
+                    <p class="mb-4">Have questions? Our team is here to help. Contact us using the form or visit one of our centers.</p>
+
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Your Name">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" placeholder="Your Email">
+                            </div>
+                            <div class="col-12">
+                                <label for="subject" class="form-label">Subject</label>
+                                <input type="text" class="form-control" id="subject" placeholder="Subject">
+                            </div>
+                            <div class="col-12">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea class="form-control" id="message" rows="5" placeholder="Your Message"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="mb-4">
+                        <h4 class="fw-bold mb-3">Main Center</h4>
+                        <div class="d-flex mb-2">
+                            <i class="fas fa-map-marker-alt text-primary me-3 mt-1"></i>
+                            <p class="mb-0">123 Medical Center Drive, Suite 300<br>City, State 12345</p>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <i class="fas fa-phone text-primary me-3 mt-1"></i>
+                            <p class="mb-0">(123) 456-7890</p>
+                        </div>
+                        <div class="d-flex mb-2">
+                            <i class="fas fa-envelope text-primary me-3 mt-1"></i>
+                            <p class="mb-0">info@lifestream.org</p>
+                        </div>
+                        <div class="d-flex">
+                            <i class="fas fa-clock text-primary me-3 mt-1"></i>
+                            <p class="mb-0">Mon-Fri: 8:00 AM - 6:00 PM<br>Sat: 9:00 AM - 1:00 PM<br>Sun: Closed</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="fw-bold mb-3">Mobile Donation Units</h4>
+                        <p>Our mobile donation units visit various locations throughout the region. Check our calendar for upcoming dates and locations.</p>
+                        <a asp-controller="BloodBank" asp-action="campaign" class="btn btn-outline-primary">View Calendar</a>
+                    </div>
+
+                    <!-- Map placeholder -->
+                    <div class="mt-4">
+                        <div class="bg-light rounded" style="height: 300px; display: flex; align-items: center; justify-content: center;">
+                            <div class="text-center p-4">
+                                <i class="fas fa-map-marked-alt text-primary fs-1 mb-3"></i>
+                                <h5>Location Map</h5>
+                                <p class="mb-0 text-muted">Interactive map would be displayed here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Frequently Asked Questions</h2>
+                <p class="lead text-muted">Answers to common questions about blood donation</p>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion" id="faqAccordion">
+                        <!-- FAQ Item 1 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Who can donate blood?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Generally, donors must be at least 17 years old (16 with parental consent in some states), weigh at least 110 pounds, and be in good general health. Additional eligibility criteria may apply based on your medical history and current health status.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FAQ Item 2 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    How often can I donate blood?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Whole blood donors can donate every 56 days (about 8 weeks). Platelet donors can donate more frequently, as often as every 7 days, up to 24 times per year. Double red cell donors must wait 112 days between donations.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FAQ Item 3 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    How long does the donation process take?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    The entire process takes about an hour, though the actual blood donation only takes about 8-10 minutes. This includes registration, a brief health screening, the donation itself, and a short rest period with refreshments afterward.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FAQ Item 4 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    Is donating blood safe?
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes, donating blood is very safe. All equipment used is sterile and disposed of after a single use. The average adult has about 10 pints of blood, and donors typically give 1 pint, which is quickly replenished by the body.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FAQ Item 5 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFive">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    What should I do before donating blood?
+                                </button>
+                            </h2>
+                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Eat a healthy meal and drink plenty of fluids before donating. Wear comfortable clothing with sleeves that can be rolled up. Bring a valid ID and a list of medications you're currently taking, if any.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="#" class="btn btn-primary">View All FAQs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-5 bg-dark text-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h3 class="fw-bold mb-4">Stay Updated</h3>
+                    <p class="mb-4">Subscribe to our newsletter for updates on blood drives, critical needs, and educational resources.</p>
+                    <form class="d-flex justify-content-center">
+                        <div class="input-group mb-3" style="max-width: 500px;">
+                            <input type="email" class="form-control" placeholder="Your Email Address" aria-label="Email Address">
+                            <button class="btn btn-primary" type="submit">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

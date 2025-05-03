@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Add Medicine";
+    Layout = "_stafflayout";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4">
+                <h2 class="text-center text-primary mb-4">Add Medicine</h2>
+
+                <form action="/Medicine/Add" method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Medicine Name</label>
+                        <input type="text" id="name" name="Name" class="form-control" placeholder="Enter medicine name" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="manufacturer" class="form-label">Manufacturer</label>
+                        <input type="text" id="manufacturer" name="Manufacturer" class="form-control" placeholder="Enter manufacturer name" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="number" id="quantity" name="Quantity" class="form-control" placeholder="Enter quantity" min="1" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price ($)</label>
+                        <input type="number" id="price" name="Price" step="0.01" class="form-control" placeholder="Enter price" min="0" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="expiryDate" class="form-label">Expiry Date</label>
+                        <input type="date" id="expiryDate" name="ExpiryDate" class="form-control" required />
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary px-4">➕ Add Medicine</button>
+                        <a asp-controller="StaffHome" asp-action="PharmacistManageMedicines" class="btn btn-secondary ms-2">🔙 Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

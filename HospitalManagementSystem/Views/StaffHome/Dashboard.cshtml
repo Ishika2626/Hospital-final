@@ -1,0 +1,465 @@
+﻿@{
+    ViewData["Title"] = "Staff Dashboard";
+    ViewData["UserRole"] = ViewData["UserRole"] ?? "Guest";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <!-- Quick Actions (Role-Based) -->
+    <h4 class="quick-actions-title">⚡ Quick Actions</h4>
+    <div class="row">
+        @if (ViewData["UserRole"].ToString() == "Receptionist")
+        {
+
+
+            <h2 class="text-center mb-4">📞 Receptionist Panel</h2>
+
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Appointments -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📅 Appointments</h5>
+                            <p>Manage and schedule patient appointments.</p>
+                            <a asp-controller="StaffHome" asp-action="ReceptionistManageAppointments" class="btn btn-primary w-100">📆 View Appointments</a>
+                        </div>
+                    </div>
+
+                    <!-- Patient Registration -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📝 Patient Registration</h5>
+                            <p>Register new patients and update details.</p>
+                            <a asp-controller="StaffHome" asp-action="ReceptionistPatientRecords" class="btn btn-success w-100">➕ Register Patient</a>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Visitor Management -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>🚪 Visitor Management</h5>
+                            <p>Monitor and manage hospital visitors.</p>
+                            <a asp-controller="StaffHome" asp-action="ReceptionistVisitorsLog" class="btn btn-info w-100">👤 Manage Visitors</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        }
+        else if (ViewData["UserRole"].ToString() == "Nurse")
+        {
+            <h2 class="text-center mb-4">🩺 Nurse Panel</h2>
+
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Patient Monitoring -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>👨‍⚕️ Patient Monitoring</h5>
+                            <p>View and monitor patient vitals and condition.</p>
+                            <a asp-controller="StaffHome" asp-action="NurseMonitorPatient" class="btn btn-primary w-100">📊 Monitor Patients</a>
+                        </div>
+                    </div>
+
+                    <!-- Medication Management -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>💊 Medication Administration</h5>
+                            <p>Track and administer prescribed medications.</p>
+                            <a asp-controller="StaffHome" asp-action="NurseAdministerMedication" class="btn btn-success w-100">💉 Administer Medication</a>
+                        </div>
+                    </div>
+
+                    <!-- Patient Reports -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📑 Patient Reports</h5>
+                            <p>Check and update patient medical reports.</p>
+                            <a asp-controller="StaffHome" asp-action="NurseMonitorPatientCheckup" class="btn btn-warning w-100">📄 View Reports</a>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        }
+
+        else if (ViewData["UserRole"].ToString() == "Pharmacist")
+        {
+            <h2 class="text-center mb-4">💊 Pharmacist Panel</h2>
+
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Manage Prescriptions -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📜 Prescription Management</h5>
+                            <p>View and dispense prescribed medications.</p>
+                            <a asp-controller="StaffHome" asp-action="PharmacistPrescriptionHandling" class="btn btn-primary w-100">📋 View Prescriptions</a>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Management -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📦 Inventory Tracking</h5>
+                            <p>Manage stock levels of medicines and supplies.</p>
+                            <a asp-controller="StaffHome" asp-action="PharmacistInventoryManagement" class="btn btn-success w-100">📊 Manage Inventory</a>
+                        </div>
+                    </div>
+
+                    <!-- Medicine Orders -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>🛒 Medicine Orders</h5>
+                            <p>Track incoming and outgoing medicine orders.</p>
+                            <a asp-controller="StaffHome" asp-action="PharmacistOrderStockInventory" class="btn btn-warning w-100">📦 View Orders</a>
+                        </div>
+                    </div>
+
+                    <!-- Expiry Alerts -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>⏳ Expiry Alerts</h5>
+                            <p>Monitor medicines nearing expiration.</p>
+                            <a asp-controller="StaffHome" asp-action="PharmacistManageMedicines" class="btn btn-danger w-100">⚠ Check Alerts</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (ViewData["UserRole"].ToString() == "LabTechnician")
+        {
+            <h2 class="text-center mb-4">🧪 Lab Technician Panel</h2>
+
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Manage Test Requests -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📋 Test Requests</h5>
+                            <p>View and process laboratory test requests.</p>
+                            <a asp-controller="StaffHome" asp-action="LTTestRequests" class="btn btn-primary w-100">🔬 View Requests</a>
+                        </div>
+                    </div>
+
+                    <!-- Conducted Tests -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>🧾 Conducted Tests</h5>
+                            <p>Manage and update test results.</p>
+                            <a asp-controller="StaffHome" asp-action="LTTestReports" class="btn btn-success w-100">📊 View Results</a>
+                        </div>
+                    </div>
+
+                    <!-- Sample Collection -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>🧫 Sample Collection</h5>
+                            <p>Monitor and update collected samples.</p>
+                            <a asp-controller="StaffHome" asp-action="LTManagePatietSamples" class="btn btn-warning w-100">📦 Manage Samples</a>
+                        </div>
+                    </div>
+
+                    <!-- Equipment Maintenance -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>🛠 Equipment Maintenance</h5>
+                            <p>Track and maintain laboratory equipment.</p>
+                            <a asp-controller="StaffHome" asp-action="LTEquipmentMaintenance" class="btn btn-danger w-100">⚙ Maintenance Log</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (ViewData["UserRole"].ToString() == "HRManager")
+        {
+
+            <h2 class="text-center mb-4">💼 HR Manager Panel</h2>
+
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Employee Management -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>👥 Employee Management</h5>
+                            <p>View, add, and manage hospital employees.</p>
+                            <a asp-controller="StaffHome" asp-action="HREmployee" class="btn btn-primary w-100">🔍 Manage Employees</a>
+                        </div>
+                    </div>
+
+                    <!-- Hiring & Recruitment -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📋 Hiring & Recruitment</h5>
+                            <p>Track and process job applications.</p>
+                            <a asp-controller="StaffHome" asp-action="HRHiring" class="btn btn-success w-100">📄 View Applications</a>
+                        </div>
+                    </div>
+
+                    <!-- Payroll Management -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>💰 Payroll & Salaries</h5>
+                            <p>Manage salaries and benefits for employees.</p>
+                            <a asp-controller="StaffHome" asp-action="HRPayroll" class="btn btn-warning w-100">💳 Manage Payroll</a>
+                        </div>
+                    </div>
+
+                    <!-- Attendance & Leave -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📅 Attendance & Leave</h5>
+                            <p>Monitor employee attendance and leave requests.</p>
+                            <a asp-controller="StaffHome" asp-action="HRAttendance" class="btn btn-danger w-100">⏳ Manage Attendance</a>
+                        </div>
+                    </div>
+
+                    <!-- Performance Reviews -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📊 Performance Reviews</h5>
+                            <p>Evaluate and improve staff performance.</p>
+                            <a asp-controller="StaffHome" asp-action="HRPerformance" class="btn btn-info w-100">📈 View Reports</a>
+                        </div>
+                    </div>
+
+                    <!-- Employee Training -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>🎓 Training Programs</h5>
+                            <p>Organize training sessions for hospital staff.</p>
+                            <a asp-controller="StaffHome" asp-action="HRTraining" class="btn btn-secondary w-100">📚 Manage Training</a>
+                        </div>
+                    </div>
+                    
+
+                </div>
+            </div>
+        }
+        else if (ViewData["UserRole"].ToString() == "BillingStaff")
+        {
+            <h2 class="text-center mb-4">💳 Billing Staff Panel</h2>
+
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Manage Billing -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>💰 Manage Billing</h5>
+                            <p>Process and manage patient bills efficiently.</p>
+                            <a asp-controller="StaffHome" asp-action="BSBilling" class="btn btn-primary w-100">💳 View Bills</a>
+                        </div>
+                    </div>
+
+                    <!-- Invoices -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>🧾 Invoice Management</h5>
+                            <p>Generate and track patient invoices.</p>
+                            <a asp-controller="StaffHome" asp-action="BSInvoices" class="btn btn-success w-100">📄 Manage Invoices</a>
+                        </div>
+                    </div>
+
+                    <!-- Insurance Processing -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📑 Insurance Processing</h5>
+                            <p>Verify and process insurance claims.</p>
+                            <a asp-controller="StaffHome" asp-action="BSInsurance" class="btn btn-warning w-100">🛡 Process Claims</a>
+                        </div>
+                    </div>
+
+                    <!-- Refunds & Adjustments -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>🔄 Refunds & Adjustments</h5>
+                            <p>Handle patient refunds and billing corrections.</p>
+                            <a asp-controller="StaffHome" asp-action="BSRefunds" class="btn btn-danger w-100">🔍 Manage Refunds</a>
+                        </div>
+                    </div>
+
+                    <!-- Dues & Payments -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>💵 Dues & Payments</h5>
+                            <p>Monitor pending dues and received payments.</p>
+                            <a asp-controller="StaffHome" asp-action="BSDues" class="btn btn-info w-100">📊 View Dues</a>
+                        </div>
+                    </div>
+
+                    <!-- Financial Reports -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📊 Financial Reports</h5>
+                            <p>Analyze revenue, expenses, and profits.</p>
+                            <a asp-controller="StaffHome" asp-action="BSReports" class="btn btn-secondary w-100">📈 View Reports</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (ViewData["UserRole"].ToString() == "EmergencyStaff")
+        {
+            <h2 class="text-center mb-4">🚨 Emergency Staff Panel</h2>
+
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Emergency Alerts -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>🚨 Emergency Alerts</h5>
+                            <p>Monitor and respond to critical emergency cases.</p>
+                            <a asp-controller="StaffHome" asp-action="ESAlerts" class="btn btn-danger w-100">⚠ View Alerts</a>
+                        </div>
+                    </div>
+
+                    <!-- Triage Management -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>⏳ Triage Management</h5>
+                            <p>Assess and prioritize patients based on severity.</p>
+                            <a asp-controller="StaffHome" asp-action="ESTriage" class="btn btn-warning w-100">🩺 Manage Triage</a>
+                        </div>
+                    </div>
+
+                    <!-- Dispatch Ambulances -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>🚑 Dispatch Ambulances</h5>
+                            <p>Assign and dispatch ambulances for emergency cases.</p>
+                            <a asp-controller="StaffHome" asp-action="ESDispatch" class="btn btn-primary w-100">🚑 Manage Dispatch</a>
+                        </div>
+                    </div>
+
+                    <!-- Bed Allocation -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>🛏 Bed Allocation</h5>
+                            <p>Assign hospital beds to incoming emergency patients.</p>
+                            <a asp-controller="StaffHome" asp-action="ESBeds" class="btn btn-success w-100">🏥 Allocate Beds</a>
+                        </div>
+                    </div>
+
+                    <!-- Emergency Reports -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📊 Emergency Reports</h5>
+                            <p>Track and analyze emergency response times and outcomes.</p>
+                            <a asp-controller="StaffHome" asp-action="ESReports" class="btn btn-secondary w-100">📈 View Reports</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+        else if (ViewData["UserRole"].ToString() == "BloodBankStaff")
+        {
+            <div class="container mt-4">
+                <h2 class="text-center">🩸 Blood Bank Staff Dashboard</h2>
+
+                <div class="row mt-4">
+                    <!-- Donor Management -->
+                    <div class="col-md-4">
+                        <div class="card shadow-lg border-0 p-3 text-center">
+                            <h5>🩸 Donors</h5>
+                            <p>Manage donor records and history.</p>
+                            <a asp-controller="StaffHome" asp-action="BBSDonors" class="btn btn-primary">View Donors</a>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Management -->
+                    <div class="col-md-4">
+                        <div class="card shadow-lg border-0 p-3 text-center">
+                            <h5>🏥 Blood Inventory</h5>
+                            <p>Monitor available blood units.</p>
+                            <a asp-controller="StaffHome" asp-action="BBSInventory" class="btn btn-danger">Check Inventory</a>
+                        </div>
+                    </div>
+
+                    <!-- Testing and Quality -->
+                    <div class="col-md-4">
+                        <div class="card shadow-lg border-0 p-3 text-center">
+                            <h5>🧪 Blood Testing</h5>
+                            <p>Manage testing and screening.</p>
+                            <a asp-controller="StaffHome" asp-action="BBSTesting" class="btn btn-success">View Testing</a>
+                        </div>
+                    </div>  
+                </div>
+
+                <div class="row mt-4">
+                    <!-- Blood Requests -->
+                    <div class="col-md-4">
+                        <div class="card shadow-lg border-0 p-3 text-center">
+                            <h5>📋 Blood Requests</h5>
+                            <p>Handle hospital and emergency requests.</p>
+                            <a asp-controller="StaffHome" asp-action="BBSRequests" class="btn btn-warning">Manage Requests</a>
+                        </div>
+                    </div>
+
+                    <!-- Emergency Dispatch -->
+                    <div class="col-md-4">
+                        <div class="card shadow-lg border-0 p-3 text-center">
+                            <h5>🚑 Emergency Dispatch</h5>
+                            <p>Quickly allocate blood for emergencies.</p>
+                            <a asp-controller="BloodBank" asp-action="BBSEmergency" class="btn btn-danger">View Emergencies</a>
+                        </div>
+                    </div>
+
+                    <!-- Reports and Statistics -->
+                    <div class="col-md-4">
+                        <div class="card shadow-lg border-0 p-3 text-center">
+                            <h5>📊 Reports</h5>
+                            <p>Generate and analyze reports.</p>
+                            <a asp-controller="BloodBank" asp-action="BBSReports" class="btn btn-info">View Reports</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 10px;
+        border: none;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+    @@media (max-width: 768px) {
+        .btn
+
+    {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    }
+
+    .quick-actions-title {
+        text-align: center; /* Centers the text */
+        font-weight: bold; /* Makes text bold */
+        font-size: 24px; /* Sets a readable font size */
+        margin-bottom: 20px;
+    }
+
+    @@media (max-width: 768px) {
+        .quick-actions-title
+
+    {
+        font-size: 20px; /* Slightly smaller for mobile */
+    }
+
+    }
+        </style>

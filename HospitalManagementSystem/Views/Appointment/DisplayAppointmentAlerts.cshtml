@@ -1,0 +1,206 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Appointment Alerts - Hospital System</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+        }
+
+        .table td, .table th {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .btn {
+            padding: 5px 10px;
+        }
+
+        .action-icons i {
+            font-size: 18px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+            .action-icons i:hover {
+                color: #007bff;
+            }
+
+        .form-container {
+            margin-top: 30px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card p-3">
+            <h2 class="text-center mb-3 gradient-text">
+                <i class="fa-solid fa-bell"></i> Appointment Alerts
+            </h2>
+
+
+            <!-- Search & Add Alert -->
+            <div class="d-flex justify-content-between mb-3">
+                <input type="text" class="form-control w-25" placeholder="🔍 Search Alerts..." id="searchAlert" onkeyup="searchAlerts()">
+                <a href="@Url.Action("AppointmentAlerts", "Appointment")" class="btn btn-success">
+                    <i class="fa-solid fa-plus"></i> Add Alert
+                </a>
+            </div>
+
+            <!-- Appointment Alerts Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="alertsTable">
+                    <thead>
+                        <tr>
+                            <th>Alert ID</th>
+                            <th>Appointment ID</th>
+                            <th>Recipient Type</th>
+                            <th>Alert Message</th>
+                            <th>Sent Status</th>
+                            <th>Sent At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alertTable">
+                        @foreach (var alert in Model)
+                        {
+                            <tr>
+                                <td>@alert.AlertId</td>
+                                <td>@alert.AppointmentId</td>
+                                <td>@alert.RecipientType</td>
+                                <td>@alert.AlertMessage</td>
+                                <td>@alert.SentStatus</td>
+                                <td>@alert.SentAt.ToString("yyyy-MM-dd HH:mm:ss") </td>
+                                <td class="action-icons">
+                                    <a href="#editModal" class="text-warning" title="Edit" data-bs-toggle="modal" data-bs-target="#editModal" onclick="populateEditModal(@alert.AlertId, '@alert.AppointmentId', '@alert.RecipientType', '@alert.AlertMessage', '@alert.SentStatus', '@alert.SentAt?.ToString("yyyy-MM-dd HH:mm:ss")')">
+                                        <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                    </a>
+                                    <a href="@Url.Action("DeleteAppointmentAlerts", "Appointment", new { id = alert.AlertId })" class="text-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this alert?')">
+                                        <i class="fa-solid fa-trash-can fa-lg"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Appointment Alert Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Appointment Alert</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="@Url.Action("EditAppointmentAlerts", "Appointment")">
+                        <input type="hidden" id="editAlertId" name="AlertId" />
+                        <div class="mb-3">
+                            <label for="editAppointmentId" class="form-label">Appointment ID</label>
+                            <input type="text" class="form-control" id="editAppointmentId" name="AppointmentId" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="editRecipientType" class="form-label">Recipient Type</label>
+                            <input type="text" class="form-control" id="editRecipientType" name="RecipientType" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="editAlertMessage" class="form-label">Alert Message</label>
+                            <textarea class="form-control" id="editAlertMessage" name="AlertMessage"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editSentStatus" class="form-label">Sent Status</label>
+                            <input type="text" class="form-control" id="editSentStatus" name="SentStatus" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="editSentAt" class="form-label">Sent At</label>
+                            <input type="text" class="form-control" id="editSentAt" name="SentAt" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function populateEditModal(alertId, appointmentId, recipientType, alertMessage, sentStatus, sentAt) {
+            document.getElementById('editAlertId').value = alertId;
+            document.getElementById('editAppointmentId').value = appointmentId;
+            document.getElementById('editRecipientType').value = recipientType;
+            document.getElementById('editAlertMessage').value = alertMessage;
+            document.getElementById('editSentStatus').value = sentStatus;
+            document.getElementById('editSentAt').value = sentAt;
+        }
+
+        function searchAlerts() {
+            const searchInput = document.getElementById('searchAlert').value.toLowerCase();
+            const rows = document.getElementById('alertTable').getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                let cells = rows[i].getElementsByTagName('td');
+                let matchFound = false;
+
+                // Loop through each cell and check if the search input matches any cell
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j]) {
+                        if (cells[j].innerText.toLowerCase().includes(searchInput)) {
+                            matchFound = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (matchFound) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

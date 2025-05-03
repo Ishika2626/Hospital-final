@@ -1,0 +1,147 @@
+﻿@{
+    ViewData["Title"] = "Staff Dashboard";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <!-- Quick Actions (Role-Based) -->
+    <h4 class="quick-actions-title">⚡ Quick Actions</h4>
+
+    <h2 class="text-center mb-4">🚨 Emergency Staff Panel</h2>
+
+    <div class="row g-3 dashboard-container">
+        <!-- Emergency Alerts -->
+        <div class="col-xl-4 col-lg-6 col-md-6">
+            <div class="card p-3 shadow-sm h-100">
+                <h5>🚨 Emergency Alerts</h5>
+                <p>Monitor and respond to critical emergency cases.</p>
+                <a asp-controller="StaffHome" asp-action="ESAlerts" class="btn btn-danger w-100">⚠ View Alerts</a>
+            </div>
+        </div>
+
+        <!-- Triage Management -->
+        <div class="col-xl-4 col-lg-6 col-md-6">
+            <div class="card p-3 shadow-sm h-100">
+                <h5>⏳ Triage Management</h5>
+                <p>Assess and prioritize patients based on severity.</p>
+                <a asp-controller="StaffHome" asp-action="ESTriage" class="btn btn-warning w-100">🩺 Manage Triage</a>
+            </div>
+        </div>
+
+        <!-- Dispatch Ambulances -->
+        <div class="col-xl-4 col-lg-6 col-md-6">
+            <div class="card p-3 shadow-sm h-100">
+                <h5>🚑 Dispatch Ambulances</h5>
+                <p>Assign and dispatch ambulances for emergency cases.</p>
+                <a asp-controller="StaffHome" asp-action="ESDispatch" class="btn btn-primary w-100">🚑 Manage Dispatch</a>
+            </div>
+        </div>
+
+        <!-- Bed Allocation -->
+        <div class="col-xl-4 col-lg-6 col-md-6">
+            <div class="card p-3 shadow-sm h-100">
+                <h5>🛏 Bed Allocation</h5>
+                <p>Assign hospital beds to incoming emergency patients.</p>
+                <a asp-controller="StaffHome" asp-action="ESBeds" class="btn btn-success w-100">🏥 Allocate Beds</a>
+            </div>
+        </div>
+        <!-- Emergency Doctor Bed Allocation -->
+        <div class="col-xl-4 col-lg-6 col-md-6">
+            <div class="card p-3 shadow-sm h-100 border-primary">
+                <h5 class="text-primary">👨‍⚕️ Emergency Doctor Allocation</h5>
+                <p>Assign emergency doctors to critical cases and patients in need.</p>
+                <a asp-controller="StaffHome" asp-action="ESDoctors" class="btn btn-primary w-100">
+                    👨‍⚕️ Allocate Doctors
+                </a>
+            </div>
+        </div>
+
+        <!-- Emergency Reports -->
+        <div class="col-xl-4 col-lg-6 col-md-6">
+            <div class="card p-3 shadow-sm h-100">
+                <h5>📊 Emergency Reports</h5>
+                <p>Track and analyze emergency response times and outcomes.</p>
+                <a asp-controller="StaffHome" asp-action="ESReports" class="btn btn-secondary w-100">📈 View Reports</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    /* Ensure the container has max width */
+    .container {
+        max-width: 1200px;
+    }
+
+    /* Dashboard Layout Fix */
+    .dashboard-container {
+        min-height: 100vh; /* Ensures content does not cut off */
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+        overflow-y: auto; /* Allows scrolling if needed */
+        padding-bottom: 80px; /* Prevents content from being hidden by footer */
+    }
+
+    /* Cards Styling */
+    .card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 10px;
+        border: none;
+        background: #ffffff;
+        min-height: 200px; /* Prevents content shrinking */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Ensures equal spacing */
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+    /* Quick Actions Title */
+    .quick-actions-title {
+        text-align: center;
+        font-weight: bold;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    /* Responsive Fixes */
+    @@media (max-width: 768px) {
+        .quick-actions-title
+
+    {
+        font-size: 20px;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    /* Fixes hidden options by ensuring full height */
+    .card {
+        min-height: auto;
+    }
+
+    }
+
+    @@media (max-width: 576px) {
+        .btn
+
+    {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    /* Adjust cards for smaller screens */
+    .card {
+        min-height: auto;
+    }
+
+    }
+</style>

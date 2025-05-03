@@ -1,0 +1,231 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+@model IEnumerable<HospitalManagementSystem.Models.InsuranceIntegration>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Insurance Integration - Hospital System</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+        }
+
+        .table td, .table th {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .btn {
+            padding: 5px 10px;
+        }
+
+        .search-bar {
+            width: 300px;
+        }
+
+        .action-icons i {
+            font-size: 18px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+            .action-icons i:hover {
+                color: #007bff;
+
+            }
+
+        .gradient-text {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card p-3">
+            <h2 class="text-center mb-3 gradient-text">
+                <i class="fa-solid fa-file-invoice-dollar"></i> Insurance Claims
+            </h2>
+
+            <!-- Search & Add Insurance Claim -->
+            <div class="d-flex justify-content-between mb-3">
+                <input type="text" class="form-control search-bar" placeholder="🔍 Search Claims..." id="searchClaim">
+                <a href="@Url.Action("InsuranceIntegration","BillingPayments")" class="btn btn-success">
+                    <i class="fa-solid fa-plus"></i> Add New Claim
+                </a>
+            </div>
+
+            <!-- Insurance Claims Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                           
+                            <th>Patient ID</th>
+                            <th>Insurance Provider</th>
+                            <th>Claim Number</th>
+                            <th>Claim Amount</th>
+                            <th>Claim Status</th>
+                            <th>Settlement Amount</th>
+                            <th>Settlement Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="insuranceTable">
+                        @foreach (var insurance in Model)
+                        {
+                            <tr data-id="@insurance.InsuranceClaimId"
+                                data-patientid="@insurance.PatientId"
+                                data-provider="@insurance.InsuranceProvider"
+                                data-claimnumber="@insurance.ClaimNumber"
+                                data-claimamount="@insurance.ClaimAmount"
+                                data-status="@insurance.ClaimStatus"
+                                data-settlementamount="@insurance.SettlementAmount"
+                                data-settlementdate="@insurance.SettlementDate?.ToString("yyyy-MM-dd")">
+                                <td>@insurance.PatientId</td>
+                                <td>@insurance.InsuranceProvider</td>
+                                <td>@insurance.ClaimNumber</td>
+                                <td>@insurance.ClaimAmount.ToString("C2")</td>
+                                <td>@insurance.ClaimStatus</td>
+                                <td>@insurance.SettlementAmount.ToString("C2")</td>
+                                <td>@(insurance.SettlementDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                                <td class="action-icons">
+                                    <a href="javascript:void(0);" class="btn btn-warning edit-btn" title="Edit">
+                                        <i class="fa-solid fa-edit"></i>
+                                    </a>
+                                    <a href="@Url.Action("DeleteInsuranceClaim", "BillingPayments", new { id = insurance.InsuranceClaimId })" class="btn btn-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this claim?')">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Insurance Claim Modal -->
+    <div class="modal fade" id="editClaimModal" tabindex="-1" aria-labelledby="editClaimModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="editClaimForm" method="post" action="@Url.Action("EditInsuranceIntegration", "BillingPayments")">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editClaimModalLabel">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit Insurance Claim
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body row g-3">
+                        <input type="hidden" name="InsuranceClaimId" id="editClaimId" />
+
+                        <div class="col-md-6">
+                            <label for="editPatientId" class="form-label">Patient ID</label>
+                            <input type="text" class="form-control" name="PatientId" id="editPatientId" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editProvider" class="form-label">Insurance Provider</label>
+                            <input type="text" class="form-control" name="InsuranceProvider" id="editProvider" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editClaimNumber" class="form-label">Claim Number</label>
+                            <input type="text" class="form-control" name="ClaimNumber" id="editClaimNumber" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editClaimAmount" class="form-label">Claim Amount</label>
+                            <input type="number" step="0.01" class="form-control" name="ClaimAmount" id="editClaimAmount" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editStatus" class="form-label">Claim Status</label>
+                            <input type="text" class="form-control" name="ClaimStatus" id="editStatus" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editSettlementAmount" class="form-label">Settlement Amount</label>
+                            <input type="number" step="0.01" class="form-control" name="SettlementAmount" id="editSettlementAmount" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editSettlementDate" class="form-label">Settlement Date</label>
+                            <input type="date" class="form-control" name="SettlementDate" id="editSettlementDate" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Save Changes
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("searchClaim").addEventListener("keyup", function () {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#insuranceTable tr");
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? "" : "none";
+            });
+        });
+    </script>
+    <script>
+        // Open edit modal and populate fields
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const row = this.closest('tr');
+
+                document.getElementById("editClaimId").value = row.dataset.id;
+                document.getElementById("editPatientId").value = row.dataset.patientid;
+                document.getElementById("editProvider").value = row.dataset.provider;
+                document.getElementById("editClaimNumber").value = row.dataset.claimnumber;
+                document.getElementById("editClaimAmount").value = row.dataset.claimamount;
+                document.getElementById("editStatus").value = row.dataset.status;
+                document.getElementById("editSettlementAmount").value = row.dataset.settlementamount;
+                document.getElementById("editSettlementDate").value = row.dataset.settlementdate;
+
+                new bootstrap.Modal(document.getElementById("editClaimModal")).show();
+            });
+        });
+    </script>
+
+</body>
+</html>

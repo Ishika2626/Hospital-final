@@ -1,0 +1,169 @@
+﻿@{
+    ViewData["Title"] = "Reports Diagnostics";
+}
+
+@{
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Diagnostics | CureLife Hospital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #f0f4f8, #d9e2ec);
+            color: #333;
+        }
+
+        /* Banner Section */
+        .banner {
+            background: url('https://source.unsplash.com/1600x600/?healthcare,medical') center/cover no-repeat;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            margin-top:100px;
+            margin-bottom:100px;
+        }
+
+            .banner::before {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to right, rgba(0, 123, 255, 0.7), rgba(0, 255, 255, 0.5)) center/cover no-repeat;
+            }
+
+            .banner h1 {
+                position: relative;
+                z-index: 2;
+            }
+
+        /* Main Content */
+        .content-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            margin-top: -50px;
+            margin-bottom: 100px;
+        }
+
+        /* Service Cards */
+        .service-card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+
+            .service-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .service-card i {
+                font-size: 40px;
+                margin-bottom: 10px;
+                color: #007bff;
+            }
+
+        /* Report Access Box */
+        .report-box {
+            background: linear-gradient(to right, rgba(0, 123, 255, 0.7), rgba(0, 255, 255, 0.5)) center/cover no-repeat;
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+            .report-box input {
+                border-radius: 8px;
+            }
+
+            .report-box button {
+                background: white;
+                color: #007bff;
+                border-radius: 8px;
+                font-weight: bold;
+            }
+
+                .report-box button:hover {
+                    background: #0056b3;
+                    color: white;
+                    margin-bottom:100px;
+                }
+
+    </style>
+</head>
+<body>
+
+    <!-- Banner Section -->
+    <section class="banner">
+        <h1>Reports & Diagnostics</h1>
+    </section>
+
+    <!-- Main Content -->
+    <section class="container">
+        <div class="row mt-5">
+            <!-- Diagnostic Services -->
+            <div class="col-md-6">
+                <div class="content-box">
+                    <h3 class="text-center text-primary">Our Diagnostic Services</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="service-card">
+                                <i class="bi bi-flask"></i>
+                                <h5>Lab Tests</h5>
+                                <p>Comprehensive blood and urine tests for accurate diagnosis.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="service-card">
+                                <i class="bi bi-x-ray"></i>
+                                <h5>X-Ray & MRI</h5>
+                                <p>High-quality imaging for detailed internal assessments.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="service-card">
+                                <i class="bi bi-heart-pulse"></i>
+                                <h5>Cardiology</h5>
+                                <p>ECG, echocardiograms, and stress tests for heart health.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="service-card">
+                                <i class="bi bi-person-hearts"></i>
+                                <h5>Ultrasound</h5>
+                                <p>Advanced imaging for pregnancy and organ analysis.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Access -->
+            <div class="col-md-6">
+                <div class="report-box">
+                    <h3>Access Your Reports</h3>
+                    <p>Enter your Patient ID to download your reports instantly.</p>
+                    <input type="text" class="form-control mb-3" placeholder="Enter Patient ID">
+                    <button class="btn btn-light btn-lg">Download Report</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

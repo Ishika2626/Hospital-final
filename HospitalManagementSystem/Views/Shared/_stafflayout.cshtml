@@ -1,0 +1,137 @@
+﻿@{
+    string userRole = Context.Session.GetString("Role") ?? "Guest";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Hospital Staff Dashboard</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .nav-item .nav-link {
+            color: #fff;
+            padding: 10px 15px;
+        }
+
+            .nav-item .nav-link:hover {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 5px;
+            }
+
+        .main-container {
+            flex: 1;
+            padding: 20px;
+            padding-bottom: 100px; /* Space for footer */
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #2a5298;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 1rem;
+            z-index: 1000;
+        }
+
+        @@media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+
+            .nav-item .nav-link {
+                font-size: 1rem;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">🏥 CureLife Hospital</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                @if (userRole == "HR Manager")
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="StaffHome" asp-action="HRManagerDashboard">HR Dashboard</a>
+                    </li>
+                }
+                else if (userRole == "Nurse")
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="StaffHome" asp-action="NurseDashboard">Nurse Dashboard</a>
+                    </li>
+                }
+                else if (userRole == "Pharmacist")
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="StaffHome" asp-action="PharmacistDashboard">Pharmacy Dashboard</a>
+                    </li>
+                }
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="StaffHome" asp-action="MarkAttendance">📝 Mark Attendance</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="StaffHome" asp-action="StaffProfile">👤 Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-danger" asp-controller="RegisterLogin" asp-action="Login">🚪 Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!--  Main Content -->
+    <div class="main-container">
+        @RenderBody()
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Hospital Management System</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

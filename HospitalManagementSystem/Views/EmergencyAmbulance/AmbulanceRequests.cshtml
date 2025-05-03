@@ -1,0 +1,92 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ambulance Request</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        body { background: #f4f7f6; font-family: Arial, sans-serif; }
+        .container { margin-top: 50px; }
+        .card { border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); }
+        .card-header { background-color: #dc3545; color: white; text-align: center; font-size: 22px; font-weight: bold; }
+        .form-control, .form-select { border-radius: 5px; }
+        .btn { width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="col-md-2" style="margin-left:40px;">
+        <a href="@Url.Action("DisplayAmbulanceRequests","EmergencyAmbulance")" class="btn btn-danger btn-sm px-3 py-2" style="font-size: 14px;">
+            <i class="fa-solid fa-list"></i> Ambulance Requests List
+        </a>
+    </div>
+    <div class="container">
+        <div class="card p-3">
+            <div class="card-header">
+                <i class="fa-solid fa-ambulance"></i> Ambulance Request Entry
+            </div>
+            <div class="card-body">
+                <form id="ambulanceRequestForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-user"></i> Patient ID</label>
+                            <input type="number" class="form-control" id="patient_id" placeholder="Enter Patient ID" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-map-marker-alt"></i> Pickup Location</label>
+                            <input type="text" class="form-control" id="pickup_location" placeholder="Enter Pickup Location" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-map"></i> Destination</label>
+                            <input type="text" class="form-control" id="destination" placeholder="Enter Destination" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-truck-medical"></i> Ambulance ID</label>
+                            <input type="number" class="form-control" id="ambulance_id" placeholder="Enter Ambulance ID">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-user-md"></i> Assigned Driver</label>
+                            <input type="number" class="form-control" id="assigned_driver" placeholder="Enter Driver ID">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-check-circle"></i> Status</label>
+                            <select class="form-select" id="status" required>
+                                <option value="Pending">Pending</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="In Transit">In Transit</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-note-sticky"></i> Notes</label>
+                            <textarea class="form-control" id="notes" rows="3" placeholder="Enter any additional details..."></textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Request
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="reset" class="btn btn-danger">
+                                <i class="fa-solid fa-eraser"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

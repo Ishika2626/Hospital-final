@@ -1,0 +1,167 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Staff Attendance</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="col-md-2" style="margin-left:40px;">
+        <a href="@Url.Action("DisplayAttendance","Staff")" class="btn btn-primary btn-sm px-3 py-2" style="font-size: 14px;">
+            <i class="fa-solid fa-list"></i> Attendance List
+        </a>
+    </div>
+    <div class="container">
+        <div class="card p-3">
+            <div class="card-header">
+                <i class="fa-solid fa-user-check"></i> Staff Attendance Management
+            </div>
+
+            <div class="card-body">
+                <form id="attendanceForm">
+                    <div class="row">
+                        <!-- Staff ID -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-id-badge"></i> Staff ID</label>
+                            <input type="number" class="form-control" id="staff_id" placeholder="Enter Staff ID" required>
+                        </div>
+
+                        <!-- Date -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-calendar-day"></i> Attendance Date</label>
+                            <input type="date" class="form-control" id="attendance_date" required>
+                        </div>
+
+                        <!-- Time In -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-clock"></i> Time In</label>
+                            <input type="time" class="form-control" id="time_in" required>
+                        </div>
+
+                        <!-- Time Out -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-clock"></i> Time Out</label>
+                            <input type="time" class="form-control" id="time_out" required>
+                        </div>
+
+                        <!-- Attendance Status -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-user-clock"></i> Attendance Status</label>
+                            <select class="form-control" id="attendance_status" required>
+                                <option value="Present">Present</option>
+                                <option value="Absent">Absent</option>
+                                <option value="Late">Late</option>
+                                <option value="On Leave">On Leave</option>
+                            </select>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-sticky-note"></i> Notes (Optional)</label>
+                            <textarea class="form-control" id="notes" placeholder="Additional remarks..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Attendance
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="reset" class="btn btn-danger">
+                                <i class="fa-solid fa-eraser"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript for Handling Form Submission -->
+    <script>
+        // Handle form submission
+        document.getElementById("attendanceForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Get values from form
+            let staff_id = document.getElementById("staff_id").value;
+            let attendance_date = document.getElementById("attendance_date").value;
+            let time_in = document.getElementById("time_in").value;
+            let time_out = document.getElementById("time_out").value;
+            let attendance_status = document.getElementById("attendance_status").value;
+            let notes = document.getElementById("notes").value || "N/A";
+
+            // Validate time-in and time-out
+            if (time_in >= time_out) {
+                alert("Time-in must be before time-out.");
+                return;
+            }
+
+            // Insert into table
+            let table = document.getElementById("attendanceTable");
+            let newRow = table.insertRow();
+            newRow.innerHTML = `
+                <td>${staff_id}</td>
+                <td>${attendance_date}</td>
+                <td>${time_in}</td>
+                <td>${time_out}</td>
+                <td>${attendance_status}</td>
+                <td>${notes}</td>
+            `;
+
+            document.getElementById("attendanceForm").reset();
+        });
+    </script>
+
+</body>
+</html>

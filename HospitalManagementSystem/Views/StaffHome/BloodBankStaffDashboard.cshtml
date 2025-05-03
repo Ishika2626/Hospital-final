@@ -1,0 +1,123 @@
+﻿@{
+    ViewData["Title"] = "Staff Dashboard";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<div class="container mt-4 d-flex flex-column min-vh-100">
+    <!-- Ensure container has enough height -->
+    <!-- Quick Actions Title -->
+    <h4 class="quick-actions-title">⚡ Quick Actions</h4>
+
+    <h2 class="text-center">🩸 Blood Bank Staff Dashboard</h2>
+
+    <div class="row mt-4">
+        <!-- Donor Management -->
+        <div class="col-md-4 col-sm-6 mb-3">
+            <div class="card shadow-lg border-0 p-3 text-center">
+                <h5>🩸 Donors</h5>
+                <p>Manage donor records and history.</p>
+                <a asp-controller="StaffHome" asp-action="BBSDonors" class="btn btn-primary">View Donors</a>
+            </div>
+        </div>
+
+        <!-- Inventory Management -->
+        <div class="col-md-4 col-sm-6 mb-3">
+            <div class="card shadow-lg border-0 p-3 text-center">
+                <h5>🏥 Blood Inventory</h5>
+                <p>Monitor available blood units.</p>
+                <a asp-controller="StaffHome" asp-action="BBSInventory" class="btn btn-danger">Check Inventory</a>
+            </div>
+        </div>
+
+        <!-- Testing and Quality -->
+        <div class="col-md-4 col-sm-6 mb-3">
+            <div class="card shadow-lg border-0 p-3 text-center">
+                <h5>🧪 Blood Testing</h5>
+                <p>Manage testing and screening.</p>
+                <a asp-controller="StaffHome" asp-action="BBSTesting" class="btn btn-success">View Testing</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Blood Requests -->
+        <div class="col-md-4 col-sm-6 mb-3">
+            <div class="card shadow-lg border-0 p-3 text-center">
+                <h5>📋 Blood Requests</h5>
+                <p>Handle hospital and emergency requests.</p>
+                <a asp-controller="StaffHome" asp-action="BBSRequests" class="btn btn-warning">Manage Requests</a>
+            </div>
+        </div>
+
+        <!-- Emergency Dispatch -->
+        <div class="col-md-4 col-sm-6 mb-3">
+            <div class="card shadow-lg border-0 p-3 text-center">
+                <h5>🚑 Emergency Dispatch</h5>
+                <p>Quickly allocate blood for emergencies.</p>
+                <a asp-controller="StaffHome" asp-action="BBSEmergency" class="btn btn-danger">View Emergencies</a>
+            </div>
+        </div>
+
+        <!-- Reports and Statistics -->
+        <div class="col-md-4 col-sm-6 mb-3">
+            <div class="card shadow-lg border-0 p-3 text-center">
+                <h5>📊 Reports</h5>
+                <p>Generate and analyze reports.</p>
+                <a asp-controller="StaffHome" asp-action="BBSReports" class="btn btn-info">View Reports</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        min-height: 100vh; /* Ensure full height */
+        padding-bottom: 50px; /* Prevent overlap with footer */
+    }
+
+    .card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 10px;
+        border: none;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+    .quick-actions-title {
+        text-align: center;
+        font-weight: bold;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    @@media (max-width: 768px) {
+        .quick-actions-title
+
+    {
+        font-size: 20px;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .row {
+        flex-wrap: wrap;
+    }
+
+    }
+
+    @@media (max-width: 576px) {
+        .col-sm-6
+
+    {
+        flex: 0 0 100%; /* Full width on smaller screens */
+        max-width: 100%;
+    }
+
+    }
+</style>

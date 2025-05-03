@@ -1,0 +1,85 @@
+﻿@model List<HospitalManagementSystem.Models.Appointment>
+
+@{
+    Layout = "~/Views/Shared/userLayout.cshtml";
+    ViewBag.Title = "Appointment Details";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<style>
+    .appointment-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-top: 50px;
+    }
+
+    .appointment-card {
+        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .appointment-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+
+    .appointment-date {
+        background: linear-gradient(to right, #1e3c72, #2a5298);
+        color: #fff;
+        padding: 5px 12px;
+        border-radius: 8px;
+        display: inline-block;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .appointment-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 6px;
+    }
+
+    .appointment-info {
+        font-size: 15px;
+        color: #374151;
+        margin-bottom: 4px;
+    }
+</style>
+
+<div class="container mt-5" >
+    <div class="d-flex justify-content-between align-items-center mb-4" style="font-size: 14px; background: linear-gradient(to right, #1e3c72, #2a5298); border: none;">
+        <h2 class="text-primary">📋 Your Appointments</h2>
+        <a href="@Url.Action("PatientDashboard", "Patient")" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="appointment-grid">
+            @foreach (var appointment in Model.OrderByDescending(a => a.AppointmentDate))
+            {
+                <div class="appointment-card">
+                    <div class="appointment-date">@appointment.AppointmentDate.ToString("dd MMM yyyy")</div>
+                    <div class="appointment-title">👨‍⚕️ Dr. @appointment.Doctor.FullName</div>
+                    <div class="appointment-info"><strong>Reason:</strong> @appointment.Reason</div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            No appointments found.
+        </div>
+    }
+</div>

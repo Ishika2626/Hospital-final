@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Update Maintenance Record";
+    Layout = "_StaffLayout";
+}
+
+<h2>✏ Update Maintenance Record</h2>
+
+<form>
+    <div class="form-group">
+        <label>Equipment Name</label>
+        <input class="form-control" value="Microscope" readonly />
+    </div>
+
+    <div class="form-group">
+        <label>Maintenance Date</label>
+        <input type="date" class="form-control" value="2025-03-15" required />
+    </div>
+
+    <div class="form-group">
+        <label>Status</label>
+        <select class="form-control">
+            <option selected>Scheduled</option>
+            <option>Completed</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Technician</label>
+        <input class="form-control" value="Lab Tech 2" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+    <a asp-action="LTEquipmentMaintenance" class="btn btn-secondary">🔙 Back</a>
+</form>

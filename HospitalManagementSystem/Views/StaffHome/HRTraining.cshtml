@@ -1,0 +1,155 @@
+﻿@{
+    ViewData["Title"] = "HR Manager - Training & Development";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+<a href="@Url.Action("HRManagerDashboard", "StaffHome")" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+
+<h2>🎓 Employee Training & Development</h2>
+
+<div class="d-flex justify-content-between mb-3">
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTrainingModal">➕ Add Training</button>
+    <input type="text" id="searchInput" class="form-control w-25" placeholder="🔍 Search Training">
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped" id="trainingTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>Training Name</th>
+                <th>Department</th>
+                <th>Date</th>
+                <th>Trainer</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Leadership Skills</td>
+                <td>Management</td>
+                <td>2025-04-10</td>
+                <td>Dr. Smith</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editTrainingModal">✏ Edit</button>
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteTrainingModal">🗑 Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Software Development</td>
+                <td>IT</td>
+                <td>2025-04-15</td>
+                <td>Jane Doe</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editTrainingModal">✏ Edit</button>
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteTrainingModal">🗑 Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Add Training Modal -->
+<div class="modal fade" id="addTrainingModal" tabindex="-1" aria-labelledby="addTrainingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">➕ Add Employee Training</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Training Name</label>
+                        <input type="text" class="form-control" placeholder="Enter Training Name">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Department</label>
+                        <input type="text" class="form-control" placeholder="Enter Department">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Trainer</label>
+                        <input type="text" class="form-control" placeholder="Enter Trainer Name">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">🔙 Cancel</button>
+                <button type="button" class="btn btn-success">✔ Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Training Modal -->
+<div class="modal fade" id="editTrainingModal" tabindex="-1" aria-labelledby="editTrainingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">✏ Edit Training</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Training Name</label>
+                        <input type="text" class="form-control" value="Leadership Skills">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Department</label>
+                        <input type="text" class="form-control" value="Management">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-control" value="2025-04-10">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Trainer</label>
+                        <input type="text" class="form-control" value="Dr. Smith">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">🔙 Cancel</button>
+                <button type="button" class="btn btn-primary">✔ Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Training Modal -->
+<div class="modal fade" id="deleteTrainingModal" tabindex="-1" aria-labelledby="deleteTrainingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">🗑 Delete Training</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this training session?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">🔙 Cancel</button>
+                <button type="button" class="btn btn-danger">🗑 Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#trainingTable tbody tr");
+
+        rows.forEach(row => {
+            let name = row.cells[1].textContent.toLowerCase();
+            let department = row.cells[2].textContent.toLowerCase();
+            row.style.display = name.includes(filter) || department.includes(filter) ? "" : "none";
+        });
+    });
+</script>

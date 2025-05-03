@@ -1,0 +1,144 @@
+﻿@model List<HospitalManagementSystem.Models.PatientRegistration>
+@{
+    ViewData["Title"] = "Assigned Patients";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-warning">@ViewBag.Error</div>
+}
+
+<!-- Main Content -->
+<div class="container mt-4 main-content">
+    <!-- Quick Actions (Role-Based) -->
+    <h4 class="quick-actions-title">⚡ Quick Actions</h4>
+    <div class="row">
+        <h2 class="text-center mb-4">🩺 Nurse Panel</h2>
+
+        <!-- Quick Actions Cards -->
+        <div class="row g-4">
+            <!-- Patient Monitoring -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card p-3 shadow-sm h-100">
+                    <h5>👨‍⚕️ Patient Monitoring</h5>
+                    <p>View and monitor patient vitals and condition.</p>
+                    <a asp-controller="StaffHome" asp-action="NurseMonitorPatient" class="btn btn-primary w-100">📊 Monitor Patients</a>
+                </div>
+            </div>
+
+            <!-- Record Vitals -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card p-3 shadow-sm h-100">
+                    <h5>🩺 Record Vitals</h5>
+                    <p>Monitor and record patient vital signs.</p>
+                    <a asp-controller="StaffHome" asp-action="NurseRecordVitals" class="btn btn-primary w-100">📋 Record Vitals</a>
+                </div>
+            </div>
+
+            <!-- Assist Discharge -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card p-3 shadow-sm h-100">
+                    <h5>🏥 Assist Discharge</h5>
+                    <p>Help in managing patient discharge procedures.</p>
+                    <a asp-controller="StaffHome" asp-action="NurseAssistDischarge" class="btn btn-success w-100">📤 Assist Discharge</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Patient Search Form -->
+<div class="container mt-4">
+    <form id="searchForm">
+        <div class="form-group">
+            <label for="search" class="form-label">🔍 Search Patients</label>
+            <input type="text" id="search" class="form-control" placeholder="Search by name..." />
+        </div>
+    </form>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+    <p class="text-danger mt-3">⚠️ No data received. Model is null or no patients assigned.</p>
+}
+else
+{
+    <div class="container mt-4">
+        <h2 class="mb-3">🧾 Patients Assigned to You</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped" id="patientsTable">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 20%;">
+                            Name
+                            <button onclick="sortTable(0)" class="btn btn-link btn-sm px-1">⬆️</button>
+                            <button onclick="sortTable(0, true)" class="btn btn-link btn-sm px-1">⬇️</button>
+                        </th>
+                        <th style="width: 10%;">Gender</th>
+                        <th style="width: 15%;">DOB</th>
+                        <th style="width: 20%;">Email</th>
+                        <th style="width: 15%;">Phone</th>
+                        <th style="width: 20%;">Emergency Contact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var patient in Model)
+                    {
+                        <tr class="patient-row" data-name="@patient.FirstName @patient.LastName">
+                            <td>@patient.FirstName @patient.LastName</td>
+                            <td>@patient.Gender</td>
+                            <td>@patient.Dob.ToShortDateString()</td>
+                            <td>@patient.Email</td>
+                            <td>@patient.PhoneNumber</td>
+                            <td>@patient.EmergencyContactName (@patient.EmergencyContactPhone)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+
+<style>
+
+    table {
+    width: 100%;
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+    td, th {
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: break-word;
+    }
+
+</style>
+
+<!-- Script -->
+<script>
+    // Live search filter
+    document.getElementById('search').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        document.querySelectorAll('.patient-row').forEach(function (row) {
+            const name = row.getAttribute('data-name').toLowerCase();
+            row.style.display = name.includes(query) ? '' : 'none';
+        });
+    });
+
+    // Sorting function
+    function sortTable(columnIndex, descending = false) {
+        const tbody = document.querySelector('#patientsTable tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        rows.sort((a, b) => {
+            const textA = a.cells[columnIndex].textContent.trim().toLowerCase();
+            const textB = b.cells[columnIndex].textContent.trim().toLowerCase();
+            return descending ? textB.localeCompare(textA) : textA.localeCompare(textB);
+        });
+
+        rows.forEach(row => tbody.appendChild(row));
+    }
+</script>
+

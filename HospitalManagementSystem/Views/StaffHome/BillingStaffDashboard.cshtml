@@ -1,0 +1,131 @@
+﻿@{
+    ViewData["Title"] = "Staff Dashboard";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<div class="container mt-4 main-content">
+
+    <!-- Quick Actions (Role-Based) -->
+    <h4 class="quick-actions-title">⚡ Quick Actions</h4>
+    <div class="row">
+
+        <h2 class="text-center mb-4">💳 Billing Staff Panel</h2>
+
+        <div class="container">
+            <div class="row g-4">
+                <!-- Manage Billing -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>💰 Manage Billing</h5>
+                        <p>Process and manage patient bills efficiently.</p>
+                        <a asp-controller="StaffHome" asp-action="BSBilling" class="btn btn-primary w-100">💳 View Bills</a>
+                    </div>
+                </div>
+
+                <!-- Invoices -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>🧾 Invoice Management</h5>
+                        <p>Generate and track patient invoices.</p>
+                        <a asp-controller="StaffHome" asp-action="BSInvoices" class="btn btn-success w-100">📄 Manage Invoices</a>
+                    </div>
+                </div>
+
+                <!-- Insurance Processing -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>📑 Insurance Processing</h5>
+                        <p>Verify and process insurance claims.</p>
+                        <a asp-controller="StaffHome" asp-action="BSInsurance" class="btn btn-warning w-100">🛡 Process Claims</a>
+                    </div>
+                </div>
+
+                <!-- Refunds & Adjustments -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>🔄 Refunds & Adjustments</h5>
+                        <p>Handle patient refunds and billing corrections.</p>
+                        <a asp-controller="StaffHome" asp-action="BSRefunds" class="btn btn-danger w-100">🔍 Manage Refunds</a>
+                    </div>
+                </div>
+
+                <!-- Dues & Payments -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>💵 Dues & Payments</h5>
+                        <p>Monitor pending dues and received payments.</p>
+                        <a asp-controller="StaffHome" asp-action="BSDues" class="btn btn-info w-100">📊 View Dues</a>
+                    </div>
+                </div>
+
+                <!-- Financial Reports -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>📊 Financial Reports</h5>
+                        <p>Analyze revenue, expenses, and profits.</p>
+                        <a asp-controller="StaffHome" asp-action="BSReports" class="btn btn-secondary w-100">📈 View Reports</a>
+                    </div>
+                </div>
+
+                <!-- Payments Records -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>💵 Payment Records</h5>
+                        <p>Track all patient payments and transactions.</p>
+                        <a asp-controller="StaffHome" asp-action="BSPayments" class="btn btn-dark w-100">💳 View Payments</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div> <!-- End of Main Container -->
+<!-- Responsive Fixes -->
+<style>
+    /* Ensure the content doesn't get hidden behind the footer */
+    .main-content {
+        min-height: 100vh;
+        padding-bottom: 80px; /* Space for footer */
+    }
+
+    .card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 10px;
+        border: none;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+    /* Mobile-friendly buttons */
+    @@media (max-width: 768px) {
+        .btn
+
+    {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    }
+
+    /* Center title and adjust spacing */
+    .quick-actions-title {
+        text-align: center;
+        font-weight: bold;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    /* Mobile title size */
+    @@media (max-width: 768px) {
+        .quick-actions-title
+
+    {
+        font-size: 20px;
+    }
+
+    }
+</style>

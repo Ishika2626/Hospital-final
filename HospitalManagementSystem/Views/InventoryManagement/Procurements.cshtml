@@ -1,0 +1,136 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inventory Procurement</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .form-control, .form-select {
+            border-radius: 5px;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="col-md-2" style="margin-left:40px;">
+        <a href="@Url.Action("DisplayProcurements","InventoryManagement")" class="btn btn-success btn-sm px-3 py-2" style="font-size: 14px;">
+            <i class="fa-solid fa-list"></i> Procurement Records List
+        </a>
+    </div>
+    <div class="container">
+        <div class="card p-3">
+            <div class="card-header">
+                <i class="fa-solid fa-shopping-cart"></i> Inventory Procurement Entry
+            </div>
+            <div class="card-body">
+                <form id="procurementForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-truck"></i> Supplier ID</label>
+                            <input type="number" class="form-control" id="supplier_id" placeholder="Enter Supplier ID" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-tag"></i> Item Name</label>
+                            <input type="text" class="form-control" id="item_name" placeholder="Enter Item Name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-calendar"></i> Order Date</label>
+                            <input type="date" class="form-control" id="order_date" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-calendar-check"></i> Delivery Date</label>
+                            <input type="date" class="form-control" id="delivery_date" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-boxes"></i> Quantity Ordered</label>
+                            <input type="number" class="form-control" id="quantity_ordered" placeholder="Enter Quantity" required min="1">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-dollar-sign"></i> Unit Price</label>
+                            <input type="number" step="0.01" class="form-control" id="unit_price" placeholder="Enter Unit Price" required min="0">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-money-bill-wave"></i> Total Cost</label>
+                            <input type="number" step="0.01" class="form-control" id="total_cost" placeholder="Enter Total Cost" required min="0">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-toggle-on"></i> Status</label>
+                            <select class="form-select" id="status" required>
+                                <option value="Pending">Pending</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Record
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="reset" class="btn btn-danger">
+                                <i class="fa-solid fa-eraser"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById('procurementForm').addEventListener('submit', function(event) {
+            var orderDate = new Date(document.getElementById('order_date').value);
+            var deliveryDate = new Date(document.getElementById('delivery_date').value);
+            var today = new Date();
+
+            if (orderDate > today) {
+                alert("Order Date cannot be in the future.");
+                event.preventDefault();
+                return;
+            }
+
+            if (deliveryDate < orderDate) {
+                alert("Delivery Date cannot be before Order Date.");
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

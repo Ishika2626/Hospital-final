@@ -1,0 +1,159 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bed Occupancy History - Hospital System</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+        }
+
+        .table td, .table th {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .btn {
+            padding: 5px 10px;
+        }
+
+        .search-bar {
+            width: 300px;
+        }
+
+        .action-icons i {
+            font-size: 18px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+            .action-icons i:hover {
+                color: #007bff;
+            }
+
+        .status-badge {
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .status-occupied {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .status-released {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card p-3">
+            <h2 class="text-center mb-3 gradient-text">
+                <i class="fa-solid fa-bed"></i> Bed Occupancy History
+            </h2>
+
+            <!-- Search & Add New Record -->
+            <div class="d-flex justify-content-between mb-3">
+                <input type="text" class="form-control search-bar" placeholder="🔍 Search Occupancy..." id="searchOccupancy">
+                <a href="@Url.Action("BedOccupancyHistory","BedManagement")" class="btn btn-success">
+                    <i class="fa-solid fa-plus"></i> Add New Record
+                </a>
+            </div>
+
+            <!-- Bed Occupancy History Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Bed ID</th>
+                            <th>Patient ID</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="occupancyTable">
+                        <tr>
+                            <td>1</td>
+                            <td>B-102</td>
+                            <td>P-2001</td>
+                            <td>2025-03-10 09:00:00</td>
+                            <td>--</td>
+                            <td><span class="status-badge status-occupied">Occupied</span></td>
+                            <td class="action-icons">
+                                <i class="fa-solid fa-pen-to-square text-warning"></i>
+                                <i class="fa-solid fa-trash text-danger"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>B-205</td>
+                            <td>P-2005</td>
+                            <td>2025-03-05 15:00:00</td>
+                            <td>2025-03-10 14:00:00</td>
+                            <td><span class="status-badge status-released">Released</span></td>
+                            <td class="action-icons">
+                                <i class="fa-solid fa-pen-to-square text-warning"></i>
+                                <i class="fa-solid fa-trash text-danger"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>B-310</td>
+                            <td>P-2010</td>
+                            <td>2025-03-12 08:30:00</td>
+                            <td>--</td>
+                            <td><span class="status-badge status-occupied">Occupied</span></td>
+                            <td class="action-icons">
+                                <i class="fa-solid fa-pen-to-square text-warning"></i>
+                                <i class="fa-solid fa-trash text-danger"></i>
+                            </td>
+                        </tr>
+                        <!-- Dynamic occupancy records will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

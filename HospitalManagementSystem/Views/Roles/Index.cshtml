@@ -1,0 +1,168 @@
+﻿@model IEnumerable<HospitalManagementSystem.Models.Role>
+@{
+    ViewData["Title"] = "Manage Roles";
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+<div class="content-wrapper">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-primary mb-0">
+            <i class="bi bi-shield-lock-fill me-2"></i> Manage Roles
+        </h3>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addRoleModal">
+            <i class="bi bi-plus-circle me-1"></i> Add Role
+        </button>
+    </div>
+
+    <!-- Roles Table -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Role Name</th>
+                            <th>Description</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var role in Model)
+                        {
+                            <tr>
+                                <td>@role.RoleName</td>
+                                <td>@role.RoleDescription</td>
+                                <td class="text-end">
+                                    <!-- Edit Button -->
+                                    <button class="btn btn-outline-warning btn-sm me-2"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editRoleModal"
+                                            data-role-id="@role.RoleId"
+                                            data-role-name="@role.RoleName"
+                                            data-role-description="@role.RoleDescription">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </button>
+                                    <!-- Delete Button -->
+                                    <button class="btn btn-outline-danger btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteRoleModal"
+                                            data-role-id="@role.RoleId">
+                                        <i class="bi bi-trash3"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Role Modal -->
+<div class="modal fade" id="addRoleModal" tabindex="-1" aria-labelledby="addRoleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRoleModalLabel">Add New Role</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Add Role Form -->
+                <form method="post" action="@Url.Action("AddRole", "Role")">
+                    <div class="mb-3">
+                        <label for="roleName" class="form-label">Role Name</label>
+                        <input type="text" class="form-control" id="roleName" name="RoleName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="roleDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="roleDescription" name="RoleDescription" rows="3" required></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Role</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Role Modal -->
+<div class="modal fade" id="editRoleModal" tabindex="-1" aria-labelledby="editRoleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editRoleModalLabel">Edit Role</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Edit Role Form (with dynamic data) -->
+                <form method="post" action="@Url.Action("EditRole", "Role")">
+                    <input type="hidden" id="editRoleId" name="RoleId">
+                    <div class="mb-3">
+                        <label for="editRoleName" class="form-label">Role Name</label>
+                        <input type="text" class="form-control" id="editRoleName" name="RoleName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editRoleDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="editRoleDescription" name="RoleDescription" rows="3" required></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update Role</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Role Modal -->
+<div class="modal fade" id="deleteRoleModal" tabindex="-1" aria-labelledby="deleteRoleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteRoleModalLabel">Delete Role</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this role?
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="@Url.Action("DeleteRole", "Role")">
+                    <input type="hidden" id="deleteRoleId" name="RoleId">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        // Edit Role Modal
+    $('#editRoleModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var roleId = button.data('role-id');
+        var roleName = button.data('role-name');
+        var roleDescription = button.data('role-description');
+
+        // Populate the modal fields
+        $('#editRoleId').val(roleId);
+        $('#editRoleName').val(roleName);
+        $('#editRoleDescription').val(roleDescription);
+    });
+
+    // Delete Role Modal
+    $('#deleteRoleModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var roleId = button.data('role-id');
+
+        // Set the roleId to the delete form
+        $('#deleteRoleId').val(roleId);
+    });
+
+</script>

@@ -1,0 +1,114 @@
+﻿@model List<HospitalManagementSystem.Models.patient_visits>
+
+@{
+    ViewBag.Title = "Visit History";
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+
+<style>
+    /* Custom Styles */
+    .visit-card {
+        border-radius: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+        .visit-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #3b82f6;
+        }
+
+        .visit-card .card-header {
+            background: #3b82f6;
+            color: white;
+            border-top-left-radius: 1.5rem;
+            border-top-right-radius: 1.5rem;
+            padding: 1.2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .visit-card .card-body {
+            padding: 1.5rem;
+        }
+
+            .visit-card .card-body p {
+                margin-bottom: 1rem;
+                color: #555;
+                font-size: 1rem;
+            }
+
+            .visit-card .card-body .visit-detail {
+                font-weight: 500;
+            }
+
+    .no-visits {
+        font-style: italic;
+        color: #888;
+        text-align: center;
+        padding: 50px 0;
+    }
+
+    .visit-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+        .visit-header h3 {
+            font-size: 2rem;
+            color: #3b82f6;
+        }
+
+    .back-button {
+        font-size: 1.1rem;
+        padding: 8px 15px;
+        background: #3b82f6;
+        color: white;
+        border-radius: 30px;
+        text-decoration: none;
+        transition: background 0.3s ease;
+    }
+
+        .back-button:hover {
+            background: #60a5fa;
+        }
+</style>
+
+<div class="container" style="margin-top: 150px;">
+    <div class="visit-header">
+        <h3>🏥 Visit History</h3>
+        <a href="@Url.Action("PatientDashboard", "Patient")" class="btn back-button">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center no-visits">
+            No visits found for your account.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var visit in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card visit-card">
+                        <div class="card-header">
+                            Visited on @visit.VisitDate.ToString("dd-MMM-yyyy")
+                        </div>
+                        <div class="card-body">
+                            <p><span class="visit-detail"><strong>Department:</strong> @visit.Department</span></p>
+                            <p><span class="visit-detail"><strong>Visit Reason:</strong> @visit.VisitReason</span></p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

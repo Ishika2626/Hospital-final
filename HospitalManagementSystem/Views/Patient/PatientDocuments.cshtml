@@ -1,0 +1,132 @@
+﻿@model HospitalManagementSystem.Models.patient_documents
+
+@{
+    ViewBag.Title = "Add Patient Document";
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+
+@section Scripts {
+    <script>
+        const documentOptions = {
+            "ID Proof": ["Aadhar Card", "PAN Card", "Driving License", "Voter ID", "Other"],
+            "Medical Report": ["Blood Test", "X-Ray", "MRI", "CT Scan", "Other"],
+            "Prescription": ["General Prescription", "Specialist Prescription", "Other"],
+            "Other": ["Discharge Summary", "Referral Letter", "Other"]
+        };
+
+        $(document).ready(function () {
+            $('input[name="DocumentType"]').on('change', function () {
+                const selectedType = this.value;
+                const nameDropdown = $('#DocumentName');
+                const customInput = $('#CustomDocumentName');
+
+                nameDropdown.empty().append('<option value="">-- Select Document Name --</option>');
+                customInput.hide().val('');
+
+                if (documentOptions[selectedType]) {
+                    documentOptions[selectedType].forEach(function (name) {
+                        nameDropdown.append($('<option>', {
+                            value: name,
+                            text: name
+                        }));
+                    });
+                }
+            });
+
+            $('#DocumentName').on('change', function () {
+                if ($(this).val() === 'Other') {
+                    $('#CustomDocumentName').show().attr('required', true);
+                } else {
+                    $('#CustomDocumentName').hide().val('').removeAttr('required');
+                }
+            });
+        });
+    </script>
+}
+<style>
+
+    .mt-100 {
+        margin-top: 100px;
+        margin-bottom:100px;
+    }
+
+</style>
+
+<div class="container mt-100">
+
+    <div class="mb-3">
+        <a href="@Url.Action("DocumentsDetails", "Patient")" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left"></i> Back to  Uploaded Documents
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <i class="fa-solid fa-file-medical"></i> Document Upload Form
+        </div>
+        <div class="card-body">
+            <form asp-action="PatientDocuments" asp-controller="Patient" enctype="multipart/form-data" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="DocumentId" />
+                <input type="hidden" asp-for="PatientId" />
+                <input type="hidden" asp-for="UploadedBy" />
+
+                <div class="row g-3">
+                    <!-- Document Type -->
+                    <div class="col-md-6">
+                        <label class="form-label d-block"><i class="fa-solid fa-file"></i> Document Type</label>
+                        @foreach (var type in new[] { "ID Proof", "Medical Report", "Prescription", "Other" })
+                        {
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="DocumentType" value="@type" required />
+                                <label class="form-check-label">@type</label>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Document Name -->
+                    <div class="col-md-6">
+                        <label class="form-label"><i class="fa-solid fa-file-signature"></i> Document Name</label>
+                        <select class="form-control" id="DocumentName" name="DocumentName" required>
+                            <option value="">-- Select Document Name --</option>
+                        </select>
+                        <input type="text" class="form-control mt-2" id="CustomDocumentName" name="CustomDocumentName"
+                               placeholder="Enter custom document name" style="display:none;" />
+                    </div>
+
+                    <!-- Document Number -->
+                    <div class="col-md-6">
+                        <label class="form-label"><i class="fa-solid fa-hashtag"></i> Document Number</label>
+                        <input type="text" class="form-control" asp-for="DocumentNumber" required />
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="col-md-6">
+                        <label class="form-label"><i class="fa-solid fa-upload"></i> Upload Document</label>
+                        <input type="file" name="DocumentFile" class="form-control" required />
+                    </div>
+                    <!-- Remarks -->
+                    <div class="col-md-12">
+                        <label class="form-label"><i class="fa-solid fa-comment"></i> Remarks (optional)</label>
+                        <textarea class="form-control" asp-for="Remarks" rows="3" placeholder="Enter any additional information about the document (e.g., issue date, notes, etc.)"></textarea>
+                    </div>
+
+                </div>
+
+                <!-- Submit Buttons -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fa-solid fa-floppy-disk"></i> Save Document
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="reset" class="btn btn-danger w-100">
+                            <i class="fa-solid fa-eraser"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,267 @@
+﻿@model List<HospitalManagementSystem.Models.Employee>
+@{
+    ViewData["Title"] = "HR Manager - Employee Management";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<a href="@Url.Action("HRManagerDashboard", "StaffHome")" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+<h2>👥 Employee Management</h2>
+
+<div class="d-flex justify-content-between mb-3">
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">➕ Add Employee</button>
+    <input type="text" id="searchInput" class="form-control w-25" placeholder="🔍 Search Employee">
+</div>
+
+<!-- Responsive Table for small devices -->
+<div class="table-responsive">
+    <table class="table table-bordered table-striped" id="employeeTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model)
+            {
+                <tr>
+                    <td>@employee.EmployeeId</td>
+                    <td>@employee.FirstName @employee.LastName</td>
+                    <td>@employee.Gender</td>
+                    <td>@employee.RoleName</td>
+                    <td>@employee.Email</td>
+                    <td>@employee.PhoneNumber</td>
+                    <td><span class="badge @(employee.EmployeeStatus == "Active" ? "bg-success" : "bg-danger")">@employee.EmployeeStatus</span></td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-sm btn-primary btn-edit"
+                                data-id="@employee.EmployeeId"
+                                data-firstname="@employee.FirstName"
+                                data-lastname="@employee.LastName"
+                                data-dateofbirth="@employee.DateOfBirth.ToString("yyyy-MM-dd")"
+                                data-gender="@employee.Gender"
+                                data-phone="@employee.PhoneNumber"
+                                data-email="@employee.Email"
+                                data-address="@employee.Address"
+                                data-hiredate="@employee.HireDate.ToString("yyyy-MM-dd")"
+                                data-roleid="@employee.RoleId"
+                                data-status="@employee.EmployeeStatus"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editEmployeeModal">
+                            ✏️ Edit
+                        </button>
+
+
+                        <button type="button"
+                                class="btn btn-sm btn-danger btn-delete"
+                                data-id="@employee.EmployeeId"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteEmployeeModal">
+                            🗑 Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Add Employee Modal -->
+<!-- Add Employee Modal -->
+<div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEmployeeModalLabel">➕ Add Employee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Add Employee Form -->
+                <form asp-action="CreateEmp" asp-controller="StaffHome" method="post" id="addEmployeeForm">
+                
+                    <div class="mb-3">
+                        <label for="FirstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="FirstName" name="FirstName" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="LastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="LastName" name="LastName" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="DateOfBirth" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="DateOfBirth" name="DateOfBirth" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Gender" class="form-label">Gender</label>
+                        <select class="form-select" id="Gender" name="Gender" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="PhoneNumber" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="PhoneNumber" name="PhoneNumber" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="Email" name="Email" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Address" class="form-label">Address</label>
+                        <textarea class="form-control" id="Address" name="Address"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="HireDate" class="form-label">Hire Date</label>
+                        <input type="date" class="form-control" id="HireDate" name="HireDate" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="RoleId" class="form-label">Role</label>
+                        <select class="form-select" id="RoleId" name="RoleId" required>
+                            <!-- Populate with roles from the database -->
+                            <option value="">Select Role</option> <!-- Default option -->
+                            @foreach (var role in ViewData["Roles"] as SelectList)
+                            {
+                                <option value="@role.Value">@role.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="EmployeeStatus" class="form-label">Status</label>
+                        <select class="form-select" id="EmployeeStatus" name="EmployeeStatus" required>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                   
+                    <button type="submit" class="btn btn-primary">Save Employee</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Employee Modal -->
+<div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="EditEmp" asp-controller="StaffHome" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editEmployeeModalLabel">✏️ Edit Employee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <input type="hidden" id="editEmployeeId" name="EmployeeId" />
+
+                    <div class="mb-3">
+                        <label for="editFirstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="editFirstName" name="FirstName" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editLastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="editLastName" name="LastName" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPhone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="editPhone" name="PhoneNumber" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" name="Email" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editAddress" class="form-label">Address</label>
+                        <textarea class="form-control" id="editAddress" name="Address"></textarea>
+                    </div>
+
+                    
+
+                    <div class="mb-3">
+                        <label for="editStatus" class="form-label">Status</label>
+                        <select class="form-select" id="editStatus" name="EmployeeStatus" required>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                   
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Delete Employee Modal -->
+<div class="modal fade" id="deleteEmployeeModal" tabindex="-1" aria-labelledby="deleteEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="DeleteEmployee" asp-controller="StaffHome" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteEmployeeModalLabel">⚠ Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this employee?
+                    <input type="hidden" id="deleteEmployeeId" name="EmployeeId" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Search functionality for Employee Table
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#employeeTable tbody tr");
+
+        rows.forEach(row => {
+            let name = row.cells[1].textContent.toLowerCase();
+            row.style.display = name.includes(filter) ? "" : "none";
+        });
+    });
+
+        document.querySelectorAll('.btn-delete').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var employeeId = button.getAttribute('data-id');
+            document.getElementById('deleteEmployeeId').value = employeeId;
+        });
+    });
+
+    document.querySelectorAll('.btn-edit').forEach(function (button) {
+        button.addEventListener('click', function () {
+            document.getElementById('editEmployeeId').value = button.getAttribute('data-id');
+            document.getElementById('editFirstName').value = button.getAttribute('data-firstname');
+            document.getElementById('editLastName').value = button.getAttribute('data-lastname');
+            document.getElementById('editPhone').value = button.getAttribute('data-phone');
+            document.getElementById('editEmail').value = button.getAttribute('data-email');
+            document.getElementById('editAddress').value = button.getAttribute('data-address');
+            document.getElementById('editStatus').value = button.getAttribute('data-status');
+        });
+    });
+</script>
+
+

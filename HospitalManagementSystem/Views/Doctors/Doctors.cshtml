@@ -1,0 +1,167 @@
+﻿@model HospitalManagementSystem.Models.Doctor
+
+@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Doctor Registration</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="col-md-1" style="margin-left:40px;">
+        <a href="@Url.Action("DisplayDoctors","Doctors")" class="btn btn-primary btn-sm px-3 py-2" style="font-size: 14px;">
+            <i class="fa-solid fa-list"></i> Doctors List
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="card p-3">
+            <div class="card-header">
+                <i class="fa-solid fa-user-md"></i> Doctor Registration
+            </div>
+
+            <div class="card-body">
+                <form asp-action="Doctors" asp-controller="Doctors" enctype="multipart/form-data" method="post">
+             
+                    <div class="row">
+                        <!-- Full Name -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-user"></i> Full Name</label>
+                            @Html.TextBoxFor(model => model.FullName, new { @class = "form-control", required = "required" })
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-envelope"></i> Email</label>
+                            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", type = "email", required = "required" })
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-phone"></i> Phone Number</label>
+                            @Html.TextBoxFor(model => model.PhoneNumber, new { @class = "form-control", required = "required" })
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-venus-mars"></i> Gender</label>
+                            @Html.DropDownListFor(model => model.Gender, new List<SelectListItem>
+                        {
+                        new SelectListItem { Text = "Select Gender", Value = "" },
+                        new SelectListItem { Text = "Male", Value = "Male" },
+                        new SelectListItem { Text = "Female", Value = "Female" },
+                        new SelectListItem { Text = "Other", Value = "Other" }
+                        }, new { @class = "form-control", required = "required" })
+                        </div>
+
+                        <!-- Date of Birth -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-calendar"></i> Date of Birth</label>
+                            @Html.TextBoxFor(model => model.DateOfBirth, new { @class = "form-control", type = "date", required = "required" })
+                        </div>
+
+                        <!-- Qualification -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-user-graduate"></i> Qualification</label>
+                            @Html.TextBoxFor(model => model.Qualification, new { @class = "form-control", required = "required" })
+                        </div>
+
+                        <!-- Experience -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-briefcase"></i> Experience (Years)</label>
+                            @Html.TextBoxFor(model => model.Experience, new { @class = "form-control", type = "number", required = "required" })
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-toggle-on"></i> Status</label>
+                            @Html.DropDownListFor(model => model.Status, new List<SelectListItem>
+                        {
+                        new SelectListItem { Text = "Active", Value = "Active" },
+                        new SelectListItem { Text = "Inactive", Value = "Inactive" },
+                        new SelectListItem { Text = "On Leave", Value = "On Leave" }
+                        }, new { @class = "form-control", required = "required" })
+                        </div>
+
+                        <!-- Password -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-lock"></i> Password</label>
+                            @Html.PasswordFor(model => model.Password, new { @class = "form-control", required = "required" })
+                        </div>
+
+                        <!-- Profile Image -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-image"></i> Profile Image</label>
+                            @Html.TextBoxFor(model => model.Img, new { @class = "form-control", type = "file", accept = "image/*", required = "required" })
+                        </div>
+
+                        <!-- Department ID -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-hospital"></i> Department ID</label>
+                            @Html.TextBoxFor(model => model.DepartmentId, new { @class = "form-control", required = "required" })
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Doctor
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="reset" class="btn btn-danger">
+                                <i class="fa-solid fa-eraser"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

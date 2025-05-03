@@ -1,0 +1,472 @@
+﻿@{
+    ViewData["Title"] = "Blood Eduction";
+}
+@{
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Donation: The Gift of Life</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background-color: #e74c3c;
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+            .stat-card h3 {
+                color: #e74c3c;
+                margin-bottom: 10px;
+            }
+
+        .step-box {
+            border-left: 3px solid #e74c3c;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+            .step-box h5 {
+                color: #e74c3c;
+            }
+
+        .blood-type-table th {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .testimonial {
+            font-style: italic;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #e74c3c;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 20px 0;
+            margin-top: 30px;
+        }
+
+        .cta-section {
+            background-color: #f5f5f5;
+            padding: 40px 0;
+            margin: 30px 0;
+        }
+
+        .video-container {
+            position: relative;
+            overflow: hidden;
+            padding-top: 56.25%;
+            margin-bottom: 20px;
+        }
+
+        .placeholder-img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4">Every Drop Counts</h1>
+            <p class="lead">Your blood donation can save up to 3 lives. Be a hero today.</p>
+            <a asp-controller="BloodBank" asp-action="UserDonorRegistre" class="btn btn-light btn-lg mt-3">Schedule a Donation</a>
+        </div>
+    </div>
+
+    <div class="container" id="why-donate">
+        <div class="row mb-5">
+            <div class="col-md-8">
+                <h2 class="section-title">Why Blood Donation Matters</h2>
+                <p>Blood donation is a critical lifeline for millions of people around the world. Every two seconds, someone in the world needs blood. A single car accident victim can require as many as 100 units of blood. Your donation makes a life-changing difference for accident victims, surgical patients, cancer patients, and those with blood disorders.</p>
+                <p>Unlike medical equipment or pharmaceuticals, blood cannot be manufactured – it can only come from generous donors like you. When you donate blood, you're giving someone another chance at life.</p>
+            </div>
+            <div class="col-md-4">
+                <img src="/api/placeholder/400/300" alt="Blood donation in progress" class="img-fluid rounded placeholder-img">
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card">
+                    <h3>4.5 Million</h3>
+                    <p>Americans need blood transfusions each year</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card">
+                    <h3>1 Pint</h3>
+                    <p>The amount of blood typically donated, which can save up to 3 lives</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card">
+                    <h3>42 Days</h3>
+                    <p>Shelf life of donated red blood cells</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card">
+                    <h3>5 Days</h3>
+                    <p>Shelf life of platelets, making regular donation crucial</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="donation-process">
+        <h2 class="section-title">The Blood Donation Process</h2>
+        <p class="mb-4">Donating blood is a simple and safe process that typically takes about an hour from start to finish. Here's what you can expect:</p>
+
+        <div class="row">
+            <div class="col-md-7">
+                <div class="step-box">
+                    <h5>Step 1: Registration</h5>
+                    <p>You'll complete a registration form with your personal information and identification. This helps maintain accurate records and ensures the safety of both donors and recipients.</p>
+                </div>
+                <div class="step-box">
+                    <h5>Step 2: Health Screening</h5>
+                    <p>A healthcare professional will check your temperature, blood pressure, pulse, and hemoglobin levels. This ensures you're healthy enough to donate blood safely.</p>
+                </div>
+                <div class="step-box">
+                    <h5>Step 3: Confidential Interview</h5>
+                    <p>You'll answer questions about your health history and recent travel to determine eligibility. This step is crucial for ensuring blood safety.</p>
+                </div>
+                <div class="step-box">
+                    <h5>Step 4: Blood Donation</h5>
+                    <p>The actual blood donation takes only about 8-10 minutes. A sterile needle is used to collect one pint (about 470 ml) of blood. You'll be seated comfortably throughout the process.</p>
+                </div>
+                <div class="step-box">
+                    <h5>Step 5: Refreshment and Recovery</h5>
+                    <p>After donating, you'll be given light refreshments to help replenish fluids and raise your blood sugar. It's recommended to rest for 10-15 minutes before leaving.</p>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">What to Expect on Donation Day</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">The entire process takes about 1 hour</li>
+                            <li class="list-group-item">Actual blood drawing only takes 8-10 minutes</li>
+                            <li class="list-group-item">Bring ID and list of medications you take</li>
+                            <li class="list-group-item">Eat a healthy meal and drink plenty of fluids before donating</li>
+                            <li class="list-group-item">Wear comfortable clothing with sleeves that can be rolled up</li>
+                            <li class="list-group-item">Plan to rest afterward and avoid strenuous activity for 24 hours</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <img src="/api/placeholder/400/250" alt="Blood donation process" class="img-fluid rounded placeholder-img">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-section" id="donate-now">
+        <div class="container text-center">
+            <h2>Ready to Save Lives?</h2>
+            <p class="lead mb-4">Schedule your donation appointment today. It only takes a few minutes to register.</p>
+            <button class="btn btn-danger btn-lg"><a asp-controller="BloodBank" asp-action="UserDonorRegistre" style="text-decoration:none; color:white">Schedule Appointment</a></button>
+            <p class="mt-3">Or call us at: <strong>(555) 123-4567</strong></p>
+        </div>
+    </div>
+
+    <div class="container" id="journey">
+        <h2 class="section-title">The Journey of Your Blood Donation</h2>
+        <p class="mb-4">Have you ever wondered what happens to your blood after you donate? Here's the remarkable journey your blood takes to save lives:</p>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="step-box">
+                    <h5>1. Collection and Labeling</h5>
+                    <p>After collection, your blood is labeled with a unique identifier and sealed in specialized bags designed to preserve its quality. The bag contains anticoagulants to prevent clotting.</p>
+                </div>
+                <div class="step-box">
+                    <h5>2. Transportation</h5>
+                    <p>Your donated blood is carefully packed in temperature-controlled containers and transported to a processing center. Speed is essential as some blood components have a short shelf life.</p>
+                </div>
+                <div class="step-box">
+                    <h5>3. Testing</h5>
+                    <p>Every unit of blood undergoes rigorous testing for blood type (A, B, AB, O) and Rh factor (positive or negative), as well as screening for infectious diseases like HIV, hepatitis B and C, West Nile virus, and syphilis.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="step-box">
+                    <h5>4. Processing and Separation</h5>
+                    <p>Your blood is separated into its vital components—red cells, platelets, and plasma. This maximizes your donation, as different patients need different components.</p>
+                </div>
+                <div class="step-box">
+                    <h5>5. Storage</h5>
+                    <p>Each component is stored according to its specific requirements: red cells are refrigerated for up to 42 days, platelets are kept at room temperature for up to 5 days, and plasma can be frozen for up to a year.</p>
+                </div>
+                <div class="step-box">
+                    <h5>6. Distribution and Transfusion</h5>
+                    <p>Hospitals order blood components as needed. When a patient requires a transfusion, their blood is cross-matched with available units to ensure compatibility. Your donated blood is then transfused to patients in need, saving lives.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Who Receives Your Blood?</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Your donated blood can help many different people in various medical situations:</p>
+                        <ul>
+                            <li><strong>Accident and trauma victims</strong> who have experienced blood loss</li>
+                            <li><strong>Surgical patients</strong> undergoing major operations, including organ transplants</li>
+                            <li><strong>Cancer patients</strong> receiving chemotherapy or radiation treatments</li>
+                            <li><strong>People with blood disorders</strong> such as sickle cell anemia or thalassemia</li>
+                            <li><strong>Women with pregnancy complications</strong> such as ectopic pregnancies</li>
+                            <li><strong>Premature babies</strong> who often need blood transfusions</li>
+                            <li><strong>Burn victims</strong> who require plasma to replace lost fluids</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="eligibility">
+        <h2 class="section-title">Blood Donation Eligibility</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h4>General Requirements</h4>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item">Be at least 17 years old (16 with parental consent in some states)</li>
+                    <li class="list-group-item">Weigh at least 110 pounds</li>
+                    <li class="list-group-item">Be in good general health and feeling well</li>
+                    <li class="list-group-item">Have not donated whole blood in the last 56 days</li>
+                    <li class="list-group-item">Have adequate iron levels in your blood</li>
+                </ul>
+
+                <h4>Common Temporary Deferrals</h4>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item">Cold, flu, or other infection (until symptoms resolve)</li>
+                    <li class="list-group-item">Pregnancy (must wait 6 weeks after delivery)</li>
+                    <li class="list-group-item">Recent travel to certain countries (varies by region)</li>
+                    <li class="list-group-item">Recent tattoos or piercings (varies by state)</li>
+                    <li class="list-group-item">Certain medications (discuss with screening staff)</li>
+                </ul>
+            </div>
+
+            <div class="col-md-6">
+                <h4>Blood Types and Compatibility</h4>
+                <p>Blood type compatibility is crucial for safe transfusions. Here's a guide to blood type compatibility:</p>
+
+                <table class="table blood-type-table">
+                    <thead>
+                        <tr>
+                            <th>Blood Type</th>
+                            <th>Can Donate To</th>
+                            <th>Can Receive From</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>O-</td>
+                            <td>All blood types</td>
+                            <td>O-</td>
+                        </tr>
+                        <tr>
+                            <td>O+</td>
+                            <td>O+, A+, B+, AB+</td>
+                            <td>O-, O+</td>
+                        </tr>
+                        <tr>
+                            <td>A-</td>
+                            <td>A-, A+, AB-, AB+</td>
+                            <td>O-, A-</td>
+                        </tr>
+                        <tr>
+                            <td>A+</td>
+                            <td>A+, AB+</td>
+                            <td>O-, O+, A-, A+</td>
+                        </tr>
+                        <tr>
+                            <td>B-</td>
+                            <td>B-, B+, AB-, AB+</td>
+                            <td>O-, B-</td>
+                        </tr>
+                        <tr>
+                            <td>B+</td>
+                            <td>B+, AB+</td>
+                            <td>O-, O+, B-, B+</td>
+                        </tr>
+                        <tr>
+                            <td>AB-</td>
+                            <td>AB-, AB+</td>
+                            <td>O-, A-, B-, AB-</td>
+                        </tr>
+                        <tr>
+                            <td>AB+</td>
+                            <td>AB+ only</td>
+                            <td>All blood types</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Most Needed Blood Types</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Type O Negative:</strong> The "universal donor" that can be given to anyone, critical for emergency situations.</p>
+                        <p><strong>Type O Positive:</strong> The most common blood type, always in high demand.</p>
+                        <p><strong>Types B Negative and A Negative:</strong> Relatively rare blood types that are frequently needed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="faq">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                        Does donating blood hurt?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Most donors report feeling only a brief pinch when the needle is inserted. The actual donation process is typically painless. Our staff is trained to make your donation as comfortable as possible.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        How long does it take to replenish donated blood?
+                    </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Your body replaces the liquid portion (plasma) within 24 hours. Red blood cells are replaced by your bone marrow within 4-6 weeks, which is why we ask whole blood donors to wait 56 days between donations.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        Is it safe to donate blood during the COVID-19 pandemic?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes. Blood donation centers have implemented additional safety protocols including enhanced disinfection, social distancing, staff health checks, and requiring masks. The need for blood is constant, even during a pandemic.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                        What should I eat before donating blood?
+                    </button>
+                </h2>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Eat a healthy, low-fat meal within two hours before donating. Focus on iron-rich foods like lean red meat, fish, poultry, beans, spinach, and iron-fortified cereals. Drink an extra 16 oz of water before your appointment.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                        Can I donate if I have a tattoo or piercing?
+                    </button>
+                </h2>
+                <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        In many states, you can donate if you got your tattoo or piercing at a state-regulated facility. If the establishment was not regulated, you'll need to wait 3 months after getting a tattoo or piercing before donating. Policies vary by state.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="section-title">Success Stories</h2>
+                <div class="testimonial">
+                    <p>"After a serious car accident, I needed 8 units of blood to survive. I wouldn't be here today without blood donors. Now I donate regularly to give back what was given to me."</p>
+                    <p class="mb-0">— Sarah, accident survivor</p>
+                </div>
+                <div class="testimonial">
+                    <p>"My daughter was diagnosed with leukemia at age 7. During her treatment, she received multiple blood transfusions that helped save her life. Today, she's a healthy 16-year-old thanks to generous blood donors."</p>
+                    <p class="mb-0">— Michael, father of cancer survivor</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h2 class="section-title">How to Prepare for Donation</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <h5>Before Your Donation:</h5>
+                        <ul>
+                            <li>Get a good night's sleep</li>
+                            <li>Eat healthy, iron-rich foods</li>
+                            <li>Drink extra water and fluids</li>
+                            <li>Avoid fatty foods</li>
+                            <li>Bring your ID and list of medications</li>
+                        </ul>
+                        <h5>After Your Donation:</h5>
+                        <ul>
+                            <li>Drink extra fluids for 48 hours</li>
+                            <li>Avoid alcohol for 24 hours</li>
+                            <li>Avoid strenuous activity for 24 hours</li>
+                            <li>Keep the bandage on for at least 4 hours</li>
+                            <li>Eat a healthy meal</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

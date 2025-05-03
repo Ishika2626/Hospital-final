@@ -1,0 +1,93 @@
+﻿@{
+    Layout = "_stafflayout";
+}
+
+<div style="margin-top: 20px; align-content:center">
+    <a href="@Url.Action("ReceptionistDashboard", "StaffHome")" class="btn btn-secondary mb-3"
+       style="background-color: #6c757d; color: white; padding: 10px 15px;
+              border-radius: 5px; text-decoration: none; display: inline-block;">
+        🔙 Back to Dashboard
+    </a>
+</div>
+
+<div class="container mt-4">
+    <div class="card p-4">
+        <h3 class="text-center mb-4">📅 Manage Appointments</h3>
+
+        <!-- Search Bar -->
+        <input type="text" id="searchInput" class="form-control mb-3" placeholder="🔍 Search by Patient Name or Doctor">
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="appointmentsTable">
+                <thead>
+                    <tr>
+                        <th>Appointment ID</th>
+                        <th>Patient Name</th>
+                        <th>Doctor</th>
+                        <th onclick="sortTable()">Date & Time ⬆⬇</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="appointmentTable">
+                    <tr>
+                        <td>1001</td>
+                        <td>John Doe</td>
+                        <td>Dr. Smith</td>
+                        <td>2025-03-15 10:00 AM</td>
+                        <td><span class="badge bg-warning">Pending</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-success">Confirm</button>
+                            <button class="btn btn-sm btn-danger" onclick="confirmCancel(this)">Cancel</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1002</td>
+                        <td>Jane Smith</td>
+                        <td>Dr. Brown</td>
+                        <td>2025-03-15 11:00 AM</td>
+                        <td><span class="badge bg-success">Confirmed</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary" disabled>Confirmed</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <a href="/StaffHome/ReceptionistAddAppointments" class="btn btn-primary">➕ Add New Appointment</a>
+    </div>
+</div>
+
+<script>
+    // Search functionality
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#appointmentTable tr");
+        rows.forEach(row => {
+            let text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
+    });
+
+    // Sorting function (sorts table by date & time)
+    function sortTable() {
+        let table = document.getElementById("appointmentsTable").getElementsByTagName("tbody")[0];
+        let rows = Array.from(table.rows);
+        let sortedRows = rows.sort((a, b) => {
+            let dateA = new Date(a.cells[3].textContent);
+            let dateB = new Date(b.cells[3].textContent);
+            return dateA - dateB;
+        });
+
+        table.innerHTML = "";
+        sortedRows.forEach(row => table.appendChild(row));
+    }
+
+    // Confirm before canceling an appointment
+    function confirmCancel(button) {
+        if (confirm("Are you sure you want to cancel this appointment?")) {
+            button.closest("tr").remove();
+        }
+    }
+</script>

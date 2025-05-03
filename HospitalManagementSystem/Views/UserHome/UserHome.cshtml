@@ -1,0 +1,203 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+@{
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CureLife Hospital | Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(0, 255, 255, 0.6)), url('/img/hospital-management.jpg') center/cover no-repeat;
+            color: white;
+            padding: 200px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            margin-top: 100px;
+        }
+
+        .hex-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            padding: 60px 20px;
+        }
+
+        .hex {
+            width: 230px;
+            height: 140px;
+            background: #e3f2fd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            padding: 20px;
+        }
+
+            .hex:hover {
+                transform: translateY(-5px);
+            }
+
+        .testimonial-card, .news-card {
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background: white;
+            margin: 15px 0;
+        }
+
+        .department-card {
+            padding: 25px;
+            border-radius: 10px;
+            background: #e3f2fd;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .gallery img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #ddd;
+            padding: 20px 0;
+        }
+
+       
+    </style>
+</head>
+<body>
+
+    <section class="header">
+        <div class="container">
+            <h1>Welcome to CureLife Hospital</h1>
+            <p>Your Health, Our Priority</p>
+        </div>
+    </section>
+
+    <section class="container text-center">
+        <h3 class="mb-4">Why Choose Us?</h3>
+        <div class="hex-container">
+            <div class="hex"><i class="bi bi-hospital fs-1 text-primary"></i> <h5>Modern Facilities</h5></div>
+            <div class="hex"><i class="bi bi-people fs-1 text-success"></i> <h5>Expert Doctors</h5></div>
+            <div class="hex"><i class="bi bi-heart-pulse fs-1 text-danger"></i> <h5>Emergency Care</h5></div>
+            <div class="hex"><i class="bi bi-shield-lock fs-1 text-warning"></i> <h5>Secure & Reliable</h5></div>
+            <div class="hex"><i class="bi bi-cash-stack fs-1 text-info"></i> <h5>Affordable Care</h5></div>
+        </div>
+    </section>
+
+    <section class="container gallery text-center">
+        <h3>Our Facility</h3><br />
+        <div class="row">
+            <div class="col-md-4"><img src="~/img/hospital-ward-1338585_1280.jpg" alt="Hospital Room"></div>
+            <div class="col-md-4"><img src="~/img/operation-1807543_1280.jpg" alt="Emergency Ward"></div>
+            <div class="col-md-4"><img src="~/img/laboratory-2815641_1280.jpg" alt="Lab"></div>
+        </div>
+    </section>
+    <br />
+    <br />
+    <br />
+    <br />
+    <section class="container text-center">
+        <h3 class="mb-4">Our Departments</h3>
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <div class="department-card">
+                    <i class="bi bi-heart fs-1 text-danger"></i>
+                    <h5>Cardiology</h5>
+                    <p>Advanced heart treatments and diagnostics.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="department-card">
+                    <i class="bi bi-brain fs-1 text-primary"></i>
+                    <h5>Neurology</h5>
+                    <p>Comprehensive brain and nerve care.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="department-card">
+                    <i class="bi bi-bandaid fs-1 text-success"></i>
+                    <h5>Orthopedics</h5>
+                    <p>Joint replacement and bone care.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <section class="container testimonials text-center">
+        <h3>What Our Patients Say</h3>
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <p>"Amazing service! The doctors and staff were so helpful and caring."</p>
+                    <h5>- John D.</h5>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <p>"I recovered quickly thanks to their excellent care. Highly recommended!"</p>
+                    <h5>- Sarah L.</h5>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <section class="container news text-center">
+        <h3>Health Tips</h3>
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="news-card">
+                    <h5>Stay Hydrated</h5>
+                    <p>Drinking 8 glasses of water a day keeps your organs healthy.</p>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="news-card">
+                    <h5>Regular Exercise</h5>
+                    <p>30 minutes of exercise daily improves heart health.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

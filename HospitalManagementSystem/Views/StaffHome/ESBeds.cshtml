@@ -1,0 +1,142 @@
+﻿@{
+    ViewData["Title"] = "Bed Management";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+<!-- Back to Dashboard Button -->
+<a asp-controller="StaffHome" asp-action="EmergencyStaffDashboard" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+
+<h2>🛏 Bed Management</h2>
+
+<div class="row">
+    <!-- Add Bed Panel -->
+    <div class="col-md-4">
+        <div class="card p-3 shadow-sm">
+            <h5>➕ Add Bed</h5>
+            <form>
+                <div class="mb-2">
+                    <label>🏥 Ward/Room</label>
+                    <input type="text" class="form-control" placeholder="Enter ward or room number">
+                </div>
+                <div class="mb-2">
+                    <label>🛏 Bed Number</label>
+                    <input type="text" class="form-control" placeholder="Enter bed number">
+                </div>
+                <div class="mb-2">
+                    <label>📌 Status</label>
+                    <select class="form-control">
+                        <option>Available</option>
+                        <option>Occupied</option>
+                        <option>Under Maintenance</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success">✔ Add Bed</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bed List Panel -->
+    <div class="col-md-8">
+        <div class="card p-3 shadow-sm">
+            <h5>📋 Bed List</h5>
+            <input type="text" id="searchInput" class="form-control w-50 mb-2" placeholder="🔍 Search Bed">
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="bedTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Ward/Room</th>
+                            <th>Bed Number</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Ward A</td>
+                            <td>B-101</td>
+                            <td><span class="badge bg-success">Available</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="editBed('Ward A', 'B-101', 'Available')">✏ Edit</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteBed()">🗑 Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>ICU</td>
+                            <td>B-205</td>
+                            <td><span class="badge bg-danger">Occupied</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="editBed('ICU', 'B-205', 'Occupied')">✏ Edit</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteBed()">🗑 Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Bed Modal -->
+<div class="modal fade" id="editBedModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">✏ Edit Bed</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-2">
+                        <label>🏥 Ward/Room</label>
+                        <input type="text" id="editWard" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label>🛏 Bed Number</label>
+                        <input type="text" id="editBedNumber" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label>📌 Status</label>
+                        <select id="editStatus" class="form-control">
+                            <option>Available</option>
+                            <option>Occupied</option>
+                            <option>Under Maintenance</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">✔ Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function editBed(ward, bedNumber, status) {
+        document.getElementById("editWard").value = ward;
+        document.getElementById("editBedNumber").value = bedNumber;
+        document.getElementById("editStatus").value = status;
+
+        let modal = new bootstrap.Modal(document.getElementById("editBedModal"));
+        modal.show();
+    }
+
+    function deleteBed() {
+        if (confirm("Are you sure you want to delete this bed?")) {
+            alert("Bed record deleted.");
+        }
+    }
+
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#bedTable tbody tr");
+
+        rows.forEach(row => {
+            let ward = row.cells[1].textContent.toLowerCase();
+            let bedNumber = row.cells[2].textContent.toLowerCase();
+            let status = row.cells[3].textContent.toLowerCase();
+            row.style.display = ward.includes(filter) || bedNumber.includes(filter) || status.includes(filter) ? "" : "none";
+        });
+    });
+</script>

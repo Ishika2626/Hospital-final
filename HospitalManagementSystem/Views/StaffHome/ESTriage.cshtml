@@ -1,0 +1,188 @@
+﻿@{
+    ViewData["Title"] = "Triage Management";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<!-- Back to Dashboard Button -->
+<a asp-controller="StaffHome" asp-action="EmergencyStaffDashboard" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+
+<h2>🩺 Triage Management</h2>
+
+<div class="row">
+    <!-- Add Triage Panel -->
+    <div class="col-md-4">
+        <div class="card p-3 shadow-sm">
+            <h5>➕ Add Triage</h5>
+            <form id="addTriageForm">
+                <div class="mb-2">
+                    <label>Patient Name</label>
+                    <input type="text" class="form-control" id="patientName" placeholder="Enter name" required>
+                </div>
+                <div class="mb-2">
+                    <label>Condition</label>
+                    <input type="text" class="form-control" id="condition" placeholder="Enter condition" required>
+                </div>
+                <div class="mb-2">
+                    <label>Priority</label>
+                    <select class="form-control" id="priority">
+                        <option value="Critical">🔴 Critical</option>
+                        <option value="Moderate">🟡 Moderate</option>
+                        <option value="Stable">🟢 Stable</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label>Assign Doctor</label>
+                    <input type="text" class="form-control" id="assignDoctor" placeholder="Enter doctor's name" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">✔ Add Triage</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Triage List Panel -->
+    <div class="col-md-8">
+        <div class="card p-3 shadow-sm">
+            <h5>📋 Triage List</h5>
+            <input type="text" id="searchInput" class="form-control w-50 mb-2" placeholder="🔍 Search Patient">
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="triageTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Patient</th>
+                            <th>Condition</th>
+                            <th>Priority</th>
+                            <th>Assigned Doctor</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>Severe Trauma</td>
+                            <td><span class="badge bg-danger">🔴 Critical</span></td>
+                            <td>Dr. Smith</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-btn">✏ Edit</button>
+                                <button class="btn btn-sm btn-danger delete-btn">🗑 Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>Fracture</td>
+                            <td><span class="badge bg-warning">🟡 Moderate</span></td>
+                            <td>Dr. Brown</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-btn">✏ Edit</button>
+                                <button class="btn btn-sm btn-danger delete-btn">🗑 Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Triage Modal -->
+<div class="modal fade" id="editTriageModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">✏ Edit Triage</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editTriageForm">
+                    <input type="hidden" id="editRowIndex">
+                    <div class="mb-2">
+                        <label>Patient Name</label>
+                        <input type="text" class="form-control" id="editPatientName" required>
+                    </div>
+                    <div class="mb-2">
+                        <label>Condition</label>
+                        <input type="text" class="form-control" id="editCondition" required>
+                    </div>
+                    <div class="mb-2">
+                        <label>Priority</label>
+                        <select class="form-control" id="editPriority">
+                            <option value="Critical">🔴 Critical</option>
+                            <option value="Moderate">🟡 Moderate</option>
+                            <option value="Stable">🟢 Stable</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label>Assign Doctor</label>
+                        <input type="text" class="form-control" id="editAssignDoctor" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">✔ Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const addForm = document.getElementById("addTriageForm");
+        const editForm = document.getElementById("editTriageForm");
+        let editRowIndex;
+
+        addForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const table = document.querySelector("#triageTable tbody");
+            const rowCount = table.rows.length + 1;
+            const patientName = document.getElementById("patientName").value;
+            const condition = document.getElementById("condition").value;
+            const priority = document.getElementById("priority").value;
+            const doctor = document.getElementById("assignDoctor").value;
+
+            const newRow = `
+                <tr>
+                    <td>${rowCount}</td>
+                    <td>${patientName}</td>
+                    <td>${condition}</td>
+                    <td><span class="badge bg-${priority.toLowerCase()}">🔴 ${priority}</span></td>
+                    <td>${doctor}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary edit-btn">✏ Edit</button>
+                        <button class="btn btn-sm btn-danger delete-btn">🗑 Delete</button>
+                    </td>
+                </tr>`;
+
+            table.insertAdjacentHTML("beforeend", newRow);
+            addForm.reset();
+        });
+
+        document.querySelector("#triageTable tbody").addEventListener("click", function (event) {
+            if (event.target.classList.contains("edit-btn")) {
+                const row = event.target.closest("tr");
+                editRowIndex = row.rowIndex - 1;
+                document.getElementById("editPatientName").value = row.cells[1].textContent;
+                document.getElementById("editCondition").value = row.cells[2].textContent;
+                document.getElementById("editPriority").value = row.cells[3].textContent.trim().split(" ")[1];
+                document.getElementById("editAssignDoctor").value = row.cells[4].textContent;
+
+                new bootstrap.Modal(document.getElementById("editTriageModal")).show();
+            }
+
+            if (event.target.classList.contains("delete-btn")) {
+                if (confirm("Are you sure you want to delete this entry?")) {
+                    event.target.closest("tr").remove();
+                }
+            }
+        });
+
+        editForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const row = document.querySelector("#triageTable tbody").rows[editRowIndex];
+            row.cells[1].textContent = document.getElementById("editPatientName").value;
+            row.cells[2].textContent = document.getElementById("editCondition").value;
+            row.cells[4].textContent = document.getElementById("editAssignDoctor").value;
+            new bootstrap.Modal(document.getElementById("editTriageModal")).hide();
+        });
+    });
+</script>

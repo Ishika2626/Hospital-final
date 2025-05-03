@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Edit Inventory Item";
+    Layout = "_StaffLayout";
+}
+
+<h2>✏ Edit Inventory Item</h2>
+
+<form>
+    <div class="form-group">
+        <label>Item Name</label>
+        <input class="form-control" value="Blood Test Kit" required />
+    </div>
+
+    <div class="form-group">
+        <label>Category</label>
+        <select class="form-control">
+            <option selected>Test Kit</option>
+            <option>Imaging</option>
+            <option>Equipment</option>
+            <option>Chemicals</option>
+            <option>Protective Gear</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Quantity</label>
+        <input type="number" class="form-control" value="50" required />
+    </div>
+
+    <div class="form-group">
+        <label>Last Updated</label>
+        <input type="date" class="form-control" value="2025-03-13" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+    <a asp-action="LTLabInventory" class="btn btn-secondary">🔙 Back</a>
+</form>

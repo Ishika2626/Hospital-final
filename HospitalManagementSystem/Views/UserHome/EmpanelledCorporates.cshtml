@@ -1,0 +1,205 @@
+﻿@{
+
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+@{
+    ViewBag.Title = "Corporate Collaborations";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Collaborations</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin-top: 100px;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        .heading-container {
+            margin-top: 100px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .heading-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .heading-underline {
+            width: 120px;
+            height: 4px;
+            background: #ffc107;
+            margin: 8px auto 0;
+            border-radius: 2px;
+        }
+
+        .card {
+            border-radius: 10px;
+            transition: 0.3s;
+            text-align: center;
+            padding: 15px;
+            background: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+            .card:hover {
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                transform: scale(1.05);
+            }
+
+            .card img {
+                max-width: 80px;
+                height: auto;
+                margin-bottom: 10px;
+            }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .card-text {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            background: #2c3e50;
+            color: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="heading-container">
+            <h2 class="heading-title">Corporate Collaborations</h2>
+            <div class="heading-underline"></div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            <div class="col">
+                <div class="card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Reliance_Industries_Logo.svg" alt="Reliance Industries">
+                    <h3 class="card-title">Reliance Industries</h3>
+                    <p class="card-text">Industry: Conglomerate</p>
+                    <p class="card-text">Location: Mumbai, India</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Tata_logo.svg" alt="Tata Group">
+                    <h3 class="card-title">Tata Group</h3>
+                    <p class="card-text">Industry: Conglomerate</p>
+                    <p class="card-text">Location: Mumbai, India</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/eb/Infosys_logo.svg" alt="Infosys">
+                    <h3 class="card-title">Infosys</h3>
+                    <p class="card-text">Industry: IT Services</p>
+                    <p class="card-text">Location: Bangalore, India</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Wipro_Primary_Logo_Color_RGB.svg" alt="Wipro">
+                    <h3 class="card-title">Wipro</h3>
+                    <p class="card-text">Industry: IT Services</p>
+                    <p class="card-text">Location: Bangalore, India</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/bb/TechMahindraLogo.svg" alt="Tech Mahindra">
+                    <h3 class="card-title">Tech Mahindra</h3>
+                    <p class="card-text">Industry: IT Services</p>
+                    <p class="card-text">Location: Pune, India</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7f/TCS_New_Logo.svg" alt="TCS">
+                    <h3 class="card-title">TCS</h3>
+                    <p class="card-text">Industry: IT Services</p>
+                    <p class="card-text">Location: Mumbai, India</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/IBM_logo.svg" alt="IBM">
+                    <h3 class="card-title">IBM India</h3>
+                    <p class="card-text">Industry: IT & AI</p>
+                    <p class="card-text">Location: Bangalore, India</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Microsoft_logo.svg" alt="Microsoft">
+                    <h3 class="card-title">Microsoft India</h3>
+                    <p class="card-text">Industry: Software</p>
+                    <p class="card-text">Location: Hyderabad, India</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Google_2015_logo.svg" alt="Google">
+                    <h3 class="card-title">Google India</h3>
+                    <p class="card-text">Industry: Technology</p>
+                    <p class="card-text">Location: Hyderabad, India</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+                    <h3 class="card-title">Amazon India</h3>
+                    <p class="card-text">Industry: E-commerce</p>
+                    <p class="card-text">Location: Bangalore, India</p>
+                </div>
+            </div>
+        </div>
+
+       
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+

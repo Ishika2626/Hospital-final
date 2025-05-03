@@ -1,0 +1,128 @@
+﻿@{
+    ViewData["Title"] = "Patient Bills";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+<a asp-controller="StaffHome" asp-action="BillingStaffDashboard" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+
+
+<div class="container mt-4">
+    <h2 class="text-center mb-3">🧾 Patient Bills</h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Patient</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>John Doe</td>
+                    <td>$500</td>
+                    <td><span class="badge bg-success">Paid</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#printBillModal">🖨 Print</button>
+                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBillModal">🗑 Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Jane Smith</td>
+                    <td>$300</td>
+                    <td><span class="badge bg-warning">Pending</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#markPaidModal">✔ Mark as Paid</button>
+                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBillModal">🗑 Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Mark as Paid Modal -->
+<div class="modal fade" id="markPaidModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 class="modal-title">✔ Mark as Paid</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to mark this bill as paid?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Print Bill Modal -->
+<div class="modal fade" id="printBillModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 class="modal-title">🖨 Print Bill</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Click below to print the bill.</p>
+                <button class="btn btn-primary">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Bill Modal -->
+<div class="modal fade" id="deleteBillModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 class="modal-title">🗑 Delete Bill</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this bill? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table {
+        min-width: 600px; /* Ensures proper display on small screens */
+    }
+
+    .badge {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+
+    .btn-sm {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+
+    @@media (max-width: 768px) {
+        .btn
+
+    {
+        font-size: 13px;
+        padding: 8px;
+    }
+
+    }
+</style>

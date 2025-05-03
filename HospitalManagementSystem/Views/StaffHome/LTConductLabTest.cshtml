@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Conduct Lab Tests";
+    Layout = "_stafflayout";
+}
+<a href="@Url.Action("LabTechnicianDashboard", "StaffHome")" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+<h2>🧪 Conduct Lab Tests</h2>
+
+<a asp-action="LTAddNewLabTest" class="btn btn-primary">➕ Add New Lab Test</a>
+
+<table class="table table-bordered mt-3">
+    <thead class="thead-dark">
+        <tr>
+            <th>#</th>
+            <th>Patient</th>
+            <th>Test</th>
+            <th>Sample Collected</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>John Doe</td>
+            <td>Blood Test</td>
+            <td>✔ Yes</td>
+            <td><span class="badge badge-warning">Pending</span></td>
+            <td>
+                <a asp-action="LTPerformLabTest" class="btn btn-sm btn-success">🧪 Conduct Test</a>
+                <a asp-action="LTViewLabTest" class="btn btn-sm btn-info">ℹ View</a>
+            </td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Jane Smith</td>
+            <td>Urine Test</td>
+            <td>✔ Yes</td>
+            <td><span class="badge badge-success">Completed</span></td>
+            <td>
+                <a asp-action="LTViewLabTest" class="btn btn-sm btn-info">ℹ View</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

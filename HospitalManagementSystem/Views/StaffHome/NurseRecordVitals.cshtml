@@ -1,0 +1,49 @@
+﻿@model List<HospitalManagementSystem.Models.PatientVitalsReport>
+
+@{
+    ViewBag.Title = "Record Vitals";
+    Layout = "_stafflayout";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center">📊 Record Vitals</h2>
+
+    <input type="text" class="form-control mb-3" placeholder="🔍 Search by Patient Name" id="searchInput" />
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Patient Name</th>
+                <th>Temperature (°C)</th>
+                <th>Blood Pressure (mmHg)</th>
+                <th>Heart Rate (bpm)</th>
+                <th>Recorded Time</th>
+            </tr>
+        </thead>
+        <tbody id="vitalsTable">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.PatientName</td>
+                    <td>@item.Temperature</td>
+                    <td>@item.BloodPressure</td>
+                    <td>@item.HeartRate</td>
+                    <td>@item.RecordedAt.ToString("yyyy-MM-dd hh:mm tt")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a href="@Url.Action("NurseDashboard", "StaffHome")" class="btn btn-secondary mt-3">⬅️ Back to Dashboard</a>
+</div>
+
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#vitalsTable tr");
+        rows.forEach(row => {
+            let text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
+    });
+</script>

@@ -1,0 +1,163 @@
+﻿@{
+    ViewData["Title"] = "Doctors";
+}
+
+@{
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Doctors | CureLife Hospital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .doctor-header {
+            background: linear-gradient(to right, rgba(0, 123, 255, 0.7), rgba(0, 255, 255, 0.5)), url('/images/contact-banner.jpg') center/cover no-repeat;
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            margin-top:100px;
+        }
+
+        .doctor-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+            .doctor-card:hover {
+                transform: translateY(-5px);
+            }
+
+        .doctor-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .search-box {
+            max-width: 400px;
+            margin: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <section class="doctor-header">
+        <div class="container">
+            <h2>Meet Our Expert Doctors</h2>
+            <p>Providing the Best Medical Care for You</p>
+        </div>
+    </section>
+
+    <!-- Search Box -->
+    <div class="container">
+        <input type="text" id="searchInput" class="form-control search-box" placeholder="Search by specialization...">
+    </div>
+
+    <!-- Doctor List -->
+    <section class="container">
+        <div class="row" id="doctorList">
+            <!-- Doctor 1 -->
+            <div class="col-md-4 mb-4 doctor-card-container">
+                <div class="doctor-card p-4">
+                    <img src="/path-to-doctor1.jpg" alt="Doctor Image" class="doctor-img">
+                    <h5>Dr. John Doe</h5>
+                    <p class="text-muted specialization">Cardiologist - 15 Years Experience</p>
+                    <p><i class="bi bi-telephone text-success"></i> +123 456 7890</p>
+                    <p><i class="bi bi-envelope text-danger"></i> johndoe@curelife.com</p>
+                </div>
+            </div>
+
+            <!-- Doctor 2 -->
+            <div class="col-md-4 mb-4 doctor-card-container">
+                <div class="doctor-card p-4">
+                    <img src="/path-to-doctor2.jpg" alt="Doctor Image" class="doctor-img">
+                    <h5>Dr. Sarah Smith</h5>
+                    <p class="text-muted specialization">Neurologist - 12 Years Experience</p>
+                    <p><i class="bi bi-telephone text-success"></i> +987 654 3210</p>
+                    <p><i class="bi bi-envelope text-danger"></i> sarahsmith@curelife.com</p>
+                </div>
+            </div>
+
+            <!-- Doctor 3 -->
+            <div class="col-md-4 mb-4 doctor-card-container">
+                <div class="doctor-card p-4">
+                    <img src="/path-to-doctor3.jpg" alt="Doctor Image" class="doctor-img">
+                    <h5>Dr. Mark Wilson</h5>
+                    <p class="text-muted specialization">Orthopedic - 10 Years Experience</p>
+                    <p><i class="bi bi-telephone text-success"></i> +555 666 7777</p>
+                    <p><i class="bi bi-envelope text-danger"></i> markwilson@curelife.com</p>
+                </div>
+            </div>
+
+            <!-- Doctor 4 -->
+            <div class="col-md-4 mb-4 doctor-card-container">
+                <div class="doctor-card p-4">
+                    <img src="/path-to-doctor4.jpg" alt="Doctor Image" class="doctor-img">
+                    <h5>Dr. Emily Carter</h5>
+                    <p class="text-muted specialization">Dermatologist - 8 Years Experience</p>
+                    <p><i class="bi bi-telephone text-success"></i> +222 333 4444</p>
+                    <p><i class="bi bi-envelope text-danger"></i> emilycarter@curelife.com</p>
+                </div>
+            </div>
+
+            <!-- Doctor 5 -->
+            <div class="col-md-4 mb-4 doctor-card-container">
+                <div class="doctor-card p-4">
+                    <img src="/path-to-doctor5.jpg" alt="Doctor Image" class="doctor-img">
+                    <h5>Dr. David Brown</h5>
+                    <p class="text-muted specialization">Pediatrician - 14 Years Experience</p>
+                    <p><i class="bi bi-telephone text-success"></i> +777 888 9999</p>
+                    <p><i class="bi bi-envelope text-danger"></i> davidbrown@curelife.com</p>
+                </div>
+            </div>
+
+            <!-- Doctor 6 -->
+            <div class="col-md-4 mb-4 doctor-card-container">
+                <div class="doctor-card p-4">
+                    <img src="/path-to-doctor6.jpg" alt="Doctor Image" class="doctor-img">
+                    <h5>Dr. Olivia Johnson</h5>
+                    <p class="text-muted specialization">Gynecologist - 9 Years Experience</p>
+                    <p><i class="bi bi-telephone text-success"></i> +111 222 3333</p>
+                    <p><i class="bi bi-envelope text-danger"></i> oliviajohnson@curelife.com</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function() {
+            let filter = this.value.toLowerCase();
+            let doctorCards = document.querySelectorAll('.doctor-card-container');
+
+            doctorCards.forEach(card => {
+                let specialization = card.querySelector('.specialization').innerText.toLowerCase();
+                if (specialization.includes(filter)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Help Desk Call Logs</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .form-control, .form-select {
+            border-radius: 5px;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="col-md-2" style="margin-left:40px;">
+        <a href="@Url.Action("DisplayHelpDeskCallLogs","HelpDesk")" class="btn btn-danger btn-sm px-3 py-2" style="font-size: 14px;">
+            <i class="fa-solid fa-list"></i> Help Desk Call Log List
+        </a>
+    </div>
+    <div class="container">
+        <div class="card p-3">
+            <div class="card-header">
+                <i class="fa-solid fa-phone-volume"></i> Help Desk Call Log Entry
+            </div>
+            <div class="card-body">
+                <form id="callLogForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-user"></i> Caller Name</label>
+                            <input type="text" class="form-control" id="caller_name" placeholder="Enter Caller Name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-phone"></i> Caller Phone</label>
+                            <input type="text" class="form-control" id="caller_phone" placeholder="Enter Caller Phone" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-clock"></i> Call Time</label>
+                            <input type="datetime-local" class="form-control" id="call_time">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-comments"></i> Issue Description</label>
+                            <textarea class="form-control" id="issue_description" rows="3" placeholder="Enter Issue Details"></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-user-tie"></i> Resolved by Staff (ID)</label>
+                            <input type="number" class="form-control" id="resolved_by_staff_id" placeholder="Enter Staff ID">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-clipboard-check"></i> Resolution Notes</label>
+                            <textarea class="form-control" id="resolution_notes" rows="3" placeholder="Enter Resolution Notes"></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-flag"></i> Status</label>
+                            <select class="form-select" id="status" required>
+                                <option value="Pending">Pending</option>
+                                <option value="Resolved">Resolved</option>
+                                <option value="Escalated">Escalated</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Call Log
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="reset" class="btn btn-danger">
+                                <i class="fa-solid fa-eraser"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

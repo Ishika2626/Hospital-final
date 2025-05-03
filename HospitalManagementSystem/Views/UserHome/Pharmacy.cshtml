@@ -1,0 +1,184 @@
+﻿@{
+    ViewData["Title"] = "Pharmacy";
+}
+
+@{
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharmacy | CureLife Hospital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        /* Banner */
+        .banner {
+            background: linear-gradient(to right, rgba(0, 123, 255, 0.7), rgba(0, 255, 255, 0.5)) center/cover no-repeat;
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+            margin-top:100px;
+        }
+
+            .banner h1 {
+                font-size: 3rem;
+                font-weight: bold;
+            }
+
+        .search-box {
+            width: 50%;
+            margin: auto;
+            padding: 10px;
+            border-radius: 50px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        /* Services */
+        .service-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+
+            .service-card:hover {
+                transform: translateY(-5px);
+            }
+
+        /* Featured Medicines */
+        .medicine-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+            .medicine-item:hover {
+                transform: translateY(-5px);
+            }
+
+        /* Discount Section */
+        .discount-box {
+            background: #ff5722;
+            color: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        /* Contact */
+        .contact-box {
+            background: linear-gradient(to right, rgba(0, 123, 255, 0.7), rgba(0, 255, 255, 0.5)) center/cover no-repeat;
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+            .contact-box a {
+                color: #fff;
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+
+    <!-- Banner Section -->
+    <section class="banner">
+        <h1>Welcome to Our Pharmacy</h1>
+        <p>Order Medicines Online & Get Home Delivery</p>
+        <input type="text" class="search-box form-control" placeholder="Search for medicines...">
+    </section>
+
+    <!-- Our Services Section -->
+    <section class="container my-5">
+        <h2 class="text-center text-primary">Our Pharmacy Services</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="service-card">
+                    <i class="bi bi-clock-history text-primary fs-1"></i>
+                    <h5>24/7 Service</h5>
+                    <p>Open round the clock for your convenience.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="service-card">
+                    <i class="bi bi-truck text-success fs-1"></i>
+                    <h5>Home Delivery</h5>
+                    <p>Get your medicines delivered at your doorstep.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="service-card">
+                    <i class="bi bi-shield-check text-danger fs-1"></i>
+                    <h5>Quality Medicines</h5>
+                    <p>Only certified and approved medicines available.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Medicines Section -->
+    <section class="container my-5">
+        <h2 class="text-center text-primary">Popular Medicines</h2>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="medicine-item">
+                    <h6>Paracetamol</h6>
+                    <p>Pain relief & fever control</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="medicine-item">
+                    <h6>Amoxicillin</h6>
+                    <p>Antibiotic for infections</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="medicine-item">
+                    <h6>Metformin</h6>
+                    <p>Diabetes management</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="medicine-item">
+                    <h6>Aspirin</h6>
+                    <p>Heart health & pain relief</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Discount Section -->
+    <section class="container my-5">
+        <div class="discount-box">
+            <h3>🎉 Special Offer: 10% Off on First Order! 🎉</h3>
+            <p>Use Code: **PHARMA10** at Checkout</p>
+        </div>
+    </section>
+
+    <!-- Contact for Assistance -->
+    <section class="container my-5">
+        <div class="contact-box">
+            <h4>Need Help with Medicines?</h4>
+            <p>Call us at <a href="tel:+1234567890">+123 456 7890</a> or email <a href="mailto:pharmacy@curelifehospital.com">pharmacy@curelifehospital.com</a></p>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

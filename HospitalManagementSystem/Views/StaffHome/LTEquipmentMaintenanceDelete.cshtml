@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Delete Maintenance Record";
+    Layout = "_StaffLayout";
+}
+
+<h2>🗑 Delete Maintenance Record</h2>
+<p>Are you sure you want to delete this record?</p>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Equipment Name</th>
+        <td>Microscope</td>
+    </tr>
+    <tr>
+        <th>Maintenance Date</th>
+        <td>2025-03-15</td>
+    </tr>
+    <tr>
+        <th>Status</th>
+        <td><span class="badge badge-warning">Scheduled</span></td>
+    </tr>
+    <tr>
+        <th>Technician</th>
+        <td>Lab Tech 2</td>
+    </tr>
+</table>
+
+<form>
+    <button type="submit" class="btn btn-danger">🗑 Confirm Delete</button>
+    <a asp-action="LTEquipmentMaintenance" class="btn btn-secondary">🔙 Cancel</a>
+</form>

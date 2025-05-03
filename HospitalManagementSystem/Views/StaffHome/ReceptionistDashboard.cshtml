@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Staff Dashboard";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <!-- Quick Actions (Role-Based) -->
+    <h4 class="quick-actions-title">⚡ Quick Actions</h4>
+    <div class="row">
+      
+
+            <h2 class="text-center mb-4">📞 Receptionist Panel</h2>
+
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Appointments -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📅 Appointments</h5>
+                            <p>Manage and schedule patient appointments.</p>
+                            <a asp-controller="StaffHome" asp-action="ReceptionistManageAppointments" class="btn btn-primary w-100">📆 View Appointments</a>
+                        </div>
+                    </div>
+
+                    <!-- Patient Registration -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>📝 Patient Registration</h5>
+                            <p>Register new patients and update details.</p>
+                            <a asp-controller="StaffHome" asp-action="ReceptionistPatientRecords" class="btn btn-success w-100">➕ Register Patient</a>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Visitor Management -->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="card p-3 shadow-sm h-100">
+                            <h5>🚪 Visitor Management</h5>
+                            <p>Monitor and manage hospital visitors.</p>
+                            <a asp-controller="StaffHome" asp-action="ReceptionistVisitorsLog" class="btn btn-info w-100">👤 Manage Visitors</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+<style>
+    .card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 10px;
+        border: none;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+    @@media (max-width: 768px) {
+        .btn {
+            font-size: 14px;
+            padding: 10px;
+        }
+    }
+
+    .quick-actions-title {
+        text-align: center; /* Centers the text */
+        font-weight: bold; /* Makes text bold */
+        font-size: 24px; /* Sets a readable font size */
+        margin-bottom: 20px;
+    }
+
+    @@media (max-width: 768px) {
+        .quick-actions-title {
+            font-size: 20px; /* Slightly smaller for mobile */
+        }
+    }
+</style>
+</div>

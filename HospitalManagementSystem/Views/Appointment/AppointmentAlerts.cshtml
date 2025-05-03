@@ -1,0 +1,171 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+@model HospitalManagementSystem.Models.AppointmentAlert
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Appointment Alerts</title>
+
+    <!-- Bootstrap & FontAwesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(to right, #1e3c72, #2a5298); /* Gradient blue */
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ced4da;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+
+            .form-control:focus {
+                background: linear-gradient(to right, #1e3c72, #2a5298); /* Gradient blue */
+                box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+            }
+
+        .input-group-text {
+            background: linear-gradient(to right, #1e3c72, #2a5298); /* Gradient blue */
+            color: white;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .btn {
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="col-md-2" style="margin-left:40px;">
+        <a href="@Url.Action("DisplayAppointmentAlerts","Appointment")"
+           class="btn btn-sm px-3 py-2 text-white"
+           style="font-size: 14px; background: linear-gradient(to right, #1e3c72, #2a5298); border: none;">
+            <i class="fa-solid fa-list"></i> Appointment Alert List
+        </a>
+    </div>
+
+
+    <div class="container">
+        <div class="card p-3">
+            <div class="card-header">
+                <i class="fa-solid fa-bell"></i> Appointment Alert Entry
+            </div>
+
+            <div class="card-body">
+                <form asp-action="AppointmentAlerts" asp-controller="Appointment" method="post">
+                    <div class="row">
+                        <!-- Appointment ID -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fa-solid fa-hospital-user"></i> Select Appointment</label>
+                            @Html.DropDownListFor(m => m.AppointmentId,
+                                     (List<SelectListItem>)ViewBag.appoinementID,
+                                     "-- Select Appointment --",
+                                     new { @class = "form-select", required = "required" })
+                        </div>
+
+                        <!-- Recipient Type -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-user"></i> Recipient Type</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-users"></i></span>
+                                <!-- Use asp-for to bind the recipient_type to the model's property -->
+                                <select asp-for="RecipientType" class="form-control" required>
+                                    <option value="Patient">Patient</option>
+                                    <option value="Doctor">Doctor</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Alert Message -->
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-envelope"></i> Alert Message</label>
+                            <textarea asp-for="AlertMessage" class="form-control" placeholder="Enter alert message" required></textarea>
+                        </div>
+
+                        <!-- Sent Status -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-clipboard-check"></i> Sent Status</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-info-circle"></i></span>
+                                <select asp-for="SentStatus" class="form-control">
+                                    <option value="Pending" selected>Pending</option>
+                                    <option value="Sent">Sent</option>
+                                    <option value="Failed">Failed</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Sent At Timestamp -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-clock"></i> Sent At</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-calendar"></i></span>
+                                <input asp-for="SentAt" type="datetime-local" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Alert
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="reset" class="btn btn-danger">
+                                <i class="fa-solid fa-eraser"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    
+</body>
+</html>

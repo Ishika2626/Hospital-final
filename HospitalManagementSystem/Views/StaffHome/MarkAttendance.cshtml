@@ -1,0 +1,89 @@
+﻿@model HospitalManagementSystem.Models.AttendanceModel
+@{
+    ViewBag.Title = "Mark Attendance";
+
+    bool hasPunchedIn = Model.PunchInTime != default(TimeSpan); // or use TimeSpan.Zero
+    bool hasPunchedOut = Model.PunchOutTime.HasValue;
+
+    Layout = "~/Views/Shared/_stafflayout.cshtml";
+}
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+
+<style>
+    .attendance-box {
+        max-width: 400px;
+        margin: 30px auto;
+        padding: 25px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        background-color: #fff;
+    }
+</style>
+
+<div class="attendance-box">
+    <h4 class="text-center mb-4">Mark Attendance</h4>
+
+    @using (Html.BeginForm("MarkAttendance", "StaffHome", FormMethod.Post))
+    {
+        @Html.HiddenFor(m => m.EmployeeId)
+        @Html.HiddenFor(m => m.Date)
+
+        <div class="form-group mb-3">
+            <label>Date</label>
+            <input type="date" class="form-control" value="@Model.Date" readonly />
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Attendance Status</label>
+            @Html.TextBoxFor(m => m.AttendanceStatus, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+        @if (!hasPunchedIn)
+        {
+            <!-- Punch In -->
+            <div class="form-group mb-3">
+                <label for="PunchInTime">Punch In</label>
+                @Html.HiddenFor(m => m.PunchInTime, new { @id = "PunchInTime" })
+                <input type="time" id="PunchInTimeDisplay" class="form-control" readonly />
+            </div>
+        }
+        else
+        {
+            <!-- Already Punched In -->
+            <div class="form-group mb-3">
+                <label>Punch In Time</label>
+                <input type="time" class="form-control" value="@Model.PunchInTime" readonly />
+            </div>
+
+            @if (!hasPunchedOut)
+            {
+                <!-- Punch Out -->
+                <div class="form-group mb-3">
+                    <label for="PunchOutTime">Punch Out</label>
+                    @Html.HiddenFor(m => m.PunchOutTime, new { @id = "PunchOutTime" })
+                    <input type="time" id="PunchOutTimeDisplay" class="form-control" value="@Model.PunchOutTime?.ToString("HH:mm")" />
+                </div>
+            }
+            else
+            {
+                <!-- Already Punched Out -->
+                <div class="form-group mb-3">
+                    <label>Punch Out Time</label>
+                    <input type="time" class="form-control" value="@Model.PunchOutTime?.ToString("HH:mm")" readonly />
+                </div>
+            }
+        }
+
+        @if (!(hasPunchedIn && hasPunchedOut))
+        {
+            <button type="submit" class="btn btn-primary w-100">
+                @(hasPunchedIn ? "Submit Punch Out" : "Submit Punch In")
+            </button>
+        }
+
+    }
+</div>

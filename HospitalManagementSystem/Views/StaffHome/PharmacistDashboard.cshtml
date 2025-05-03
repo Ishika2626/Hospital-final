@@ -1,0 +1,86 @@
+﻿@{
+    ViewData["Title"] = "Staff Dashboard";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <!-- Quick Actions (Role-Based) -->
+    <h4 class="quick-actions-title">⚡ Quick Actions</h4>
+    <div class="row">
+
+
+        <h2 class="text-center mb-4">💊 Pharmacist Panel</h2>
+
+        <div class="container">
+            <div class="row g-4">
+                <!-- Manage Prescriptions -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>📜 Prescription Management</h5>
+                        <p>View and dispense prescribed medications.</p>
+                        <a asp-controller="StaffHome" asp-action="PharmacistPrescriptionHandling" class="btn btn-primary w-100">📋 View Prescriptions</a>
+                    </div>
+                </div>
+
+                <!-- Inventory Management -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>📦 Inventory Tracking</h5>
+                        <p>Manage stock levels of medicines and supplies.</p>
+                        <a asp-controller="StaffHome" asp-action="PharmacistInventoryManagement" class="btn btn-success w-100">📊 Manage Inventory</a>
+                    </div>
+                </div>
+
+                <!-- Medicine Orders -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>🛒 Medicine Orders</h5>
+                        <p>Track incoming and outgoing medicine orders.</p>
+                        <a asp-controller="StaffHome" asp-action="PharmacistOrderStockInventory" class="btn btn-warning w-100">📦 View Orders</a>
+                    </div>
+                </div>
+
+                <!-- Expiry Alerts -->
+                <div class="col-lg-6 col-md-6">
+                    <div class="card p-3 shadow-sm h-100">
+                        <h5>⏳ Expiry Alerts</h5>
+                        <p>Monitor medicines nearing expiration.</p>
+                        <a asp-controller="StaffHome" asp-action="PharmacistManageMedicines" class="btn btn-danger w-100">⚠ Check Alerts</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .card {
+                transition: transform 0.2s, box-shadow 0.2s;
+                border-radius: 10px;
+                border: none;
+            }
+
+                .card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                }
+
+            @@media (max-width: 768px) {
+                .btn {
+                    font-size: 14px;
+                    padding: 10px;
+                }
+            }
+
+            .quick-actions-title {
+                text-align: center; /* Centers the text */
+                font-weight: bold; /* Makes text bold */
+                font-size: 24px; /* Sets a readable font size */
+                margin-bottom: 20px;
+            }
+
+            @@media (max-width: 768px) {
+                .quick-actions-title {
+                    font-size: 20px; /* Slightly smaller for mobile */
+                }
+            }
+        </style>

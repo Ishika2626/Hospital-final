@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "Emergency Alerts";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<!-- Back to Dashboard Button -->
+<a asp-controller="StaffHome" asp-action="EmergencyStaffDashboard" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+
+<h2>🚨 Emergency Alerts</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Alert Type</th>
+                <th>Message</th>
+                <th>Time</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="table-danger">
+                <td>1</td>
+                <td><strong>Critical</strong></td>
+                <td>Patient in Cardiac Arrest - ER Room 5</td>
+                <td>Now</td>
+                <td>
+                    <button class="btn btn-sm btn-light acknowledge-btn" data-alert="Critical Alert">
+                        Acknowledge
+                    </button>
+                </td>
+            </tr>
+            <tr class="table-warning">
+                <td>2</td>
+                <td><strong>Urgent</strong></td>
+                <td>Ambulance arriving in 5 mins - Trauma Case</td>
+                <td>5 min ago</td>
+                <td>
+                    <button class="btn btn-sm btn-light acknowledge-btn" data-alert="Urgent Alert">
+                        Acknowledge
+                    </button>
+                </td>
+            </tr>
+            <tr class="table-info">
+                <td>3</td>
+                <td><strong>Update</strong></td>
+                <td>Extra beds required in ICU</td>
+                <td>10 min ago</td>
+                <td>
+                    <button class="btn btn-sm btn-light acknowledge-btn" data-alert="Update">
+                        Acknowledge
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal for Acknowledgment Confirmation -->
+<div id="acknowledgeModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Acknowledgment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">Are you sure you want to acknowledge this alert?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmAcknowledge">Yes, Acknowledge</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script for Acknowledging Alerts -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let selectedAlert;
+        const modal = new bootstrap.Modal(document.getElementById('acknowledgeModal'));
+
+        document.querySelectorAll(".acknowledge-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                selectedAlert = this.closest("tr");
+                document.getElementById("modalMessage").textContent =
+                    `Are you sure you want to acknowledge the "${this.dataset.alert}" alert?`;
+                modal.show();
+            });
+        });
+
+        document.getElementById("confirmAcknowledge").addEventListener("click", function () {
+            if (selectedAlert) {
+                selectedAlert.remove();
+                modal.hide();
+            }
+        });
+    });
+</script>
+
+<!-- Styles for Responsiveness -->
+<style>
+    /* Responsive Table Scroll */
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    /* Ensures modal is centered */
+    .modal-content {
+        text-align: center;
+    }
+
+    /* Button Styling */
+    .btn-light {
+        transition: 0.2s ease-in-out;
+    }
+
+        .btn-light:hover {
+            background-color: #ddd;
+        }
+</style>

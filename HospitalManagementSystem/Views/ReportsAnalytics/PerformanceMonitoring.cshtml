@@ -1,0 +1,150 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Performance Monitoring</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="col-md-2" style="margin-left:40px;">
+        <a href="@Url.Action("DisplayPerformanceMonitoring","ReportsAnalytics")" class="btn btn-primary btn-sm px-3 py-2" style="font-size: 14px;">
+            <i class="fa-solid fa-list"></i> Performance Monitoring List
+        </a>
+    </div>
+    <div class="container">
+        <div class="card p-3">
+            <div class="card-header">
+                <i class="fa-solid fa-chart-line"></i> Performance Monitoring Entry
+            </div>
+
+            <div class="card-body">
+                <form id="performanceForm">
+                    <div class="row">
+                        <!-- Staff ID -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-id-badge"></i> Staff ID</label>
+                            <input type="text" class="form-control" id="staff_id" placeholder="Enter Staff ID" required>
+                        </div>
+
+                        <!-- Department ID -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-building"></i> Department ID</label>
+                            <input type="text" class="form-control" id="department_id" placeholder="Enter Department ID" required>
+                        </div>
+
+                        <!-- Rating -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-star"></i> Rating (1-5)</label>
+                            <input type="number" class="form-control" id="rating" min="1" max="5" placeholder="Enter Rating" required>
+                        </div>
+
+                        <!-- Cases Handled -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-briefcase"></i> Cases Handled</label>
+                            <input type="number" class="form-control" id="cases_handled" placeholder="Enter Cases Handled" required>
+                        </div>
+
+                        <!-- Patient Feedback -->
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-comment"></i> Patient Feedback</label>
+                            <textarea class="form-control" id="patient_feedback" placeholder="Enter Feedback (Optional)"></textarea>
+                        </div>
+
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Entry
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="reset" class="btn btn-danger">
+                                <i class="fa-solid fa-eraser"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+     
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript for Handling Form Submission -->
+    <script>
+        document.getElementById("performanceForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Get values from form
+            let staff_id = document.getElementById("staff_id").value;
+            let department_id = document.getElementById("department_id").value;
+            let rating = document.getElementById("rating").value;
+            let cases_handled = document.getElementById("cases_handled").value;
+            let patient_feedback = document.getElementById("patient_feedback").value;
+
+            // Insert new row in table
+            let table = document.getElementById("performanceTable");
+            let newRow = table.insertRow();
+            newRow.innerHTML = `
+                <td>${staff_id}</td>
+                <td>${department_id}</td>
+                <td>${rating}</td>
+                <td>${cases_handled}</td>
+                <td>${patient_feedback}</td>
+            `;
+
+            // Reset form after submission
+            document.getElementById("performanceForm").reset();
+        });
+    </script>
+
+</body>
+</html>

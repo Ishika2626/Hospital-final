@@ -1,0 +1,99 @@
+﻿@{
+    ViewData["Title"] = "Payments";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<!-- Back to Dashboard Button -->
+<a asp-controller="StaffHome" asp-action="BillingStaffDashboard" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+
+<h2>💳 Payments</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Transaction ID</th>
+                <th>Patient</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>TXN-2025001</td>
+                <td>John Doe</td>
+                <td>$500</td>
+                <td>Credit Card</td>
+                <td>2025-03-13</td>
+                <td>
+                    <button class="btn btn-sm btn-primary view-details" data-bs-toggle="modal" data-bs-target="#paymentModal"
+                            data-transaction="TXN-2025001" data-patient="John Doe" data-amount="$500"
+                            data-method="Credit Card" data-date="2025-03-13">
+                        📜 Details
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Payment Details Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Payment Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Transaction ID:</strong> <span id="modalTransaction"></span></p>
+                <p><strong>Patient:</strong> <span id="modalPatient"></span></p>
+                <p><strong>Amount:</strong> <span id="modalAmount"></span></p>
+                <p><strong>Method:</strong> <span id="modalMethod"></span></p>
+                <p><strong>Date:</strong> <span id="modalDate"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    @@media (max-width: 768px) {
+        .table
+
+    {
+        font-size: 14px;
+    }
+
+    .btn {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".view-details").forEach(button => {
+            button.addEventListener("click", function () {
+                document.getElementById("modalTransaction").textContent = this.getAttribute("data-transaction");
+                document.getElementById("modalPatient").textContent = this.getAttribute("data-patient");
+                document.getElementById("modalAmount").textContent = this.getAttribute("data-amount");
+                document.getElementById("modalMethod").textContent = this.getAttribute("data-method");
+                document.getElementById("modalDate").textContent = this.getAttribute("data-date");
+            });
+        });
+    });
+</script>

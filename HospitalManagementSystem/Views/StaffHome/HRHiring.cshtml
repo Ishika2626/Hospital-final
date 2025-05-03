@@ -1,0 +1,131 @@
+﻿@model List<HospitalManagementSystem.Models.HiringManagement>
+
+@{
+    ViewData["Title"] = "Job Openings";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+
+<div class="container mt-4">
+    <h2>📋 Job Openings</h2>
+
+    <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#createJobModal">+ Post New Job</button>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th>Department</th>
+                <th>Vacancies</th>
+                <th>Posted Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var job in Model)
+            {
+                <tr id="row-@job.JobId">
+                    <td>@job.Position</td>
+                    <td>@job.Department</td>
+                    <td>
+                        <form asp-action="UpdateVacancies" method="post" class="form-inline">
+                            <input type="hidden" name="jobId" value="@job.JobId" />
+                            <input type="number" class="form-control form-control-sm"
+                                   name="vacancies" id="vacancies-@job.JobId"
+                                   value="@job.Vacancies" style="width:80px;" disabled required />
+
+                            <button type="submit" class="btn btn-success btn-sm ml-2 d-none" id="saveBtn-@job.JobId">Save</button>
+                        </form>
+                    </td>
+                    <td>@job.PostedDate.ToShortDateString()</td>
+                    <td>@job.Status</td>
+                    <td>
+                        @if (job.Status == "Open")
+                        {
+                            <button type="button" class="btn btn-primary btn-sm" onclick="enableEdit(@job.JobId)">Edit</button>
+
+                            <form asp-action="Close" asp-route-id="@job.JobId" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-warning btn-sm ml-1"
+                                        onclick="return confirm('Are you sure you want to close this job?');">
+                                    Close
+                                </button>
+                            </form>
+
+                            <form asp-action="Delete" asp-route-id="@job.JobId" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm ml-1"
+                                        onclick="return confirm('Are you sure you want to permanently delete this job?');">
+                                    Delete
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <button class="btn btn-secondary btn-sm" disabled>Closed</button>
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+
+
+
+    </table>
+</div>
+
+
+<!-- Modal for Creating a New Job -->
+<div class="modal fade" id="createJobModal" tabindex="-1" role="dialog" aria-labelledby="createJobModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createJobModalLabel">Create New Job Posting</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Create" method="post">
+                    <div class="form-group">
+                        <label for="Position">Position</label>
+                        <input type="text" class="form-control" id="Position" name="Position" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Department">Department</label>
+                        <input type="text" class="form-control" id="Department" name="Department" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Vacancies">Vacancies</label>
+                        <input type="number" class="form-control" id="Vacancies" name="Vacancies" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="Status">Status</label>
+                        <select class="form-control" id="Status" name="Status" required>
+                            <option value="Open">Open</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Job</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+
+            function enableEdit(jobId) {
+        const input = document.getElementById('vacancies-' + jobId);
+        const saveBtn = document.getElementById('saveBtn-' + jobId);
+
+        input.disabled = false;
+        input.focus();
+        saveBtn.classList.remove('d-none');
+    }
+    
+</script>

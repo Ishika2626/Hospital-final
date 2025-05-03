@@ -1,0 +1,345 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="icon" type="image/png" href="@Url.Content("~/img/hospital.png")">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+
+    <title>@ViewData["Title"]</title>
+    @* <title>Hospital Management System</title> *@
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+@*     <link rel="stylesheet" href="styles.css"> *@
+
+    <style>
+        /* Custom Styling */
+        .hero {
+            background: url('hospital-banner.jpg') no-repeat center center/cover;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .footer {
+            background: #004085;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        html, body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1; /* Pushes the footer to the bottom */
+        }
+
+
+        .footer {
+            flex-shrink: 0; /* Prevents the footer from collapsing */
+            width: 100%;
+        }
+
+        /* Navbar Styling */
+        .glass-nav {
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.8), rgba(0, 85, 170, 0.8));
+            backdrop-filter: blur(10px);
+            transition: 0.3s ease-in-out;
+            height: 90px; /* Adjust the height as needed */
+            display: flex;
+            align-items: center; /* Centers items vertically */
+            padding: 10px 0; /* Adjust padding to balance the height */
+           
+        }
+
+        .nav-scrolled {
+            background: linear-gradient(135deg, rgba(0, 85, 170, 0.9), rgba(0, 55, 120, 0.9));
+        }
+
+        .navbar-brand {
+    font-size: 2.5rem; /* Increase size as needed */
+    font-weight: bold;
+    letter-spacing: 1px; /* Optional: Add spacing for better visibility */
+}
+
+        .navbar-nav .nav-link {
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: #ffdd57 !important;
+            }
+
+        /* Mega Menu */
+        .mega-menu {
+            width: 300px;
+            padding: 15px;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-bar {
+            width: 0;
+            padding: 5px;
+            border: none;
+            transition: width 0.4s ease-in-out;
+            border-radius: 20px;
+        }
+
+        .search-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .search-container:hover .search-bar {
+            width: 180px;
+            padding: 5px 10px;
+            border: 1px solid #fff;
+        }
+
+        @@media (max-width: 768px) {
+            .mega-menu
+
+        {
+            width: 100%;
+        }
+
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top glass-nav" role="navigation" aria-label="Main navigation">
+
+ @*    <nav class="navbar navbar-expand-lg fixed-top glass-nav"> *@
+        <div class="container-fluid">
+            <!-- Changed from container to container-fluid -->
+            <a class="navbar-brand text-light" href="#"><h3><b>🏥 
+                       @*  <img src="/img/CureLife_Hospital-removebg-preview (1).png" alt="Hospital Logo"> *@
+                CureLife Hospital</b></h3></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("UserHome","UserHome")">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("AppointmentScheduling","Appointment")">Appointments</a></li>
+                    <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("Doctors","UserHome")">Doctors </a></li>
+                    <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("BloodBank","UserHome")">Blood Bank</a></li>
+                    <!-- Services Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" data-bs-toggle="dropdown">Patients & Visitors</a>
+                        <div class="dropdown-menu mega-menu shadow">
+                            <a class="dropdown-item" href="@Url.Action("PatientsVisitors","UserHome")">🏥 Hospital Tour</a>
+                            <a class="dropdown-item" href="@Url.Action("EmpanelledCorporates","UserHome")">🏢 Empanelled Corporates</a>
+                            <a class="dropdown-item" href="@Url.Action("TPACashlessTieUps","UserHome")">💳 TPA & Cashless Tie-Ups</a>
+                            <a class="dropdown-item" href="@Url.Action("GovernmentSchemes","UserHome")">⚕️ Government Schemes </a>
+                        </div>
+                    </li>
+                    <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("PatientLogin","Patient")">Patient Portal</a></li>
+                    <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("AboutUs","UserHome")">About </a></li>
+                    <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("ContactUS","UserHome")">Contact </a></li>
+                    <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("Careers", "UserHome")">Careers</a></li>
+                    <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("Laboratory", "UserHome")">Laboratory</a></li>
+
+                    <!-- Services Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" data-bs-toggle="dropdown">Services</a>
+                        <div class="dropdown-menu mega-menu shadow">
+                            <a class="dropdown-item" href="@Url.Action("BillingInsurance","UserHome")">💳 Billing & Insurance</a>
+                            <a class="dropdown-item" href="@Url.Action("Pharmacy","UserHome")">💊 Pharmacy</a>
+                            <a class="dropdown-item" href="@Url.Action("ReportsDiagnostics","UserHome")">📊 Reports & Diagnostics</a>
+                            <a class="dropdown-item" href="@Url.Action("EmergencyServices","UserHome")">🚑 Emergency Services</a>
+                        </div>
+                    </li>
+
+                    <!-- Search Bar -->
+                    <li class="nav-item">
+                        <div class="search-container">
+                            <input type="text" id="searchInput" class="search-bar" placeholder="Search...">
+                            <button id="searchBtn" class="search-btn" type="button">🔍</button>
+
+
+                        </div>
+                    </li>
+                   
+                    <!-- Profile Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" data-bs-toggle="dropdown">👤 Profile</a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                            <li><a class="dropdown-item" href="@Url.Action("Login","RegisterLogin")">🔑 Login</a></li>
+
+                            <li><a class="dropdown-item" href="@Url.Action("Register","RegisterLogin")">📝 Register</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="@Url.Action("PatientProfile","UserHome")">⚙️ Settings</a></li>
+                        </ul>
+                    </li> 
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Content Area -->
+    <div class="content mt-4">
+        @RenderBody()
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer text-light pt-5">
+        <div class="container">
+            <div class="row">
+                <!-- About Hospital -->
+                <div class="col-md-4">
+                    <h5 class="fw-bold">🏥 CureLife Hospital</h5>
+                    <p>Delivering world-class healthcare with compassion and excellence. Your health, our commitment.</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-md-2">
+                    <h5 class="fw-bold">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-link">Home</a></li>
+                        <li><a href="#" class="footer-link">Appointments</a></li>
+                        <li><a href="#" class="footer-link">Doctors</a></li>
+                        <li><a href="#" class="footer-link">Services</a></li>
+                        <li><a href="#" class="footer-link">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="col-md-3">
+                    <h5 class="fw-bold">Contact Us</h5>
+                    <p>📍 123 Main Street, City, Country</p>
+                    <p>📞 <a href="tel:+1234567890" class="footer-link">+1 234 567 890</a></p>
+                    <p>✉️ <a href="mailto:support@curelife.com" class="footer-link">support@curelife.com</a></p>
+                </div>
+
+                <!-- Social Media -->
+                <div class="col-md-3">
+                    <h5 class="fw-bold">Follow Us</h5>
+                    <div class="social-icons">
+                        <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright Section -->
+            <div class="text-center border-top pt-3 mt-3">
+                <p class="mb-0">&copy; 2025 CureLife Hospital. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Footer Styles -->
+    <style>
+        .footer {
+            background: linear-gradient(135deg, #004085, #0069d9);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .footer::before {
+                content: "";
+                position: absolute;
+                top: -30px;
+                left: 0;
+                width: 100%;
+                height: 50px;
+                background: url('https://www.svgrepo.com/show/328671/wave.svg') repeat-x;
+                background-size: contain;
+            }
+
+        .footer-link {
+            color: #ffffff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+            .footer-link:hover {
+                color: #ffdd57;
+                text-decoration: underline;
+            }
+
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-link {
+            color: white;
+            font-size: 24px;
+            transition: transform 0.3s, color 0.3s;
+        }
+
+            .social-link:hover {
+                color: #ffdd57;
+                transform: scale(1.2);
+            }
+    </style>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <!-- Add this at the end of the body section in your layout file -->
+    <!-- Ensure jQuery is loaded first -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Then, load the jQuery Validate library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+
+    <!-- Finally, load the Unobtrusive Validation library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("searchInput");
+            const searchBtn = document.getElementById("searchBtn");
+
+            function performSearch() {
+                const query = searchInput.value.trim();
+                if (query) {
+                    // Redirect to search results page (replace with actual controller/action if available)
+                    window.location.href = `/UserHome/Search?query=${encodeURIComponent(query)}`;
+                    // OR: temporarily show alert (for demo)
+                    // alert("You searched for: " + query);
+                }
+            }
+
+            // Handle button click
+            searchBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                performSearch();
+            });
+
+            // Handle Enter key press
+            searchInput.addEventListener("keypress", function (e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    performSearch();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

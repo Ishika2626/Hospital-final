@@ -1,0 +1,174 @@
+﻿@{
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Doctor Payments</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            background: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .form-control, .form-select {
+            border-radius: 5px;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="col-md-2" style="margin-left:40px;">
+        <a href="@Url.Action("DisplayPayments","Doctors")" class="btn btn-primary btn-sm px-3 py-2" style="font-size: 14px;">
+            <i class="fa-solid fa-list"></i> Payments List
+        </a>
+    </div>
+    <div class="container">
+        <div class="card p-3">
+            <div class="card-header">
+                <i class="fa-solid fa-money-bill"></i> Doctor Payments Entry
+            </div>
+
+            <div class="card-body">
+                <form id="paymentsForm">
+                    <div class="row">
+                        <!-- Doctor ID -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-user-md"></i> Doctor ID</label>
+                            <input type="number" class="form-control" id="doctor_id" placeholder="Enter Doctor ID" required>
+                        </div>
+
+                        <!-- Payment Date -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-calendar"></i> Payment Date</label>
+                            <input type="date" class="form-control" id="payment_date" required>
+                        </div>
+
+                        <!-- Salary Amount -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-dollar-sign"></i> Salary Amount</label>
+                            <input type="number" class="form-control" id="salary_amount" placeholder="Enter Salary Amount" step="0.01" required>
+                        </div>
+
+                        <!-- Bonus Amount -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-gift"></i> Bonus Amount</label>
+                            <input type="number" class="form-control" id="bonus_amount" placeholder="Enter Bonus Amount" step="0.01" value="0.00">
+                        </div>
+
+                        <!-- Total Amount (Read-only) -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-calculator"></i> Total Amount</label>
+                            <input type="text" class="form-control" id="total_amount" readonly>
+                        </div>
+
+                        <!-- Payment Status -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-file-invoice-dollar"></i> Payment Status</label>
+                            <select class="form-select" id="status" required>
+                                <option value="Pending">Pending</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Failed">Failed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Payment
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="reset" class="btn btn-danger">
+                                <i class="fa-solid fa-eraser"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+       
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript for Handling Form Submission -->
+    <script>
+        // Automatically calculate total amount when salary or bonus is entered
+        document.getElementById("salary_amount").addEventListener("input", calculateTotal);
+        document.getElementById("bonus_amount").addEventListener("input", calculateTotal);
+
+        function calculateTotal() {
+            let salary = parseFloat(document.getElementById("salary_amount").value) || 0;
+            let bonus = parseFloat(document.getElementById("bonus_amount").value) || 0;
+            document.getElementById("total_amount").value = (salary + bonus).toFixed(2);
+        }
+
+        document.getElementById("paymentsForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Get values from form
+            let doctor_id = document.getElementById("doctor_id").value;
+            let payment_date = document.getElementById("payment_date").value;
+            let salary_amount = parseFloat(document.getElementById("salary_amount").value).toFixed(2);
+            let bonus_amount = parseFloat(document.getElementById("bonus_amount").value).toFixed(2);
+            let total_amount = document.getElementById("total_amount").value;
+            let status = document.getElementById("status").value;
+            let created_at = new Date().toLocaleString();
+
+            // Insert new row in table
+            let table = document.getElementById("paymentsTable");
+            let newRow = table.insertRow();
+            newRow.innerHTML = `
+                <td>${doctor_id}</td>
+                <td>${payment_date}</td>
+                <td>$${salary_amount}</td>
+                <td>$${bonus_amount}</td>
+                <td>$${total_amount}</td>
+                <td>${status}</td>
+                <td>${created_at}</td>
+            `;
+
+            // Reset form after submission
+            document.getElementById("paymentsForm").reset();
+            document.getElementById("total_amount").value = "0.00"; // Reset total amount field
+        });
+    </script>
+
+</body>
+</html>

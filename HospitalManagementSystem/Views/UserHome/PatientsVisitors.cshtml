@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["Title"] = "Hospital Tour";
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+@model IEnumerable<HospitalManagementSystem.Models.Rooms>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Tour</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Page Styling */
+        body {
+            background-color: #f8f9fa;
+            margin-top: 100px;
+        }
+
+        /* Card Styling */
+        .room-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .room-card img {
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .room-title {
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            font-size: 1.2rem;
+        }
+
+        .enquiry-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #0d6efd;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .enquiry-btn i {
+            margin-right: 8px;
+        }
+
+        .heading-container {
+            margin-top: 100px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .heading-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .heading-underline {
+            width: 120px;
+            height: 4px;
+            background: #ffc107;
+            margin: 8px auto 0;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Banner -->
+    <div class="heading-container">
+        <h2 class="heading-title">Hospital Tour</h2>
+        <div class="heading-underline"></div>
+    </div>
+
+    <div class="container py-5">
+        <div class="row g-4">
+            @foreach (var room in Model)  // Loop through rooms and display each one
+            {
+                <div class="col-md-4">
+                    <div class="card room-card">
+                        <img src="@room.room_img" class="card-img-top" alt="@room.RoomType">
+                        <div class="room-title">@room.RoomType</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Enquiry Button -->
+    <a href="@Url.Action("ContactUS","UserHome")" class="enquiry-btn">
+        <i class="fas fa-comment-alt"></i> Check to Enquire
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

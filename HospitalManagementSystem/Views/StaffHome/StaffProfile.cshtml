@@ -1,0 +1,148 @@
+﻿@{
+    Layout = "_stafflayout";
+}
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card p-4 shadow-sm">
+                <div class="d-flex align-items-center mb-3">
+                    <!-- Profile Avatar -->
+                    <img src="https://www.gravatar.com/avatar/@ViewBag.Email" alt="Profile Avatar" class="rounded-circle" width="60" height="60">
+                    <h4 class="ms-3 mb-0"><i class="fas fa-user-circle me-2"></i>Staff Profile Details</h4>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Full Name:</strong> @ViewBag.FullName</p>
+                        <p><strong>Login ID:</strong> @ViewBag.LoginID</p>
+                        <p><strong>Role:</strong> @ViewBag.Role</p>
+                        <p><strong>Email:</strong> @ViewBag.Email</p>
+                        <p><strong>Phone:</strong> @ViewBag.PhoneNumber</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Gender:</strong> @ViewBag.Gender</p>
+                        <p><strong>Address:</strong> @ViewBag.Address</p>
+                        <p><strong>Date of Birth:</strong> @ViewBag.DateOfBirth</p>
+                        <p><strong>Hire Date:</strong> @ViewBag.HireDate</p>
+                        <p><strong>Last Login:</strong> @ViewBag.LastLogin</p> <!-- Last login time -->
+                    </div>
+                </div>
+
+                <hr>
+                <h5 class="mt-3"><i class="fas fa-tasks me-2"></i>Responsibilities</h5>
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item"><i class="fas fa-user-nurse me-2 text-primary"></i>Monitor Patient Vitals</li>
+                    <li class="list-group-item"><i class="fas fa-pills me-2 text-success"></i>Administer Medications</li>
+                    <li class="list-group-item"><i class="fas fa-file-medical-alt me-2 text-info"></i>Maintain Patient Records</li>
+                    <li class="list-group-item"><i class="fas fa-procedures me-2 text-danger"></i>Assist in Discharges</li>
+                </ul>
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <i class="fas fa-edit me-1"></i> Edit Profile
+                    </button>
+                    @{
+                        string dashboardAction = "NurseDashboard"; // default
+
+                        if (ViewBag.Role == "HR Manager")
+                        {
+                            dashboardAction = "HRManagerDashboard";
+                        }
+                        else if (ViewBag.Role == "Admin")
+                        {
+                            dashboardAction = "AdminDashboard";
+                        }
+                        else if (ViewBag.Role == "Receptionist")
+                        {
+                            dashboardAction = "ReceptionDashboard";
+                        }
+                        // Add more roles if you have others
+                    }
+
+                    <a asp-action="@dashboardAction" asp-controller="StaffHome" class="btn btn-outline-secondary">
+                        <i class="fas fa-home me-1"></i> Back to Dashboard
+                    </a>
+
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                        <i class="fas fa-key me-1"></i> Change Password
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel"><i class="fas fa-edit me-2"></i>Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form asp-action="UpdateProfile" asp-controller="StaffHome" method="post">
+                <div class="modal-body row g-3">
+                    <input type="hidden" name="EmployeeId" value="@ViewBag.EmployeeId" />
+
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="Email" value="@ViewBag.Email" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Phone</label>
+                        <input type="text" class="form-control" name="PhoneNumber" value="@ViewBag.PhoneNumber" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Address</label>
+                        <input type="text" class="form-control" name="Address" value="@ViewBag.Address" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Save Changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel"><i class="fas fa-key me-2"></i>Change Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form asp-action="ChangePassword" asp-controller="StaffHome" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label>Current Password</label>
+                        <input type="password" name="CurrentPassword" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label>New Password</label>
+                        <input type="password" name="NewPassword" class="form-control" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i> Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
