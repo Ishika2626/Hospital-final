@@ -490,37 +490,20 @@ namespace HospitalManagementSystem.Controllers
             ViewBag.Visits = visits;
 
 
-            // Fetch prescriptions
-            var prescriptions = pharmacyRepository.GetPrescriptionsByPatientId(patientId)
-                .Select(p => new PrescriptionViewModel
-                {
-                    PrescriptionId = p.PrescriptionId,
-                    Date = p.PrescriptionDate.ToString("dd-MMM-yyyy"),
-                    DoctorName = doctors.FirstOrDefault(d => d.DoctorId == p.DoctorId)?.FullName ?? "N/A",
-                    Status = p.Status,
-                    Amount = p.TotalAmount,
-
-                })
-                .ToList();
-
-            // Pass prescriptions to the view using ViewBag
-            ViewBag.Prescriptions = prescriptions;
-
-
-
 
             // 💳 Billing
             var bills = billingRepository.GetAllInvoices()
-                .Where(r => r.PatientId == patientId)
-                .Select(r => new
-                {
-                    Date = r.InvoiceDate.ToString("dd-MMM-yyyy"),
-                    Amount = r.Amount,
-                    Description = r.Description
-                })
-                .ToList();
-
+       .Where(r => r.PatientId == patientId && r.Status != "Paid") // Only show unpaid
+       .Select(r => new
+       {
+           InvoiceId = r.InvoiceId,
+           Date = r.InvoiceDate.ToString("dd-MMM-yyyy"),
+           Amount = r.Amount,
+           Description = r.Description
+       })
+       .ToList();
             ViewBag.Bills = bills;
+
 
             // 🛡️ Insurance
             var insurance = patientRepository.GetAllpatient_insurance()
@@ -581,39 +564,7 @@ namespace HospitalManagementSystem.Controllers
 
             return View(appointments);
         }
-        public IActionResult PrescriptionDetails()
-        {
-            var patientIdString = HttpContext.Session.GetString("PatientId");
-
-            if (string.IsNullOrEmpty(patientIdString))
-            {
-                return RedirectToAction("PatientLogin");
-            }
-
-            int patientId = Convert.ToInt32(patientIdString);
-
-            var prescriptions = pharmacyRepository.GetPrescriptionsByPatientId(patientId);
-
-            if (prescriptions == null || !prescriptions.Any())
-            {
-                ViewBag.Message = "No prescriptions found.";
-                return View(new List<PrescriptionViewModel>());
-            }
-
-            // Optional: enrich with doctor name, date formatting, etc.
-            var doctors = doctorrepository.GetAllDoctors();
-            var prescriptionViewModels = prescriptions.Select(p => new PrescriptionViewModel
-            {
-                PrescriptionId = p.PrescriptionId,
-                Date = p.PrescriptionDate.ToString("dd-MMM-yyyy"),
-                DoctorName = doctors.FirstOrDefault(d => d.DoctorId == p.DoctorId)?.FullName ?? "N/A",
-                Status = p.Status,
-                Amount = p.TotalAmount,
-
-            }).ToList();
-
-            return View(prescriptionViewModels);
-        }
+     
         public IActionResult VisitsDetails()
         {
             var patientIdString = HttpContext.Session.GetString("PatientId");

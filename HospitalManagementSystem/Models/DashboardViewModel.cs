@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace HospitalManagementSystem.Models
 {
@@ -16,7 +17,7 @@ namespace HospitalManagementSystem.Models
         public List<BedInfo> BedOccupancy { get; set; }
         public List<NewsItem> NewsItems { get; set; }
         public List<BillingInfo> BillingSummaries { get; set; }
-         public List<PrescriptionViewModel> Prescriptions { get; set; }
+       
     }
 
     // Represents recent patient admissions.
@@ -63,17 +64,6 @@ namespace HospitalManagementSystem.Models
         public decimal Amount { get; set; }
         public string Status { get; set; } // Bill status (e.g., Paid, Unpaid)
     }
-    public class PrescriptionViewModel
-    {
-        public int PrescriptionId { get; set; }
-        public string Date { get; set; }
-        public string DoctorName { get; set; }
-        public string Status { get; set; }
-
-        public decimal Amount { get; set; }
-
-
-    }
-
-
+   
+   
 }

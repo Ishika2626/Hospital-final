@@ -14,12 +14,7 @@ namespace HospitalManagementSystem.Repositories
         void UpdateDoctor(Doctor doctor, IFormFile doctor_img);
         void DeleteDoctor(int doctor_id);
 
-        // CRUD for DoctorSpecialization
-        IEnumerable<DoctorSpecialization> GetSpecializationsByDoctorId(int doctor_id);
-        void AddDoctorSpecialization(DoctorSpecialization specialization);
-        void UpdateDoctorSpecialization(DoctorSpecialization specialization);
-        void DeleteDoctorSpecialization(int specialization_id);
-
+       
         // CRUD for DoctorSchedule
         IEnumerable<DoctorSchedule> GetDoctorSchedule(int doctor_id);
         void AddDoctorSchedule(DoctorSchedule schedule);
@@ -57,6 +52,8 @@ namespace HospitalManagementSystem.Repositories
         void DeleteDoctorPayment(int payment_id);
         List<SelectListItem> GetDoctorName();
         public string GetDoctorNameById(int doctorId);
+
+        IEnumerable<Department> GetDepartment();
 
     }
 }

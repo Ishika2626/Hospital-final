@@ -1,0 +1,73 @@
+﻿@model HospitalManagementSystem.Models.Invoice
+
+@{
+    Layout = "~/Views/Shared/userLayout.cshtml";
+    var invoice = Model;  // Model is the Invoice object passed to the view
+    var patient = ViewBag.Patient; // Patient details passed in ViewBag
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">🧾 Invoice Details</h2>
+
+    <div class="card p-4 shadow">
+        <h4 class="text-primary">Patient Info</h4>
+        <p><strong>Name:</strong> @patient?.FirstName @patient?.LastName</p>
+        <p><strong>Email:</strong> @patient?.Email</p>
+        <p><strong>Phone:</strong> @patient?.PhoneNumber</p>
+
+        <hr />
+
+        <h4 class="text-success">Invoice Info</h4>
+        <p><strong>Invoice ID:</strong> @invoice.InvoiceId</p>
+        <p><strong>Date:</strong> @invoice.InvoiceDate.ToString("dd MMM yyyy")</p>
+        <p><strong>Description:</strong> @invoice.Description</p>
+        <p><strong>Amount:</strong> ₹@invoice.Amount.ToString("F2")</p>
+        <p><strong>Discount:</strong> ₹@invoice.Discount.ToString("F2")</p>
+        <p><strong>Tax:</strong> ₹@invoice.Tax.ToString("F2")</p>
+        <p><strong>Total Amount:</strong> ₹@invoice.TotalAmount.ToString("F2")</p>
+        <hr />
+
+        <!-- Razorpay Checkout Button -->
+        @if (invoice.Amount >= 1.00m)
+        {
+            <button id="rzp-button" class="btn btn-danger">Proceed to Payment</button>
+        }
+        else
+        {
+            <p class="text-danger">Payment is not possible for amounts less than ₹1.</p>
+        }
+    </div>
+</div>
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.getElementById('rzp-button').onclick = function (e) {
+        var options = {
+            "key": "@ViewBag.Key", // Use the Razorpay key from ViewBag
+            "amount": "@((int)(invoice.TotalAmount * 100))", // amount in paise
+            "currency": "INR",
+            "name": "Hospital Management",
+            "description": "@invoice.Description",
+            "order_id": "@ViewBag.OrderId", // Razorpay order ID
+
+            // 🔁 DIRECT REDIRECT after payment success
+            "handler": function (response) {
+                window.location.href = '/BillingPayments/ThankYou?paymentId=' + response.razorpay_payment_id;
+            },
+
+            "prefill": {
+                "name": "@patient.FirstName @patient.LastName",
+                "email": "@patient.Email",
+                "contact": "@patient.PhoneNumber"
+            },
+            "theme": {
+                "color": "#1e3c72"
+            }
+        };
+        var rzp = new Razorpay(options);
+        rzp.open();
+        e.preventDefault();
+    }
+</script>

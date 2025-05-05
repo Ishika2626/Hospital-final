@@ -20,18 +20,7 @@ namespace HospitalManagementSystem.Models
         public string RoleDescription { get; set; }
     }
 
-    [Table("Departments", Schema = "EmployeeManagement")]
-    public class Department
-    {
-        [Key]
-        [Column("department_id")]
-        public int DepartmentId { get; set; }
-
-        [Required]
-        [StringLength(255)]
-        [Column("department_name")]
-        public string DepartmentName { get; set; }
-    }
+   
 
     [Table("Employees", Schema = "EmployeeManagement")]
     public class Employee

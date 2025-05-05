@@ -197,46 +197,12 @@
                     </div>
                 </div>
 
-                <!-- Card 4: Prescriptions -->
-                <div class="col-md-6 mb-4">
-                    <div class="dashboard-card">
-                        <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">💊 Prescriptions</h5>
-                            <a href="@Url.Action("PrescriptionDetails", "Patient")" class="btn btn-outline-light btn-sm">View All</a>
-                        </div>
-                   
-                        <div class="card-body">
-                            @if (ViewBag.Prescriptions != null && (ViewBag.Prescriptions as List<HospitalManagementSystem.Models.PrescriptionViewModel>).Count > 0)
-                            {
-                                var prescriptions = (ViewBag.Prescriptions as List<HospitalManagementSystem.Models.PrescriptionViewModel>)
-                                .OrderByDescending(p => p.Date) // Optional: show most recent
-                                .Take(2);
-
-                                foreach (var prescription in prescriptions)
-                                {
-                                    <div>
-                                        <strong>Date:</strong> @prescription.Date<br />
-                                        <strong>Doctor:</strong> @prescription.DoctorName<br />
-                                        <strong>Status:</strong> @prescription.Status<br />
-                                        <strong>Total Amount:</strong> ₹@prescription.Amount
-                                        <hr />
-                                    </div>
-                                }
-
-                                
-                            }
-                            else
-                            {
-                                <p class="no-data-text">No prescriptions available.</p>
-                            }
-                        </div>
-                    </div>
-                </div>
+               
 
                 <!-- Card 5: Insurance Details -->
                 <div class="col-md-6 mb-4">
                     <div class="dashboard-card">
-                        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">🛡️ Insurance Details</h5>
                             <a href="@Url.Action("InsuranceDetails", "Patient")" class="btn btn-outline-light btn-sm">View All</a>
                         </div>
@@ -302,16 +268,19 @@
                         <div class="card-body">
                             @if (ViewBag.Bills != null && ViewBag.Bills.Count > 0)
                             {
-                                foreach (var bill in ViewBag.Bills)
+                                @foreach (var bill in ViewBag.Bills)
                                 {
                                     <div>
                                         <strong>Date:</strong> @bill.Date<br />
                                         <strong>Amount:</strong> ₹@bill.Amount<br />
                                         <strong>Description:</strong> @bill.Description
                                         <hr />
+                                        <a href="@Url.Action("DisplayBill", "BillingPayments", new { invoiceId = bill.InvoiceId })"
+                                           class="btn btn-sm btn-outline-danger">
+                                            Pay Now
+                                        </a>
                                     </div>
                                 }
-                                <a href="@Url.Action("PayBill", "Patient")" class="btn btn-sm btn-outline-danger">Pay Now</a>
                             }
                             else
                             {
@@ -320,6 +289,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Add more cards here as needed -->
             </div>

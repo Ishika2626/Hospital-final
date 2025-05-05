@@ -4,6 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HospitalManagementSystem.Models
 {
+    public class RazorpayConfig
+    {
+        public string Key { get; set; }
+        public string Secret { get; set; }
+    }
+   
+
+
+
     [Table("invoicing", Schema = "BillingPayment")]
     public class Invoice
     {
@@ -51,6 +60,11 @@ namespace HospitalManagementSystem.Models
 
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
+        // Add a new field for Razorpay Order ID
+        [Column("razorpay_order_id")]
+        [StringLength(255)] // String length based on Razorpay order ID length
+        public string RazorpayOrderId { get; set; }
     }
 
     [Table("insurance_integration", Schema = "BillingPayment")]

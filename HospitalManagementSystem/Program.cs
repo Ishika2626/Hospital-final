@@ -14,6 +14,10 @@ namespace HospitalManagementSystem
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            var razorpayConfig = new HospitalManagementSystem.Models.RazorpayConfig();
+            builder.Configuration.GetSection("Razorpay").Bind(razorpayConfig);
+            builder.Services.AddSingleton(razorpayConfig);
+
             builder.Services.AddRazorPages();
 
             builder.Services.AddScoped<IPatientRepository, PatientRepository>();
@@ -59,7 +63,7 @@ namespace HospitalManagementSystem
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=UserHome}/{action=UserHome}/{id?}");
+                pattern: "{controller=Patient}/{action=PatientLogin}/{id?}");
 
             app.Run();
         }

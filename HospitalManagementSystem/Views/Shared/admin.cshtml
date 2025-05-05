@@ -305,6 +305,7 @@
             <li class="dropdown">
                 <a>Doctors Management<i class="fa-solid fa-chevron-down"></i> </a>
                 <ul class="submenu">
+                    <li><a class="nav-link text-white" href="@Url.Action("DisplayDepartments", "Doctors")">Departments</a></li>
                     <li><a class="nav-link text-white" href="@Url.Action("Doctors", "Doctors")">Doctors</a></li>
                     <li><a class="nav-link text-white" href="@Url.Action("Specialization", "Doctors")">Specializations</a></li>
                     <li><a class="nav-link text-white" href="@Url.Action("Schedule", "Doctors")">Schedule</a></li>
@@ -324,7 +325,6 @@
                     <li><a class="nav-link text-white" href="@Url.Action("Payroll", "Staff")">Payroll</a></li>
                     <li><a class="nav-link text-white" href="@Url.Action("Scheduling", "Staff")">Scheduling</a></li>
                     <li><a class="nav-link text-white" href="@Url.Action("DisplayRoles", "Staff")">Staff Roles</a></li>
-                    <li><a class="nav-link text-white" href="@Url.Action("DisplayDepartments", "Staff")">Departments</a></li>
                     <li><a class="nav-link text-white" href="@Url.Action("Attendance", "Staff")">Attendance</a></li>
                     <li><a class="nav-link text-white" href="@Url.Action("LeaveRequests", "Staff")">Leave Requests</a></li>
                     <li><a class="nav-link text-white" href="@Url.Action("PerformanceReviews", "Staff")">Performance Reviews</a></li>
@@ -364,17 +364,7 @@
                 </ul>
             </li>
 
-            <!-- Inventory Management Section -->
-            <li class="dropdown">
-                <a>Inventory Management<i class="fa-solid fa-chevron-down"></i></a>
-                <ul class="submenu">
-                    <li><a class="nav-link text-white" href="@Url.Action("InventoryRecords", "InventoryManagement")">Inventory Records</a></li>
-                    <li><a class="nav-link text-white" href="@Url.Action("InventoryUsage", "InventoryManagement")">Inventory Usage</a></li>
-                    <li><a class="nav-link text-white" href="@Url.Action("Suppliers", "InventoryManagement")">Suppliers</a></li>
-                    <li><a class="nav-link text-white" href="@Url.Action("Procurements", "InventoryManagement")">Inventory Procurements</a></li>
-                    <li><a class="nav-link text-white" href="@Url.Action("Returns", "InventoryManagement")">Inventory Returns</a></li>
-                </ul>
-            </li>
+           
 
             <!-- Blood Bank Section -->
             <li class="dropdown">

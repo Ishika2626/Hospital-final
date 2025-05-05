@@ -34,5 +34,8 @@ namespace HospitalManagementSystem.Repositories
         List<SelectListItem> GetPaymentStatusList();
         List<SelectListItem> GetInsuranceProviders();
         List<SelectListItem> GetClaimStatusList();
+
+        void MarkInvoiceAsPaid(string razorpayOrderId, string razorpayPaymentId);
+
     }
 }

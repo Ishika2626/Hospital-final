@@ -35,7 +35,7 @@ namespace HospitalManagementSystem.Repositories
 
         List<Medicine> GetMedicineList();
 
-        List<PharmacyPrescriptionEntity> GetPrescriptionsByPatientId(int patientId);
+     
 
     }
 }

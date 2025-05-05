@@ -55,23 +55,27 @@ namespace HospitalManagementSystem.Models
         [Required]
         public string Img { get; set; }  // Doctor's profile image (could be a file path or URL)
 
-        public int DepartmentId { get; set; }  // Foreign Key linking to departments table
+        [ForeignKey("Department")]
+        public int DepartmentId { get; set; }
+        public Department Department { get; set; }
+
 
     }
 
-    [Table("doctor_specializations", Schema = "Doctors")]
-    public class DoctorSpecialization
+    [Table("Departments", Schema = "EmployeeManagement")]
+    public class Department
     {
         [Key]
-        public int specialization_id { get; set; }
+        [Column("department_id")]
+        public int DepartmentId { get; set; }
 
         [Required]
-        public int doctor_id { get; set; }
-
-        [Required]
-        [MaxLength(100)]
-        public string specialization { get; set; }
+        [StringLength(255)]
+        [Column("department_name")]
+        public string DepartmentName { get; set; }
     }
+
+  
 
     [Table("doctor_schedule", Schema = "Doctors")]
     public class DoctorSchedule

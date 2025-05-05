@@ -77,18 +77,31 @@ namespace HospitalManagementSystem.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = @"UPDATE BillingPayment.invoicing SET 
-    patient_id = @PatientId,
-    description = @Description,
-    amount = @Amount,
-    discount = @Discount,
-    tax = @Tax,
-    invoice_date = @InvoiceDate,
-    status = @Status,
-    total_amount = @TotalAmount,
-    due_date = @DueDate
-WHERE invoice_id = @InvoiceId";
+                // Validate InvoiceDate and DueDate
+                if (invoice.InvoiceDate < new DateTime(1753, 1, 1) || invoice.InvoiceDate > new DateTime(9999, 12, 31))
+                {
+                    // Set to a default valid date if outside SQL Server's valid range
+                    invoice.InvoiceDate = DateTime.Now;  // Default to current date
+                }
 
+                if (invoice.DueDate < new DateTime(1753, 1, 1) || invoice.DueDate > new DateTime(9999, 12, 31))
+                {
+                    // Set to a default valid date if outside SQL Server's valid range
+                    invoice.DueDate = DateTime.Now;  // Default to current date
+                }
+
+                string query = @"UPDATE BillingPayment.invoicing SET 
+            patient_id = @PatientId,
+            description = @Description,
+            amount = @Amount,
+            discount = @Discount,
+            tax = @Tax,
+            invoice_date = @InvoiceDate,
+            status = @Status,
+            total_amount = @TotalAmount,
+            due_date = @DueDate,
+            razorpay_order_id = @RazorpayOrderId
+        WHERE invoice_id = @InvoiceId";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@InvoiceId", invoice.InvoiceId);
@@ -101,11 +114,13 @@ WHERE invoice_id = @InvoiceId";
                 cmd.Parameters.AddWithValue("@TotalAmount", invoice.TotalAmount);
                 cmd.Parameters.AddWithValue("@Description", invoice.Description ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Status", invoice.Status ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@RazorpayOrderId", invoice.RazorpayOrderId ?? (object)DBNull.Value); // Razorpay order ID
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
         }
+
 
 
         public void AddPayment(PaymentTracking payment)
@@ -373,7 +388,7 @@ WHERE invoice_id = @InvoiceId";
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = "SELECT * FROM BillingPayment.invoicing WHERE InvoiceId = @InvoiceId";
+                string query = "SELECT * FROM BillingPayment.invoicing WHERE invoice_id = @InvoiceId";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@InvoiceId", invoiceId);
 
@@ -384,9 +399,9 @@ WHERE invoice_id = @InvoiceId";
                     {
                         return new Invoice
                         {
-                            InvoiceId = (int)reader["InvoiceId"],
-                            PatientId = (int)reader["PatientId"],
-                            InvoiceDate = (DateTime)reader["InvoiceDate"],
+                            InvoiceId = (int)reader["invoice_id"],
+                            PatientId = (int)reader["patient_id"],
+                            InvoiceDate = (DateTime)reader["invoice_date"],
                             Amount = (decimal)reader["Amount"],
                             Description = reader["Description"].ToString(),
                             Status = reader["Status"].ToString()
@@ -567,6 +582,27 @@ WHERE invoice_id = @InvoiceId";
 
                 // Open connection and execute the command
                 conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+        public void MarkInvoiceAsPaid(string razorpayOrderId, string razorpayPaymentId)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                string query = @"UPDATE BillingPayment.invoicing 
+                         SET status = 'Paid', 
+                             updated_at = GETDATE()
+                         WHERE invoice_id = (
+                             SELECT CAST(SUBSTRING(@razorpayOrderId, 4, LEN(@razorpayOrderId)) AS INT)
+                         )";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@razorpayOrderId", razorpayOrderId);
+                cmd.Parameters.AddWithValue("@razorpayPaymentId", razorpayPaymentId);
+
+                con.Open();
                 cmd.ExecuteNonQuery();
             }
         }

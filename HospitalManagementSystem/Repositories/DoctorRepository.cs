@@ -86,7 +86,7 @@ namespace HospitalManagementSystem.Repositories
             using (SqlConnection con = new SqlConnection(_connectionstring))
             {
                 string query = @"INSERT INTO Doctors.doctors
-                        (full_name, email, phone_number, gender, date_of_birth, qualification, experience, status, password, department_id, img)
+                        (full_name, email, phone_number, gender, date_of_birth, qualification, experience, status, password, department_id, profile_photo)
                         VALUES
                         (@FullName, @Email, @PhoneNumber, @Gender, @DateOfBirth, @Qualification, @Experience, @Status, @Password, @DepartmentId, @Img)";
 
@@ -136,7 +136,7 @@ namespace HospitalManagementSystem.Repositories
                              status = @Status,
                              password = @Password,
                              department_id = @DepartmentId,
-                             img = @Img
+                             profile_photo = @Img
                          WHERE doctor_id = @DoctorId";
 
                 SqlCommand cmd = new SqlCommand(query, con);
@@ -206,20 +206,7 @@ namespace HospitalManagementSystem.Repositories
             return filePath; // Save the file path to the database
         }
 
-        public IEnumerable<DoctorSpecialization> GetSpecializationsByDoctorId(int doctor_id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddDoctorSpecialization(DoctorSpecialization specialization)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateDoctorSpecialization(DoctorSpecialization specialization)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public void DeleteDoctorSpecialization(int specialization_id)
         {
@@ -392,6 +379,35 @@ namespace HospitalManagementSystem.Repositories
 
             return doctorName;
         }
+
+
+        public IEnumerable<Department> GetDepartment()
+        {
+            List<Department> departments = new List<Department>();
+
+            using (SqlConnection con = new SqlConnection(_connectionstring))
+            {
+                string query = "SELECT * FROM EmployeeManagement.Departments";
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    // Use while to read all rows from the data reader
+                    while (reader.Read())
+                    {
+                        departments.Add(new Department
+                        {
+                            DepartmentId = Convert.ToInt32(reader["department_id"]),
+                            DepartmentName = reader["department_name"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return departments;
+        }
+
     }
 
 }

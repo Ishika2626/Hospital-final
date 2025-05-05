@@ -266,37 +266,6 @@ namespace HospitalManagementSystem.Controllers
             return RedirectToAction("DisplayRoles");
         }
 
-        [HttpPost]
-        public IActionResult Departments(Department department)
-        {
-            if (ModelState.IsValid)
-            {
-                _staffRepository.AddDepartment(department);
-                return RedirectToAction("DisplayDepartments");
-            }
-
-            var departments = _staffRepository.GetAllDepartments();
-            return View("DisplayDepartments", departments);
-        }
-        public IActionResult DisplayDepartments()
-        {
-            var departments = _staffRepository.GetAllDepartments();
-            return View(departments);
-        }
-        [HttpPost]
-        public IActionResult EditDepartment(Department dept)
-        {
-            _staffRepository.UpdateDepartment(dept);
-            return RedirectToAction("DisplayDepartments");
-        }
-
-        [HttpPost]
-        public IActionResult DeleteDepartment(int id)
-        {
-            _staffRepository.DeleteDepartment(id);
-            return RedirectToAction("DisplayDepartments");
-        }
-
         public IActionResult Attendance()
         {
             return View();

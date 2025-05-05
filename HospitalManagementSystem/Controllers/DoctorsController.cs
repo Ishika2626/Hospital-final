@@ -1,15 +1,18 @@
 ﻿using HospitalManagementSystem.Models;
 using HospitalManagementSystem.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HospitalManagementSystem.Controllers
 {
     public class DoctorsController : Controller
     {
+        private readonly IStaffRepository _staffRepository;
         private readonly IDoctorRepository doctorRepository;
-        public DoctorsController(IDoctorRepository doctorRepository)
+        public DoctorsController(IDoctorRepository doctorRepository, IStaffRepository staffRepository)
         {
             this.doctorRepository = doctorRepository;
+            _staffRepository = staffRepository;
         }
         public IActionResult Index()
         {
@@ -18,18 +21,26 @@ namespace HospitalManagementSystem.Controllers
         [HttpGet]
         public IActionResult Doctors()
         {
+            var departments = doctorRepository.GetDepartment();
+
+            ViewBag.getDepartment = departments.Select(d => new SelectListItem
+            {
+                Value = d.DepartmentId.ToString(),
+                Text = d.DepartmentName
+            }).ToList();
+
             return View();
         }
+
         [HttpPost]
         public IActionResult Doctors(Doctor doctor, IFormFile doctor_img)
         {
-            if (ModelState.IsValid)
-            {
+          
                 doctorRepository.AddDoctor(doctor, doctor_img);
                 return RedirectToAction("DisplayDoctors");
-            }
-            return View(doctor); // In case of error, return the view with the model.
+         
         }
+
 
         public IActionResult DisplayDoctors()
         {
@@ -67,14 +78,6 @@ namespace HospitalManagementSystem.Controllers
         }
 
 
-        public IActionResult Specialization()
-        {
-            return View();
-        }
-        public IActionResult DisplaySpecialization()
-        {
-            return View();
-        }
         public IActionResult Schedule()
         {
             return View();
@@ -124,6 +127,45 @@ namespace HospitalManagementSystem.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Departments()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Departments(Department department)
+        {
+            if (ModelState.IsValid)
+            {
+                _staffRepository.AddDepartment(department);
+                return RedirectToAction("DisplayDepartments");
+            }
+
+            var departments = _staffRepository.GetAllDepartments();
+            return View("DisplayDepartments", departments);
+        }
+        public IActionResult DisplayDepartments()
+        {
+            var departments = _staffRepository.GetAllDepartments();
+            return View(departments);
+        }
+
+      
+
+        [HttpPost]
+        public IActionResult EditDepartment(Department dept)
+        {
+            _staffRepository.UpdateDepartment(dept);
+            return RedirectToAction("DisplayDepartments");
+        }
+
+        [HttpPost]
+        public IActionResult DeleteDepartment(int id)
+        {
+            _staffRepository.DeleteDepartment(id);
+            return RedirectToAction("DisplayDepartments");
+        }
 
 
     }
