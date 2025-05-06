@@ -492,17 +492,21 @@ namespace HospitalManagementSystem.Controllers
 
 
             // 💳 Billing
+            // 💳 Billing
             var bills = billingRepository.GetAllInvoices()
-       .Where(r => r.PatientId == patientId && r.Status != "Paid") // Only show unpaid
-       .Select(r => new
-       {
-           InvoiceId = r.InvoiceId,
-           Date = r.InvoiceDate.ToString("dd-MMM-yyyy"),
-           Amount = r.Amount,
-           Description = r.Description
-       })
-       .ToList();
+                .Where(r => r.PatientId == patientId && r.Status != "Paid") // Only show unpaid
+                .Select(r => new
+                {
+                    InvoiceId = r.InvoiceId,
+                    Date = r.InvoiceDate.ToString("dd-MMM-yyyy"),
+                    Amount = r.Amount,
+                    Description = r.Description,
+                    Status = r.Status // Include Status in the anonymous object
+                })
+                .ToList();
+
             ViewBag.Bills = bills;
+
 
 
             // 🛡️ Insurance

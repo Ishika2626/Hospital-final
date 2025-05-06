@@ -131,14 +131,14 @@ namespace HospitalManagementSystem.Repositories
             string photo = SavePhoto(room_img);
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "INSERT INTO bed_managment.Rooms (RoomNumber, RoomType, Capacity, Status, Quantity, room_img) " +
-                               "VALUES (@RoomNumber, @RoomType, @Capacity, @Status, @Quantity, @room_img)";
+                string query = "INSERT INTO bed_managment.Rooms (RoomNumber, RoomType, Capacity, Status, room_img) " +
+                               "VALUES (@RoomNumber, @RoomType, @Capacity, @Status, @room_img)";
                 SqlCommand cmd = new SqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@RoomNumber", room.RoomNumber);
                 cmd.Parameters.AddWithValue("@RoomType", room.RoomType.GetDisplayName()); // ✅ FIXED
                 cmd.Parameters.AddWithValue("@Capacity", room.Capacity);
                 cmd.Parameters.AddWithValue("@Status", room.Status.ToString());
-                cmd.Parameters.AddWithValue("@Quantity", room.Quantity);
+               
                 cmd.Parameters.AddWithValue("@room_img", string.IsNullOrEmpty(photo) ? (object)DBNull.Value : photo);
 
                 connection.Open();
@@ -415,16 +415,23 @@ namespace HospitalManagementSystem.Repositories
                 {
                     while (reader.Read())
                     {
-                        beds.Add(new Beds
-                        {
-                            BedID = reader.GetInt32(reader.GetOrdinal("BedID")),
-                            RoomID = reader.GetInt32(reader.GetOrdinal("RoomID")),
-                            BedNumber = reader.GetString(reader.GetOrdinal("BedNumber")),
-                            BedType = (BedType)Enum.Parse(typeof(BedType), reader.GetString(reader.GetOrdinal("BedType"))),
-                            Status = (Status)Enum.Parse(typeof(Status), reader.GetString(reader.GetOrdinal("Status"))),
-                            LastUpdated = reader.GetDateTime(reader.GetOrdinal("LastUpdated"))
-                        });
+                        var bed = new Beds();
+
+                        bed.BedID = reader.IsDBNull(reader.GetOrdinal("BedID")) ? 0 : reader.GetInt32(reader.GetOrdinal("BedID"));
+                        bed.RoomID = reader.IsDBNull(reader.GetOrdinal("RoomID")) ? 0 : reader.GetInt32(reader.GetOrdinal("RoomID"));
+                        bed.BedNumber = reader.IsDBNull(reader.GetOrdinal("BedNumber")) ? "" : reader.GetString(reader.GetOrdinal("BedNumber"));
+
+                        var bedTypeStr = reader.IsDBNull(reader.GetOrdinal("BedType")) ? "General" : reader.GetString(reader.GetOrdinal("BedType"));
+                        bed.BedType = Enum.TryParse<BedType>(bedTypeStr, out var bedType) ? bedType : BedType.General;
+
+                        var statusStr = reader.IsDBNull(reader.GetOrdinal("Status")) ? "Available" : reader.GetString(reader.GetOrdinal("Status"));
+                        bed.Status = Enum.TryParse<Status>(statusStr, out var status) ? status : Status.Available;
+
+                        bed.LastUpdated = reader.IsDBNull(reader.GetOrdinal("LastUpdated")) ? DateTime.MinValue : reader.GetDateTime(reader.GetOrdinal("LastUpdated"));
+
+                        beds.Add(bed);
                     }
+
                 }
             }
 
@@ -532,7 +539,7 @@ namespace HospitalManagementSystem.Repositories
                         Capacity = Convert.ToInt32(reader["Capacity"]),
                         Status = (Status)Enum.Parse(typeof(Status), reader["Status"].ToString()),
 
-                        Quantity = reader["Quantity"]?.ToString(),
+                        
                         room_img = reader["room_img"]?.ToString(),
                         LastUpdated = Convert.ToDateTime(reader["LastUpdated"])
                     });
@@ -557,6 +564,7 @@ namespace HospitalManagementSystem.Repositories
                     throw new ArgumentException($"Invalid room type: {roomTypeString}");
             }
         }
+
 
         public Beds GetBedById(int bedId)
         {
@@ -741,7 +749,7 @@ namespace HospitalManagementSystem.Repositories
                             RoomType = GetRoomType(reader["RoomType"].ToString()), // Use custom method here
                             Capacity = Convert.ToInt32(reader["Capacity"]),
                             Status = (Status)Enum.Parse(typeof(Status), reader["Status"].ToString()),
-                            Quantity = reader["Quantity"]?.ToString(),
+                          
                             room_img = reader["room_img"]?.ToString(),
                             LastUpdated = Convert.ToDateTime(reader["LastUpdated"])
                         };
@@ -929,14 +937,14 @@ namespace HospitalManagementSystem.Repositories
             {
                 string query = @"UPDATE bed_managment.Rooms 
                          SET RoomNumber = @RoomNumber, RoomType = @RoomType, Capacity = @Capacity, 
-                             Status = @Status, Quantity = @Quantity, room_img = @room_img 
+                             Status = @Status, room_img = @room_img 
                          WHERE RoomID = @RoomID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@RoomNumber", room.RoomNumber);
                 cmd.Parameters.AddWithValue("@RoomType", GetRoomTypeDbValue(room.RoomType));
                 cmd.Parameters.AddWithValue("@Capacity", room.Capacity);
                 cmd.Parameters.AddWithValue("@Status", room.Status.ToString());
-                cmd.Parameters.AddWithValue("@Quantity", (object)room.Quantity ?? DBNull.Value);
+              
                 cmd.Parameters.AddWithValue("@room_img", newPhotoPath ?? (object)DBNull.Value);
                 
                 cmd.Parameters.AddWithValue("@RoomID", room.RoomID);

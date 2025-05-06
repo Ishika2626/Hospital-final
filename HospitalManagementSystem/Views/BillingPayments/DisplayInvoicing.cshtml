@@ -116,7 +116,26 @@
                                 <td>@invoice.TotalAmount.ToString("C2")</td>
                                 <td>@invoice.InvoiceDate.ToString("yyyy-MM-dd")</td>
                                 <td>@invoice.DueDate.ToString("yyyy-MM-dd")</td>
-                                <td>@invoice.Status</td>
+                                <td>
+                                    @if (invoice.Status == "Paid")
+                                    {
+                                        <span style="background-color: #28a745; color: white; padding: 4px 12px; border-radius: 15px; font-weight: bold;">@invoice.Status</span>
+                                    }
+                                    else if (invoice.Status == "Cancelled")
+                                    {
+                                        <span style="background-color: #dc3545; color: white; padding: 4px 12px; border-radius: 15px; font-weight: bold;">@invoice.Status</span>
+                                    }
+                                    else if (invoice.Status == "Pending")
+                                    {
+                                        <span style="background-color: #ffc107; color: black; padding: 4px 12px; border-radius: 15px; font-weight: bold;">@invoice.Status</span>
+                                    }
+                                    else if (invoice.Status == "Overdue")
+                                    {
+                                        <span style="background-color: #e83e8c; color: white; padding: 4px 12px; border-radius: 15px; font-weight: bold;">@invoice.Status</span>
+                                    }
+                                </td>
+
+
                                 <td class="action-icons">
                                     <a href="javascript:void(0);" class="btn btn-warning edit-btn" title="Edit">
                                         <i class="fa-solid fa-edit"></i>

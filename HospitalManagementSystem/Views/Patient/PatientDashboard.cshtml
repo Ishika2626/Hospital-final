@@ -273,12 +273,24 @@
                                     <div>
                                         <strong>Date:</strong> @bill.Date<br />
                                         <strong>Amount:</strong> ₹@bill.Amount<br />
-                                        <strong>Description:</strong> @bill.Description
+                                        <strong>Description:</strong> @bill.Description<br />
+                                        <strong>Status:</strong>
+                                        <span class="badge @(bill.Status == "Paid" ? "bg-success" : "bg-warning")">
+                                            @bill.Status
+                                        </span>
                                         <hr />
-                                        <a href="@Url.Action("DisplayBill", "BillingPayments", new { invoiceId = bill.InvoiceId })"
-                                           class="btn btn-sm btn-outline-danger">
-                                            Pay Now
-                                        </a>
+
+                                        @if (bill.Status == "Paid")
+                                        {
+                                            <button class="btn btn-sm btn-secondary" disabled>Paid</button>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("DisplayBill", "BillingPayments", new { invoiceId = bill.InvoiceId })"
+                                               class="btn btn-sm btn-outline-danger">
+                                                Pay Now
+                                            </a>
+                                        }
                                     </div>
                                 }
                             }
@@ -287,6 +299,7 @@
                                 <p class="no-data-text">No bills to show.</p>
                             }
                         </div>
+
                     </div>
                 </div>
 

@@ -57,8 +57,6 @@ namespace HospitalManagementSystem.Models
 
             public DateTime LastUpdated { get; set; } = DateTime.Now;
 
-            [StringLength(20)]
-            public string Quantity { get; set; }
 
             public string room_img { get; set; }
 

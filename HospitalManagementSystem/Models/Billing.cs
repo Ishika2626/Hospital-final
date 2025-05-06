@@ -43,7 +43,7 @@ namespace HospitalManagementSystem.Models
 
         [Column("total_amount")]
         [Range(0, double.MaxValue)]
-        public decimal TotalAmount { get; set; }
+        public decimal TotalAmount => Amount - Discount + Tax;
 
         [Column("invoice_date")]
         public DateTime InvoiceDate { get; set; } = DateTime.Now;

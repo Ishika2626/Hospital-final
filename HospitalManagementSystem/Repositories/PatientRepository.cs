@@ -959,14 +959,14 @@ namespace HospitalManagementSystem.Repositories
             using (SqlConnection con = new SqlConnection(_connectionstring))
             {
                 con.Open();
-                SqlCommand cmd = new SqlCommand("SELECT BedID, BedType FROM bed_managment.Beds", con);
+                SqlCommand cmd = new SqlCommand("SELECT BedID, BedNumber FROM bed_managment.Beds", con);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     list.Add(new SelectListItem
                     {
                         Value = reader["BedID"].ToString(),
-                        Text = reader["BedType"].ToString()
+                        Text = reader["BedNumber"].ToString()
                     });
                 }
             }

@@ -1,8 +1,10 @@
-﻿using HospitalManagementSystem.Models;
+﻿using System.Reflection.Metadata;
+using HospitalManagementSystem.Models;
 using HospitalManagementSystem.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Razorpay.Api;
-
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace HospitalManagementSystem.Controllers
 {
@@ -49,51 +51,57 @@ namespace HospitalManagementSystem.Controllers
         [HttpGet]
         public IActionResult DisplayBill(int invoiceId)
         {
+            // Fetch the invoice by ID
             var invoice = billingRepository.GetInvoiceById(invoiceId);
             if (invoice == null)
             {
-                return NotFound();
+                return NotFound(); // Return 404 if invoice not found
             }
 
+            // Fetch the associated patient using the PatientId from the invoice
             var patient = patientRepository.GetById(invoice.PatientId);
             if (patient == null)
             {
-                ViewBag.Patient = null; // Ensure null if patient not found
+                ViewBag.Patient = null; // Set ViewBag.Patient to null if patient not found
             }
             else
             {
                 ViewBag.Patient = patient;
             }
 
+            // If the invoice amount is greater than or equal to ₹1, proceed with Razorpay order creation
             if (invoice.Amount >= 1.00m)
             {
                 var options = new Dictionary<string, object>
-        {
-            { "amount", (int)(invoice.Amount * 100) }, // amount in paise
-            { "currency", "INR" },
-            { "receipt", $"INV{invoice.InvoiceId}" },
-            { "payment_capture", 1 }
-        };
+            {
+                { "amount", (int)(invoice.Amount * 100) }, // Convert amount to paise
+                { "currency", "INR" },
+                { "receipt", $"INV{invoice.InvoiceId}" },
+                { "payment_capture", 1 }
+            };
 
+                // Initialize Razorpay client
                 RazorpayClient client = new RazorpayClient(_razorpayConfig.Key, _razorpayConfig.Secret);
                 Order order = client.Order.Create(options);
 
-                string orderId = order["id"].ToString();  // Ensure order ID is a string
+                // Store Razorpay order ID in ViewBag to pass it to the view
+                string orderId = order["id"].ToString();
                 ViewBag.OrderId = orderId;
                 ViewBag.Key = _razorpayConfig.Key;
 
-                // Store Razorpay order ID in invoice
+                // Update the invoice with the Razorpay order ID
                 invoice.RazorpayOrderId = orderId;
-                billingRepository.UpdateInvoice(invoice);
+                billingRepository.UpdateInvoice(invoice); // Save the Razorpay order ID in your database
             }
             else
             {
-                TempData["Error"] = "The invoice amount must be at least ₹1.";
+                TempData["Error"] = "The invoice amount must be at least ₹1."; // Show error message if the invoice amount is less than ₹1
             }
 
-            ViewBag.Invoice = invoice;  // Make sure to pass the invoice object as well
+            // Return the view with the invoice model
             return View(invoice);
         }
+
 
         [HttpGet]
         public IActionResult ThankYou(string paymentId)
@@ -103,18 +111,100 @@ namespace HospitalManagementSystem.Controllers
                 var razorpayClient = new RazorpayClient(_razorpayConfig.Key, _razorpayConfig.Secret);
                 var paymentDetails = razorpayClient.Payment.Fetch(paymentId);
 
-                ViewBag.PaymentId = paymentDetails["id"].ToString();
-                ViewBag.Status = paymentDetails["status"].ToString();
-                ViewBag.Amount = (Convert.ToDecimal(paymentDetails["amount"]) / 100).ToString("F2");
+                string orderId = paymentDetails["order_id"].ToString();  // Razorpay order ID
 
-                return View();  // Return the ThankYou.cshtml view
+                // Mark the invoice as paid using the Razorpay Order ID
+                billingRepository.MarkInvoiceAsPaid(orderId);
+
+                // Retrieve invoice by Razorpay order ID to display details
+                var invoice = billingRepository.GetInvoiceByRazorpayOrderId(orderId);
+
+                ViewBag.PaymentId = paymentId;
+                ViewBag.Invoice = invoice;
+
+                return View();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 TempData["Error"] = "Could not fetch payment details.";
-                return RedirectToAction("DisplayBill");
+                return RedirectToAction("DisplayBill", new { invoiceId = 0 }); // fallback
             }
         }
+
+
+
+        [HttpGet]
+        public IActionResult DownloadInvoice(int invoiceId)
+        {
+            var invoice = billingRepository.GetInvoiceById(invoiceId);
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                var document = new iTextSharp.text.Document(PageSize.A4, 40f, 40f, 60f, 40f);
+                PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+                document.Open();
+
+                // Add hospital logo (optional)
+                string logoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "hospital-logo.png");
+                if (System.IO.File.Exists(logoPath))
+                {
+                    var logo = iTextSharp.text.Image.GetInstance(logoPath);
+                    logo.ScaleToFit(100f, 100f);
+                    logo.Alignment = iTextSharp.text.Image.ALIGN_CENTER;
+                    document.Add(logo);
+                }
+
+                // Add header
+                var headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+                var normalFont = FontFactory.GetFont(FontFactory.HELVETICA, 12);
+                var boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12);
+
+                document.Add(new Paragraph("INVOICE", headerFont) { Alignment = Element.ALIGN_CENTER });
+                document.Add(new Paragraph($"Date: {DateTime.Now:dd-MM-yyyy HH:mm}", normalFont));
+                document.Add(new Paragraph("\n"));
+
+                // Add invoice details in table format
+                PdfPTable table = new PdfPTable(2);
+                table.WidthPercentage = 100;
+                table.SpacingBefore = 10f;
+                table.SpacingAfter = 10f;
+
+                table.AddCell(new PdfPCell(new Phrase("Invoice ID", boldFont)) { Border = 0 });
+                table.AddCell(new PdfPCell(new Phrase(invoice.InvoiceId.ToString(), normalFont)) { Border = 0 });
+
+                table.AddCell(new PdfPCell(new Phrase("Patient ID", boldFont)) { Border = 0 });
+                table.AddCell(new PdfPCell(new Phrase(invoice.PatientId.ToString(), normalFont)) { Border = 0 });
+
+                table.AddCell(new PdfPCell(new Phrase("Description", boldFont)) { Border = 0 });
+                table.AddCell(new PdfPCell(new Phrase(invoice.Description, normalFont)) { Border = 0 });
+
+                table.AddCell(new PdfPCell(new Phrase("Amount", boldFont)) { Border = 0 });
+                table.AddCell(new PdfPCell(new Phrase($"₹{invoice.Amount:F2}", normalFont)) { Border = 0 });
+
+                table.AddCell(new PdfPCell(new Phrase("Discount", boldFont)) { Border = 0 });
+                table.AddCell(new PdfPCell(new Phrase($"₹{invoice.Discount:F2}", normalFont)) { Border = 0 });
+
+                table.AddCell(new PdfPCell(new Phrase("Tax", boldFont)) { Border = 0 });
+                table.AddCell(new PdfPCell(new Phrase($"₹{invoice.Tax:F2}", normalFont)) { Border = 0 });
+
+                table.AddCell(new PdfPCell(new Phrase("Total Amount", boldFont)) { Border = 0 });
+                table.AddCell(new PdfPCell(new Phrase($"₹{invoice.TotalAmount:F2}", normalFont)) { Border = 0 });
+
+                document.Add(table);
+
+                document.Add(new Paragraph("\nThank you for your payment!", normalFont));
+
+                document.Close();
+                writer.Close();
+
+                return File(memoryStream.ToArray(), "application/pdf", $"Invoice_{invoice.InvoiceId}.pdf");
+            }
+        }
+
 
         [HttpGet]
         public IActionResult EditInvoicing(int id)

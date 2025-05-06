@@ -96,7 +96,7 @@
                             <th>Type</th>
                             <th>Status</th>
                             <th>Capacity</th>
-                            <th>Quantity</th>
+                           
                             <th>Last Updated</th>
                             <th>Image</th>
                             <th>Actions</th>
@@ -113,7 +113,7 @@
                                     <td>@room.RoomType</td>
                                     <td>@room.Status</td>
                                     <td>@room.Capacity</td>
-                                    <td>@room.Quantity</td>
+                                    
                                     <td>@room.LastUpdated.ToString("yyyy-MM-dd HH:mm")</td>
                                     <td>
                                         @if (!string.IsNullOrEmpty(room.room_img))
@@ -127,7 +127,7 @@
                                     </td>
                                     <td class="action-icons">
                                         <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal"
-                                                onclick="loadEditModal(@room.RoomID, '@room.RoomNumber', '@room.RoomType', '@room.Status', @room.Capacity, '@room.Quantity')">
+                                                onclick="loadEditModal(@room.RoomID, '@room.RoomNumber', '@room.RoomType', '@room.Status', @room.Capacity)">
                                             <i class="fa-solid fa-edit"></i>
                                         </button>
                                         &nbsp;
@@ -187,10 +187,7 @@
                             <input type="number" class="form-control" id="roomCapacity" name="Capacity" required />
                         </div>
 
-                        <div class="mb-3">
-                            <label for="roomQuantity" class="form-label">Quantity</label>
-                            <input type="text" class="form-control" id="roomQuantity" name="Quantity" />
-                        </div>
+                  
 
                         <div class="mb-3">
                             <label for="roomImage" class="form-label">Room Image</label>

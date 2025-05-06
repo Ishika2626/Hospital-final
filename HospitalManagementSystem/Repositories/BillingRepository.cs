@@ -1,6 +1,7 @@
 ﻿using HospitalManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace HospitalManagementSystem.Repositories
 {
@@ -159,19 +160,27 @@ namespace HospitalManagementSystem.Repositories
             }
         }
 
-
         public void DeleteInvoice(int invoiceId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = "DELETE FROM BillingPayment.invoicing WHERE invoice_id = @InvoiceId";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@InvoiceId", invoiceId);
+                // First, delete the related records in payment_tracking
+                string deleteTrackingQuery = "DELETE FROM BillingPayment.payment_tracking WHERE invoice_id = @InvoiceId";
+                SqlCommand deleteTrackingCmd = new SqlCommand(deleteTrackingQuery, conn);
+                deleteTrackingCmd.Parameters.AddWithValue("@InvoiceId", invoiceId);
 
                 conn.Open();
-                cmd.ExecuteNonQuery();
+                deleteTrackingCmd.ExecuteNonQuery();
+
+                // Then, delete the invoice record
+                string deleteInvoiceQuery = "DELETE FROM BillingPayment.invoicing WHERE invoice_id = @InvoiceId";
+                SqlCommand deleteInvoiceCmd = new SqlCommand(deleteInvoiceQuery, conn);
+                deleteInvoiceCmd.Parameters.AddWithValue("@InvoiceId", invoiceId);
+
+                deleteInvoiceCmd.ExecuteNonQuery();
             }
         }
+
 
 
         public void DeletePayment(int paymentId)
@@ -251,7 +260,7 @@ namespace HospitalManagementSystem.Repositories
                             Amount = (decimal)reader["amount"],
                             Discount = (decimal)reader["discount"],
                             Tax = (decimal)reader["tax"],
-                            TotalAmount = (decimal)reader["total_amount"],
+                           
                             InvoiceDate =  (DateTime)reader["invoice_date"],
                             DueDate =  (DateTime)reader["due_date"],
                             Status = reader["status"].ToString()
@@ -587,24 +596,56 @@ namespace HospitalManagementSystem.Repositories
         }
 
 
-        public void MarkInvoiceAsPaid(string razorpayOrderId, string razorpayPaymentId)
+        public void MarkInvoiceAsPaid(string razorpayOrderId)
         {
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
-                string query = @"UPDATE BillingPayment.invoicing 
-                         SET status = 'Paid', 
-                             updated_at = GETDATE()
-                         WHERE invoice_id = (
-                             SELECT CAST(SUBSTRING(@razorpayOrderId, 4, LEN(@razorpayOrderId)) AS INT)
-                         )";
+                string query = @"
+            UPDATE BillingPayment.invoicing 
+            SET status = 'Paid', updated_at = GETDATE()
+            WHERE razorpay_order_id = @razorpayOrderId";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@razorpayOrderId", razorpayOrderId);
-                cmd.Parameters.AddWithValue("@razorpayPaymentId", razorpayPaymentId);
 
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        public Invoice GetInvoiceByRazorpayOrderId(string razorpayOrderId)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                string query = @"SELECT invoice_id, patient_id, invoice_date, description, amount, discount, tax, total_amount, razorpay_order_id, status
+                         FROM BillingPayment.invoicing
+                         WHERE razorpay_order_id = @razorpayOrderId";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@razorpayOrderId", razorpayOrderId);
+
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new Invoice
+                        {
+                            InvoiceId = Convert.ToInt32(reader["invoice_id"]),
+                            PatientId = Convert.ToInt32(reader["patient_id"]),
+                            InvoiceDate = Convert.ToDateTime(reader["invoice_date"]),
+                            Description = reader["description"].ToString(),
+                            Amount = Convert.ToDecimal(reader["amount"]),
+                            Discount = Convert.ToDecimal(reader["discount"]),
+                            Tax = Convert.ToDecimal(reader["tax"]),
+                            
+                            RazorpayOrderId = reader["razorpay_order_id"].ToString(),
+                            Status = reader["status"].ToString()
+                        };
+                    }
+                }
+            }
+            return null; // Invoice not found
         }
 
     }
