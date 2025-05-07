@@ -53,12 +53,6 @@ namespace HospitalManagementSystem.Controllers
         {
             // Fetch the invoice by ID
             var invoice = billingRepository.GetInvoiceById(invoiceId);
-            if (invoice == null)
-            {
-                return NotFound(); // Return 404 if invoice not found
-            }
-
-            // Fetch the associated patient using the PatientId from the invoice
             var patient = patientRepository.GetById(invoice.PatientId);
             if (patient == null)
             {
@@ -70,11 +64,11 @@ namespace HospitalManagementSystem.Controllers
             }
 
             // If the invoice amount is greater than or equal to ₹1, proceed with Razorpay order creation
-            if (invoice.Amount >= 1.00m)
+            if (invoice.TotalAmount >= 1.00m)
             {
                 var options = new Dictionary<string, object>
             {
-                { "amount", (int)(invoice.Amount * 100) }, // Convert amount to paise
+                { "amount", (int)(invoice.TotalAmount * 100) }, // Convert amount to paise
                 { "currency", "INR" },
                 { "receipt", $"INV{invoice.InvoiceId}" },
                 { "payment_capture", 1 }

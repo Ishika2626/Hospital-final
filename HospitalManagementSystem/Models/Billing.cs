@@ -65,6 +65,8 @@ namespace HospitalManagementSystem.Models
         [Column("razorpay_order_id")]
         [StringLength(255)] // String length based on Razorpay order ID length
         public string RazorpayOrderId { get; set; }
+      
+
     }
 
     [Table("insurance_integration", Schema = "BillingPayment")]

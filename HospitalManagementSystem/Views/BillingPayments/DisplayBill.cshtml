@@ -20,12 +20,13 @@
         <p><strong>Invoice ID:</strong> @Model.InvoiceId</p>
         <p><strong>Date:</strong> @Model.InvoiceDate.ToString("dd MMM yyyy")</p>
         <p><strong>Description:</strong> @Model.Description</p>
-        <p><strong>Amount:</strong> ₹@Model.Amount.ToString("F2")</p>
-        <p><strong>Discount:</strong> ₹@Model.Discount.ToString("F2")</p>
-        <p><strong>Tax:</strong> ₹@Model.Tax.ToString("F2")</p>
-        <p><strong>Total Amount:</strong> ₹@Model.TotalAmount.ToString("F2")</p>
-
+        <p><strong>Amount:</strong> @Model.Amount.ToString("C2")</p>
+        <p><strong>Discount:</strong> @Model.Discount.ToString("C2")</p>
+        <p><strong>Tax:</strong> @Model.Tax.ToString("C2")</p>
+        <p><strong>Total Amount:</strong> @Model.TotalAmount.ToString("C2")</p>
+       
         <hr />
+
 
         @if (Model.Amount >= 1.00m && Model.Status != "Paid")
         {

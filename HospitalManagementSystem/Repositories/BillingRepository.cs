@@ -412,6 +412,8 @@ namespace HospitalManagementSystem.Repositories
                             PatientId = (int)reader["patient_id"],
                             InvoiceDate = (DateTime)reader["invoice_date"],
                             Amount = (decimal)reader["Amount"],
+                            Discount = (decimal)reader["discount"],
+                            Tax = (decimal)reader["tax"],
                             Description = reader["Description"].ToString(),
                             Status = reader["Status"].ToString()
                         };
