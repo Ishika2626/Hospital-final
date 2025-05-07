@@ -12,13 +12,15 @@ namespace HospitalManagementSystem.Controllers
         private readonly IBedsRepository bedsRepository;
         private readonly IAppointmentRepository appointmentRepository;
         private readonly IBillingRepository billingRepository;
-        public DashBoardController(IPatientRepository patientRepo, IDoctorRepository doctorRepository, IBedsRepository bedsRepository, IAppointmentRepository appointmentRepository,IBillingRepository billingRepository)
+        private readonly IStaffRepository staffRepository;
+        public DashBoardController(IPatientRepository patientRepo, IDoctorRepository doctorRepository, IBedsRepository bedsRepository, IAppointmentRepository appointmentRepository,IBillingRepository billingRepository, IStaffRepository staffRepository)
         {
             _patientRepo = patientRepo;
             this.doctorRepository = doctorRepository;
             this.bedsRepository = bedsRepository;
             this.appointmentRepository = appointmentRepository;
             this.billingRepository = billingRepository;
+            this.staffRepository = staffRepository;
         }
 
 
@@ -28,8 +30,7 @@ namespace HospitalManagementSystem.Controllers
             var totalDoctors = doctorRepository.GetAllDoctors().Count();
             var totalBeds = bedsRepository.GetAllBeds().Count();
             var totalappoinments = appointmentRepository.GetAllAppointments().Count();
-            
-
+          
             var recentAdmissions = _patientRepo.GetAllpatient_admission()
                                                .OrderByDescending(a => a.admission_date)
                                                .Take(3)
@@ -41,7 +42,7 @@ namespace HospitalManagementSystem.Controllers
                                                  .OrderByDescending(a => a.AppointmentDate)
                                                  .Take(3)
                                                  .ToList();
-
+            var departments = staffRepository.GetAllDepartments();
             var billingSummaries = billingRepository.GetAllInvoices()
                             .OrderByDescending(b => b.InvoiceDate)
             .Take(5) // Take top 5 recent invoices
@@ -80,6 +81,12 @@ namespace HospitalManagementSystem.Controllers
                     Status=appt.Status
                 }).ToList(),
 
+                Departments = departments.Select(apt=>new Department
+               {
+                   DepartmentId=apt.DepartmentId,
+                   DepartmentName=apt.DepartmentName,
+               }).ToList(),
+
                 BillingSummaries = billingSummaries
             };
 
@@ -88,8 +95,55 @@ namespace HospitalManagementSystem.Controllers
 
         public IActionResult adminProfile()
         {
+            ViewBag.LoginID = HttpContext.Session.GetString("LoginID");
+            ViewBag.Role = HttpContext.Session.GetString("Role");
+            ViewBag.FullName = HttpContext.Session.GetString("FullName");
+            ViewBag.Email = HttpContext.Session.GetString("Email");
+            ViewBag.PhoneNumber = HttpContext.Session.GetString("PhoneNumber");
+            ViewBag.Address = HttpContext.Session.GetString("Address");
+            ViewBag.EmployeeId = HttpContext.Session.GetInt32("EmployeeId");
+            ViewBag.Gender = HttpContext.Session.GetString("Gender");
+            ViewBag.DateOfBirth = HttpContext.Session.GetString("DateOfBirth");
+            ViewBag.HireDate = HttpContext.Session.GetString("HireDate");
+
             return View();
         }
+
+        [HttpPost]
+        public IActionResult UpdateProfile(Employee model)
+        {
+
+            staffRepository.Updateprofile(model); // Calls the Update method in the repository
+                                                  // Optionally, you can update session values
+            HttpContext.Session.SetString("Email", model.Email);
+            HttpContext.Session.SetString("PhoneNumber", model.PhoneNumber);
+            HttpContext.Session.SetString("Address", model.Address);
+
+            // Provide feedback to the user
+            TempData["Success"] = "Profile updated successfully!";
+            return RedirectToAction("adminProfile");
+
+
+        }
+
+        [HttpPost]
+        public IActionResult ChangePassword(string currentPassword, string newPassword)
+        {
+
+            int empId = HttpContext.Session.GetInt32("EmployeeId") ?? 0;
+
+            bool success = staffRepository.ChangePassword(empId, currentPassword, newPassword);
+
+            if (success)
+                TempData["Message"] = "Password updated successfully.";
+            else
+                TempData["Error"] = "Incorrect current password.";
+
+            return RedirectToAction("adminProfile"); // or wherever your profile page is
+        }
+
+
+
         public IActionResult adminSetting()
         {
             return View();

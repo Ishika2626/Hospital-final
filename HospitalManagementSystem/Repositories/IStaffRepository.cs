@@ -62,5 +62,8 @@ namespace HospitalManagementSystem.Repositories
         AttendanceModel GetAttendanceForToday(int employeeId, DateTime date);
         void InsertPunchIn(AttendanceModel model);
         void UpdatePunchOut(AttendanceModel model);
+
+
+        IEnumerable<Employee> GetEmployee();
     }
 }

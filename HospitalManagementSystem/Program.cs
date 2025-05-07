@@ -27,6 +27,7 @@ namespace HospitalManagementSystem
             builder.Services.AddScoped<IBillingRepository, BillingRepository>();
             builder.Services.AddScoped<IPharmacyRepository, PharmacyRepository>();
             builder.Services.AddScoped<IStaffRepository, StaffRepository>();
+            builder.Services.AddScoped<IReportsAnalyticsRepository, ReportsAnalyticsRepository>();
 
             // Load configuration from user secrets (only for development environment)
             if (builder.Environment.IsDevelopment())
@@ -63,7 +64,7 @@ namespace HospitalManagementSystem
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Patient}/{action=PatientLogin}/{id?}");
+                pattern: "{controller=RegisterLogin}/{action=Login}/{id?}");
 
             app.Run();
         }

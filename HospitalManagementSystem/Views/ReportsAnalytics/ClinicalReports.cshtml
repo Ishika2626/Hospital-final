@@ -1,7 +1,8 @@
-﻿@{
+﻿@model HospitalManagementSystem.Models.ClinicalReport
+
+@{
     Layout = "~/Views/Shared/admin.cshtml";
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +32,7 @@
         }
 
         .card-header {
-            background-color: #007bff;
+            background: linear-gradient(to right, #1e3c72, #2a5298); /* Gradient blue */
             color: white;
             text-align: center;
             font-size: 22px;
@@ -48,93 +49,100 @@
     </style>
 </head>
 <body>
-    <div class="col-md-2" style="margin-left:40px;">
-        <a href="@Url.Action("DisplayClinicalReports","ReportsAnalytics")" class="btn btn-primary btn-sm px-3 py-2" style="font-size: 14px;">
-            <i class="fa-solid fa-list"></i> Clinical Report List
-        </a>
-    </div>
-    <div class="container">
-        <div class="card p-3">
-            <div class="card-header">
-                <i class="fa-solid fa-notes-medical"></i> Clinical Report Entry
-            </div>
 
-            <div class="card-body">
-                <form id="clinicalReportForm">
-                    <div class="row">
-                        <!-- Patient ID -->
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fa-solid fa-id-badge"></i> Patient ID</label>
-                            <input type="text" class="form-control" id="patient_id" placeholder="Enter patient ID" required>
-                        </div>
+<div class="col-md-2" style="margin-left:40px;">
+        <a href="@Url.Action("DisplayClinicalReports","ReportsAnalytics")" class="btn btn-primary btn-sm px-3 py-2" style="font-size: 14px; background: linear-gradient(to right, #1e3c72, #2a5298); border: none;">
+        <i class="fa-solid fa-list"></i> Clinical Report List
+    </a>
+</div>
 
-                        <!-- Doctor ID -->
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fa-solid fa-user-md"></i> Doctor ID</label>
-                            <input type="text" class="form-control" id="doctor_id" placeholder="Enter doctor ID" required>
-                        </div>
-
-                        <!-- Diagnosis -->
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label"><i class="fa-solid fa-diagnoses"></i> Diagnosis</label>
-                            <input type="text" class="form-control" id="diagnosis" placeholder="Enter diagnosis" required>
-                        </div>
-
-                        <!-- Treatment Plan -->
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label"><i class="fa-solid fa-file-medical"></i> Treatment Plan</label>
-                            <textarea class="form-control" id="treatment_plan" placeholder="Enter treatment plan"></textarea>
-                        </div>
-
-                        <!-- Treatment Start Date -->
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fa-solid fa-calendar-plus"></i> Treatment Start Date</label>
-                            <input type="date" class="form-control" id="treatment_start_date" required>
-                        </div>
-
-                        <!-- Treatment End Date -->
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fa-solid fa-calendar-minus"></i> Treatment End Date</label>
-                            <input type="date" class="form-control" id="treatment_end_date">
-                        </div>
-
-                        <!-- Outcome -->
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fa-solid fa-heartbeat"></i> Outcome</label>
-                            <select class="form-control" id="outcome" required>
-                                <option value="">Select Outcome</option>
-                                <option value="Recovered">Recovered</option>
-                                <option value="Ongoing">Ongoing</option>
-                                <option value="Critical">Critical</option>
-                                <option value="Deceased">Deceased</option>
-                            </select>
-                        </div>
-
-                        <!-- Notes -->
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label"><i class="fa-solid fa-sticky-note"></i> Notes</label>
-                            <textarea class="form-control" id="notes" placeholder="Enter additional notes"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Buttons -->
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <button type="submit" class="btn btn-success">
-                                <i class="fa-solid fa-floppy-disk"></i> Save Report
-                            </button>
-                        </div>
-                        <div class="col-md-6">
-                            <button type="reset" class="btn btn-danger">
-                                <i class="fa-solid fa-eraser"></i> Reset
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+<div class="container">
+    <div class="card p-3">
+        <div class="card-header">
+            <i class="fa-solid fa-notes-medical"></i> Clinical Report Entry
         </div>
-       
+
+        <div class="card-body">
+                <form asp-action="ClinicalReports" asp-controller="ReportsAnalytics" method="post" enctype="multipart/form-data">
+
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-id-badge"></i> Patient Name</label>
+                            @Html.DropDownListFor(m => m.PatientID,
+                                     (List<SelectListItem>)ViewBag.patientName,
+                                     "-- Select Patient --",
+                                     new { @class = "form-control", required = "required" })
+                        </div>
+
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label"><i class="fa-solid fa-id-badge"></i> Doctor Name</label>
+                            @Html.DropDownListFor(m => m.DoctorID,
+                                     (List<SelectListItem>)ViewBag.doctorName,
+                                     "-- Select Docotr --",
+                                     new { @class = "form-control", required = "required" })
+                        </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Diagnosis</label>
+                        <input asp-for="Diagnosis" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Treatment Plan</label>
+                        <textarea asp-for="TreatmentPlan" class="form-control"></textarea>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Treatment Start Date</label>
+                        <input asp-for="TreatmentStartDate" type="date" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Treatment End Date</label>
+                        <input asp-for="TreatmentEndDate" type="date" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Outcome</label>
+                        <select asp-for="Outcome" class="form-control" required>
+                            <option value="">Select Outcome</option>
+                            <option value="Recovered">Recovered</option>
+                            <option value="Ongoing">Ongoing</option>
+                            <option value="Critical">Critical</option>
+                            <option value="Deceased">Deceased</option>
+                        </select>
+                    </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Upload Report Image</label>
+                            <input type="file" name="imageFile" class="form-control" />
+                        </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Notes</label>
+                        <textarea asp-for="Notes" class="form-control"></textarea>
+                    </div>
+
+                   
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa-solid fa-floppy-disk"></i> Save Report
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="reset" class="btn btn-danger">
+                            <i class="fa-solid fa-eraser"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

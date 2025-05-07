@@ -1234,6 +1234,37 @@ WHERE npa.employee_id = @employeeId
                 cmd.ExecuteNonQuery();
             }
         }
+
+        public IEnumerable<Employee> GetEmployee()
+        {
+            var employees = new List<Employee>();
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT * FROM EmployeeManagement.Employee";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var emp = new Employee
+                        {
+                            EmployeeId = reader.GetInt32(reader.GetOrdinal("employee_id")),
+                            FirstName = reader.GetString(reader.GetOrdinal("first_name")),
+                           LastName= reader.GetString(reader.GetOrdinal("last_name"))
+                        };
+
+                        employees.Add(emp);
+                    }
+                }
+            }
+
+            return employees;
+        }
+
     }
 }
 

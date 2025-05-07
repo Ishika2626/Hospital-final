@@ -218,7 +218,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var bill in Model.BillingSummaries) 
+                            @foreach (var bill in Model.BillingSummaries.Take(3)) 
                              { 
                                 <tr> 
                                      <td>@bill.BillId</td> 
@@ -239,17 +239,16 @@
                         <thead>
                             <tr>
                                 <th>Department</th>
-                                <th>Visits</th>
+                              
                             </tr>
                         </thead>
                         <tbody>
-                            @* @foreach (var dept in Model.TopDepartments) *@
-                            @* { *@
-                            @*     <tr> *@
-                            @*         <td>@dept.Name</td> *@
-                            @*         <td>@dept.VisitCount</td> *@
-                            @*     </tr> *@
-                            @* } *@
+                            @foreach (var dept in Model.Departments.Take(3))
+                            {
+                                <tr>
+                                    <td>@dept.DepartmentName</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
