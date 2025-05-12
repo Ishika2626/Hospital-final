@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using System.IO;
 using Microsoft.AspNetCore.Hosting.Server;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HospitalManagementSystem.Controllers
 {
@@ -117,6 +118,7 @@ namespace HospitalManagementSystem.Controllers
             ViewBag.patientName = patientRepository.GetPatientName();
             ViewBag.RoomTypes = patientRepository.GetRoomTypes();
             ViewBag.BedTypes = patientRepository.GetBedTypes();
+
             return View(admission);
         }
 

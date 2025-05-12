@@ -176,6 +176,7 @@ namespace HospitalManagementSystem.Models
 
         [Column("doctor_id")]
         public int DoctorId { get; set; }
+        public Doctor doctor { get; set; }  
 
         [Required]
         [Column("visit_reason")]

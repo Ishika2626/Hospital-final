@@ -9,7 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Doctor Registration</title>
+    <title>Edit Doctor</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -31,19 +31,19 @@
         }
 
         .card-header {
-            background-color: #007bff;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
             color: white;
             text-align: center;
             font-size: 22px;
             font-weight: bold;
         }
 
-        .form-control {
-            border-radius: 5px;
-        }
-
         .btn {
             width: 100%;
+        }
+
+        .form-control {
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -58,95 +58,94 @@
     <div class="container">
         <div class="card p-3">
             <div class="card-header">
-                <i class="fa-solid fa-user-md"></i> Doctor Registration
+                <i class="fa-solid fa-user-md"></i> Edit Doctor
             </div>
 
             <div class="card-body">
-                <form asp-action="Doctors" asp-controller="Doctors" enctype="multipart/form-data" method="post">
-             
+                <form asp-action="EditDoctor" asp-controller="Doctors" enctype="multipart/form-data" method="post">
+                    <input type="hidden" asp-for="DoctorId" />
+
                     <div class="row">
                         <!-- Full Name -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label"><i class="fa-solid fa-user"></i> Full Name</label>
-                            @Html.TextBoxFor(model => model.FullName, new { @class = "form-control", required = "required" })
+                            <input type="text" class="form-control" asp-for="FullName" required />
                         </div>
 
                         <!-- Email -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label"><i class="fa-solid fa-envelope"></i> Email</label>
-                            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", type = "email", required = "required" })
+                            <input type="email" class="form-control" asp-for="Email" required />
                         </div>
 
-                        <!-- Phone Number -->
+                        <!-- Phone -->
                         <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fa-solid fa-phone"></i> Phone Number</label>
-                            @Html.TextBoxFor(model => model.PhoneNumber, new { @class = "form-control", required = "required" })
+                            <label class="form-label"><i class="fa-solid fa-phone"></i> Phone</label>
+                            <input type="text" class="form-control" asp-for="PhoneNumber" required />
                         </div>
 
                         <!-- Gender -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label"><i class="fa-solid fa-venus-mars"></i> Gender</label>
-                            @Html.DropDownListFor(model => model.Gender, new List<SelectListItem>
-                        {
-                        new SelectListItem { Text = "Select Gender", Value = "" },
-                        new SelectListItem { Text = "Male", Value = "Male" },
-                        new SelectListItem { Text = "Female", Value = "Female" },
-                        new SelectListItem { Text = "Other", Value = "Other" }
-                        }, new { @class = "form-control", required = "required" })
+                            <select class="form-control" asp-for="Gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
 
                         <!-- Date of Birth -->
                         <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fa-solid fa-calendar"></i> Date of Birth</label>
-                            @Html.TextBoxFor(model => model.DateOfBirth, new { @class = "form-control", type = "date", required = "required" })
+                            <label class="form-label"><i class="fa-solid fa-calendar"></i> DOB</label>
+                            <input type="date" class="form-control" asp-for="DateOfBirth" required />
                         </div>
 
                         <!-- Qualification -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label"><i class="fa-solid fa-user-graduate"></i> Qualification</label>
-                            @Html.TextBoxFor(model => model.Qualification, new { @class = "form-control", required = "required" })
+                            <input type="text" class="form-control" asp-for="Qualification" required />
                         </div>
 
                         <!-- Experience -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label"><i class="fa-solid fa-briefcase"></i> Experience (Years)</label>
-                            @Html.TextBoxFor(model => model.Experience, new { @class = "form-control", type = "number", required = "required" })
+                            <input type="number" class="form-control" asp-for="Experience" required />
                         </div>
 
                         <!-- Status -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label"><i class="fa-solid fa-toggle-on"></i> Status</label>
-                            @Html.DropDownListFor(model => model.Status, new List<SelectListItem>
-                        {
-                        new SelectListItem { Text = "Active", Value = "Active" },
-                        new SelectListItem { Text = "Inactive", Value = "Inactive" },
-                        new SelectListItem { Text = "On Leave", Value = "On Leave" }
-                        }, new { @class = "form-control", required = "required" })
+                            <select class="form-control" asp-for="Status" required>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="On Leave">On Leave</option>
+                            </select>
                         </div>
 
                         <!-- Password -->
                         <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fa-solid fa-lock"></i> Password</label>
-                            @Html.PasswordFor(model => model.Password, new { @class = "form-control", required = "required" })
+                            <label class="form-label"><i class="fa-solid fa-key"></i> Password</label>
+                            <input type="text" class="form-control" asp-for="Password" required />
                         </div>
 
-                       
-                        <!-- Profile Image -->
+                        <!-- Department -->
                         <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fa-solid fa-image"></i> Profile Image</label>
-                            <input type="file" name="doctor_img" class="form-control" required />
-
+                            <label class="form-label"><i class="fa-solid fa-hospital"></i> Department</label>
+                            @Html.DropDownListFor(m => m.DepartmentId, (IEnumerable<SelectListItem>)ViewBag.getDepartment,
+                                     "-- Select Department --", new { @class = "form-control", required = "required" })
                         </div>
 
-                       
+                        <!-- Upload New Profile Image -->
                         <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fa-solid fa-hospital"></i> Department Name</label>
-                            @Html.DropDownListFor(m => m.DepartmentId,
-                                     (IEnumerable<SelectListItem>)ViewBag.getDepartment,
-                                     "-- Select Department --",
-                                     new { @class = "form-control", required = "required" })
+                            @if (!string.IsNullOrEmpty(Model.Img))
+                            {
+                                <label>Current Profile Image</label>
+                                <img src="@Url.Content(Model.Img)" alt="Doctor Image" width="100" height="100" class="mb-2" />
+                            }
 
-
+                            <label><i class="fa-solid fa-image"></i> Upload New Profile Image</label>
+                            <input type="file" name="doctor_img" class="form-control" />
                         </div>
 
                     </div>
@@ -155,7 +154,7 @@
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <button type="submit" class="btn btn-success">
-                                <i class="fa-solid fa-floppy-disk"></i> Save Doctor
+                                <i class="fa-solid fa-floppy-disk"></i> Update Doctor
                             </button>
                         </div>
                         <div class="col-md-6">

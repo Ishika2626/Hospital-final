@@ -20,7 +20,7 @@ namespace HospitalManagementSystem.Repositories
             var doctorList = new List<Doctor>();
             using (SqlConnection con = new SqlConnection(_connectionstring))
             {
-                string query = "SELECT * FROM Doctors.doctors";
+                string query = "SELECT d.*, dep.department_name\r\nFROM Doctors.doctors d\r\nJOIN EmployeeManagement.Departments dep ON d.department_id = dep.department_id\r\n";
                 SqlCommand cmd = new SqlCommand(query, con);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -38,7 +38,13 @@ namespace HospitalManagementSystem.Repositories
                         Experience = (int)reader["Experience"],
                         Status = reader["Status"].ToString(),
                         Password = reader["Password"].ToString(),
-                        DepartmentId = (int)reader["department_id"],
+
+                        // Manually populate navigation property
+                        Department = new Department
+                        {
+                            DepartmentId = Convert.ToInt32(reader["department_id"]),
+                            DepartmentName = reader["department_name"].ToString()
+                        },
                         Img = reader["profile_photo"].ToString()
 
                     });
@@ -119,7 +125,7 @@ namespace HospitalManagementSystem.Repositories
 
                 if (string.IsNullOrEmpty(newPhotoPath))
                 {
-                    throw new Exception("Error saving photo.");
+                    throw new Exception("Error saving photo."); // Throw an exception if photo saving fails
                 }
             }
 
@@ -164,11 +170,19 @@ namespace HospitalManagementSystem.Repositories
         {
             using (SqlConnection con = new SqlConnection(_connectionstring))
             {
-                string query = "DELETE FROM Doctors.doctors WHERE doctor_id = @doctor_id";
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@doctor_id", doctorId);
                 con.Open();
-                cmd.ExecuteNonQuery();
+
+                // First delete patient admissions related to the doctor
+                string deleteAdmissions = "DELETE FROM patient.patient_admission WHERE doctor_id = @doctor_id";
+                SqlCommand cmd1 = new SqlCommand(deleteAdmissions, con);
+                cmd1.Parameters.AddWithValue("@doctor_id", doctorId);
+                cmd1.ExecuteNonQuery();
+
+                // Then delete the doctor
+                string deleteDoctor = "DELETE FROM Doctors.doctors WHERE doctor_id = @doctor_id";
+                SqlCommand cmd2 = new SqlCommand(deleteDoctor, con);
+                cmd2.Parameters.AddWithValue("@doctor_id", doctorId);
+                cmd2.ExecuteNonQuery();
             }
         }
 
@@ -177,12 +191,12 @@ namespace HospitalManagementSystem.Repositories
             if (doctor_img == null || doctor_img.Length == 0)
             {
                 Console.WriteLine("No file uploaded.");
-                return null;
+                return null; // No file uploaded, return null
             }
 
             if (!Directory.Exists(_imageFilePath))
             {
-                Directory.CreateDirectory(_imageFilePath);
+                Directory.CreateDirectory(_imageFilePath); // Ensure the upload directory exists
                 Console.WriteLine("Uploads folder created at: " + _imageFilePath);
             }
 
@@ -200,13 +214,12 @@ namespace HospitalManagementSystem.Repositories
             catch (Exception e)
             {
                 Console.WriteLine("Error while saving file: " + e.Message);
-                return null;
+                return null; // Return null if an error occurs
             }
 
-            return filePath; // Save the file path to the database
+            return "/uploads/" + fileName; // Return the correct file path
         }
 
-      
 
         public void DeleteDoctorSpecialization(int specialization_id)
         {

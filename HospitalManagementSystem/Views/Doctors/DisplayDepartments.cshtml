@@ -26,7 +26,7 @@
         }
 
         .table th {
-            background-color: #007bff;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
             color: white;
         }
 
@@ -52,12 +52,19 @@
             .action-icons i:hover {
                 color: #007bff;
             }
+
+        .gradient-text {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="card p-3">
-            <h2 class="text-center text-primary mb-3">
+            <h2 class="text-center mb-3 gradient-text">
                 <i class="fa-solid fa-building"></i> Staff Departments
             </h2>
 

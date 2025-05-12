@@ -102,11 +102,11 @@
                     </thead>
                     <tbody id="insuranceTable">
                         @{
-                            int count = 1;
+                            
                             foreach (var record in Model)
                             {
                                 <tr>
-                                    <td>@count</td>
+                                    <td>@record.InsuranceId</td>
                                     <td>@record.PatientId</td>
                                     <td>@record.InsuranceProvider</td>
                                     <td>@record.PolicyNumber</td>
@@ -141,7 +141,7 @@
                                     </td>
 
                                 </tr>
-                                count++;
+                               
                             }
                         }
                     </tbody>

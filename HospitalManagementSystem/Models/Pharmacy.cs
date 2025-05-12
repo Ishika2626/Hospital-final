@@ -166,4 +166,133 @@ namespace HospitalManagementSystem.Models
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
+
+
+
+
+
+    [Table("ambulance_requests", Schema = "EmergencyAmbulanceManagement")]
+    public class AmbulanceRequest
+    {
+        [Key]
+        [Column("RequestID")]
+        public int RequestID { get; set; }
+
+        [ForeignKey("Patient")]
+        [Column("PatientID")]
+        public int PatientID { get; set; }
+        public PatientRegistration Patient { get; set; }
+
+        [Column("RequestTime")]
+        public DateTime RequestTime { get; set; } = DateTime.Now;
+
+        [Column("PickupLocation")]
+        [Required]
+        [StringLength(255)]
+        public string PickupLocation { get; set; }
+
+        [Column("Destination")]
+        [Required]
+        [StringLength(255)]
+        public string Destination { get; set; }
+
+
+        [ForeignKey("Ambulance")]
+        [Column("AmbulanceID")]
+        public int? AmbulanceID { get; set; }
+        public Ambulance Ambulance { get; set; }
+
+        [Column("Status")]
+        public AmbulanceRequestStatus Status { get; set; } = AmbulanceRequestStatus.Pending;
+
+        [ForeignKey("Staff")]
+        [Column("AssignedDriver")]
+        public int AssignedDriver { get; set; }
+        public Employee AssignedStaff { get; set; }
+
+        [Column("Notes")]
+        public string Notes { get; set; }
+    }
+
+    public enum AmbulanceRequestStatus
+    {
+        Pending,
+        Accepted,
+        InTransit,
+        Completed,
+        Cancelled
+    }
+
+    // Emergency Cases Model
+    [Table("emergency_cases", Schema = "EmergencyAmbulanceManagement")]
+    public class EmergencyCase
+    {
+        [Key]
+        [Column("CaseID")]
+        public int CaseID { get; set; }
+
+        [ForeignKey("Patient")]
+        [Column("PatientID")]
+        public int PatientID { get; set; }
+        public PatientRegistration Patient { get; set; }
+
+        [Column("ArrivalTime")]
+        public DateTime ArrivalTime { get; set; } = DateTime.Now;
+
+        [Column("SeverityLevel")]
+        [Required]
+        public SeverityLevel SeverityLevel { get; set; }
+
+        [Column("Diagnosis")]
+        [StringLength(255)]
+        public string Diagnosis { get; set; }
+
+        [Column("TreatmentGiven")]
+        public string TreatmentGiven { get; set; }
+
+        [ForeignKey("Doctor")]
+        [Column("DoctorID")]
+        public int DoctorID { get; set; }
+        public Doctor Doctor { get; set; }
+
+        [Column("Status")]
+        [Required]
+        public EmergencyCaseStatus Status { get; set; }
+
+        [Column("Notes")]
+        public string Notes { get; set; }
+    }
+
+    public enum SeverityLevel
+    {
+        Low,
+        Moderate,
+        Severe,
+        Critical
+    }
+
+    public enum EmergencyCaseStatus
+    {
+        Admitted,
+        TreatedAndDischarged,
+        Transferred,
+        Deceased
+    }
+
+    // Ambulance Model (just to complete foreign key reference)
+    [Table("ambulances", Schema = "EmergencyManagement")]
+    public class Ambulance
+    {
+        [Key]
+        [Column("AmbulanceID")]
+        public int AmbulanceID { get; set; }
+
+        [Column("AmbulanceNumber")]
+        [StringLength(50)]
+        public string AmbulanceNumber { get; set; }
+
+        
+    }
+
+
 }

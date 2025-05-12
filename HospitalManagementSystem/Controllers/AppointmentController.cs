@@ -34,7 +34,7 @@ namespace HospitalManagementSystem.Controllers
             ViewBag.doctorName = doctorrepository.GetDoctorName();
             ViewBag.patientName = patientRepository.GetPatientName();
 
-            return View();
+            return View();   
         }
 
         [HttpPost]

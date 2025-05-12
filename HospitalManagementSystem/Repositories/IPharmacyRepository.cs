@@ -35,7 +35,26 @@ namespace HospitalManagementSystem.Repositories
 
         List<Medicine> GetMedicineList();
 
-     
+        // Ambulance Requests CRUD operations
+        IEnumerable<AmbulanceRequest> GetAllAmbulanceRequests();
+        AmbulanceRequest GetAmbulanceRequestById(int requestId);
+        void AddAmbulanceRequest(AmbulanceRequest request);
+        void UpdateAmbulanceRequest(AmbulanceRequest request);
+        void DeleteAmbulanceRequest(int requestId);
+
+        // Emergency Cases CRUD operations
+        IEnumerable<EmergencyCase> GetAllEmergencyCases();
+        EmergencyCase GetEmergencyCaseById(int caseId);
+        void AddEmergencyCase(EmergencyCase emergencyCase);
+        void UpdateEmergencyCase(EmergencyCase emergencyCase);
+        void DeleteEmergencyCase(int caseId);
+
+        // Ambulance CRUD operations
+        IEnumerable<Ambulance> GetAllAmbulances();
+        Ambulance GetAmbulanceById(int ambulanceId);
+        void AddAmbulance(Ambulance ambulance);
+        void UpdateAmbulance(Ambulance ambulance);
+        void DeleteAmbulance(int ambulanceId);
 
     }
 }

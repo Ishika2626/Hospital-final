@@ -48,18 +48,23 @@ namespace HospitalManagementSystem.Controllers
             return View(doctors);
         }
 
-
         [HttpGet]
         public IActionResult EditDoctor(int id)
         {
-
-            var doctors = doctorRepository.GetDoctorById(id);
-            if (doctors == null)
+            var doctor = doctorRepository.GetDoctorById(id);
+            if (doctor == null)
             {
                 return NotFound(); // Return 404 if not found
             }
 
-            return View(doctors);
+            var departments = doctorRepository.GetDepartment(); // You already use this in Doctors()
+            ViewBag.getDepartment = departments.Select(d => new SelectListItem
+            {
+                Value = d.DepartmentId.ToString(),
+                Text = d.DepartmentName
+            }).ToList();
+
+            return View(doctor);
         }
 
         [HttpPost]

@@ -230,7 +230,8 @@ namespace HospitalManagementSystem.Models
             ICU,
             Emergency,
             Pediatric,
-            Maternity
+            Maternity,
+        Private
     }
 
     // Enum for Room Type

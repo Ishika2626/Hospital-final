@@ -953,21 +953,21 @@ namespace HospitalManagementSystem.Repositories
             }
         }
 
-        private string SavePhoto(IFormFile patient_img)
+        private string SavePhoto(IFormFile doctor_img)
         {
-            if (patient_img == null || patient_img.Length == 0)
+            if (doctor_img == null || doctor_img.Length == 0)
             {
                 Console.WriteLine("No file uploaded.");
-                return null;
+                return null; // No file uploaded, return null
             }
 
             if (!Directory.Exists(_imageFilePath))
             {
-                Directory.CreateDirectory(_imageFilePath);
+                Directory.CreateDirectory(_imageFilePath); // Ensure the upload directory exists
                 Console.WriteLine("Uploads folder created at: " + _imageFilePath);
             }
 
-            string fileName = Guid.NewGuid() + Path.GetExtension(patient_img.FileName);
+            string fileName = Guid.NewGuid() + Path.GetExtension(doctor_img.FileName);
             string filePath = Path.Combine(_imageFilePath, fileName);
             Console.WriteLine("Saving file to: " + filePath);
 
@@ -975,18 +975,16 @@ namespace HospitalManagementSystem.Repositories
             {
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    patient_img.CopyTo(stream);
+                    doctor_img.CopyTo(stream);
                 }
-
-                string returnPath = "/uploads/" + fileName;
-                Console.WriteLine("File saved successfully at: " + returnPath);
-                return returnPath;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine("Error saving file: " + ex.Message);
-                return null;
+                Console.WriteLine("Error while saving file: " + e.Message);
+                return null; // Return null if an error occurs
             }
+
+            return "/uploads/" + fileName; // Return the correct file path
         }
 
         public void UpdateRoomOccupancy(Room_Occupancy occupancy)
