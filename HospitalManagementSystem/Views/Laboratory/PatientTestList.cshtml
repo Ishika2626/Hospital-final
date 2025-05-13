@@ -1,0 +1,174 @@
+﻿@model IEnumerable<PatientTestViewModel>
+
+@{
+    ViewData["Title"] = "Patient Test List";
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Patient Test List</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 15px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .btn-details {
+            background-color: #00bfff;
+            color: white;
+            border: none;
+        }
+
+            .btn-details:hover {
+                background-color: #009acd;
+            }
+
+        .table th, .table td {
+            vertical-align: middle !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Container -->
+    <div class="d-flex justify-content-center mt-5">
+        <div class="card p-3" style="width: 100%; max-width: 1200px;">
+            <div class="card-header">
+                <i class="fa-solid fa-vial"></i> Patient Test List
+            </div>
+
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Patient Test ID</th>
+                            <th>Test Order ID</th>
+                            <th>Test Name</th>
+                            <th>Test Type</th>
+                            <th>Result Received</th>
+                            <th>Result Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.PatientTestId</td>
+                                <td>@item.TestOrderId</td>
+                                <td>@item.TestName</td>
+                                <td>@item.TestType</td>
+                                <td>
+                                    @if (item.ResultReceived)
+                                    {
+                                        <span class="badge bg-success">Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">No</span>
+                                    }
+                                </td>
+                                <td>@item.ResultStatus</td>
+                                <td>
+                                    <button class="btn btn-sm btn-details" data-id="@item.PatientTestId" data-bs-toggle="modal" data-bs-target="#detailsModal">
+                                        <i class="fa fa-eye"></i> View Details
+                                    </button>
+
+                                    @if (item.ResultStatus == "Pending")
+                                    {
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    }
+                                    else if (item.ResultStatus == "Completed")
+                                    {
+                                        <span class="badge bg-primary">Completed</span>
+
+                                        @if (item.ReportId.HasValue)
+                                        {
+                                            <a href="@Url.Action("ViewReport", "Laboratory", new { id = item.ReportId })" class="btn btn-sm btn-success ms-2">
+                                                <i class="fa fa-file-medical"></i> View Report
+                                            </a>
+                                        }
+                                    }
+                                    else if (item.ResultStatus == "Reviewed")
+                                    {
+                                        <span class="badge bg-success">Reviewed</span>
+
+                                        @if (item.ReportId.HasValue)
+                                        {
+                                            <a href="@Url.Action("ViewReport", "Reports", new { id = item.ReportId })" class="btn btn-sm btn-success ms-2">
+                                                <i class="fa fa-file-medical"></i> View Report
+                                            </a>
+                                        }
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Patient Test Details -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModalLabel">Patient Test Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Patient Test Details will be loaded here via AJAX -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).on("click", ".btn-details", function () {
+            var patientTestId = $(this).data("id");
+
+            // Use AJAX to fetch the details
+            $.ajax({
+                url: '@Url.Action("Details", "Laboratory")/' + patientTestId,
+                type: 'GET',
+                success: function (data) {
+                    // Insert the fetched data into the modal body
+                    $('#modalBody').html(data);
+                },
+                error: function () {
+                    $('#modalBody').html('<p>Error loading patient test details.</p>');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

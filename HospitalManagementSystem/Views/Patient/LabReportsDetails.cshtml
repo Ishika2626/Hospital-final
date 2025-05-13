@@ -1,0 +1,74 @@
+﻿@model List<HospitalManagementSystem.Models.LabReportViewModel2>
+
+@{
+    ViewBag.Title = "Lab Report Details";
+    Layout = "~/Views/Shared/userLayout.cshtml";
+}
+
+<style>
+    .report-card {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        background-color: #f9f9f9;
+    }
+
+    .report-header {
+        font-size: 18px;
+        font-weight: 600;
+        color: #007bff;
+        margin-bottom: 10px;
+    }
+
+    .report-detail {
+        margin-bottom: 8px;
+    }
+
+    .icon {
+        margin-right: 5px;
+        color: #007bff;
+    }
+
+</style>
+
+<div class="container mt-5" style="margin-top:100px; padding:100px;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">📄 Your Lab Reports</h2>
+        <div>
+            <a href="@Url.Action("PatientDashboard", "Patient")" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var report in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="report-card">
+                        <div class="report-header">🧪 @report.TestName</div>
+                        <div class="report-detail"><strong>Test Order ID:</strong> @report.TestOrderId</div>
+                        <div class="report-detail"><strong>Patient ID:</strong> @report.PatientId</div>
+                        <div class="report-detail"><strong>Doctor:</strong> @report.DoctorName</div>
+                        <div class="report-detail">
+                            <a href="@report.ReportPdf" class="btn btn-outline-primary btn-sm" target="_blank">
+                                View Report
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            No reports found. Please upload your lab reports.
+        </div>
+    }
+</div>

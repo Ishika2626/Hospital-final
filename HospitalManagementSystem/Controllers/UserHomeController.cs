@@ -11,7 +11,8 @@ namespace HospitalManagementSystem.Controllers
         private readonly IPatientRepository patientRepository;
         private readonly IDoctorRepository doctorrepository;
         private readonly IBedsRepository bedRepository;
-        public UserHomeController(IAppointmentRepository appointmentRepository, IPatientRepository patientRepository, IDoctorRepository doctorrepository, IBedsRepository bedRepository,IStaffRepository _staffrepo)
+        private readonly ILabTestRepository labTestRepository;
+        public UserHomeController(IAppointmentRepository appointmentRepository, ILabTestRepository labTestRepository, IPatientRepository patientRepository, IDoctorRepository doctorrepository, IBedsRepository bedRepository,IStaffRepository _staffrepo)
         {
             
             this.appointmentRepository = appointmentRepository;
@@ -19,6 +20,7 @@ namespace HospitalManagementSystem.Controllers
             this.doctorrepository = doctorrepository;
             this.bedRepository = bedRepository;
             this._staffrepo = _staffrepo;
+            this.labTestRepository = labTestRepository;
         }
         public IActionResult Index()
         {
@@ -120,8 +122,21 @@ namespace HospitalManagementSystem.Controllers
 
         public IActionResult Laboratory()
         {
-            return View();
+            var userRole = HttpContext.Session.GetString("UserRole");
+            var patientId = HttpContext.Session.GetString("PatientId");
+
+            var labTests = labTestRepository.GetAllLabTests() ?? new List<LabTestViewModel>();
+            ViewBag.LabTests = labTests;
+
+            ViewBag.IsLoggedIn = !string.IsNullOrEmpty(userRole) && !string.IsNullOrEmpty(patientId);
+
+
+            // If logged in, pass the lab tests and other necessary details to the view
+            ViewBag.LabTests = labTestRepository.GetAllLabTests();
+            ViewBag.Doctors = doctorrepository.GetAllDoctors();
+            return View(labTests);
         }
+
         public IActionResult Careers()
         {
             var jobs = _staffrepo.GetAllOpenJobs();

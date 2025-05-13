@@ -1,0 +1,87 @@
+﻿@model HospitalManagementSystem.Models.LabTestViewModel
+
+@{
+    ViewData["Title"] = "Lab Test Details";
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+
+<!-- Bootstrap & FontAwesome are assumed to be in admin.cshtml layout -->
+
+<style>
+    body {
+        background: #f4f7f6;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background: linear-gradient(to right, #1e3c72, #2a5298);
+        color: white;
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .table th {
+        width: 30%;
+    }
+
+    .btn-back {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container">
+    <div class="card p-3">
+        <div class="card-header">
+            <i class="fa-solid fa-flask"></i> Lab Test Details
+        </div>
+
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Test Name:</th>
+                    <td>@Model.TestName</td>
+                </tr>
+                <tr>
+                    <th>Test Description:</th>
+                    <td>@Model.TestDescription</td>
+                </tr>
+                <tr>
+                    <th>Test Category:</th>
+                    <td>@Model.TestCategory</td>
+                </tr>
+                <tr>
+                    <th>Test Type:</th>
+                    <td>@Model.TestType</td>
+                </tr>
+                <tr>
+                    <th>Duration (mins):</th>
+                    <td>@Model.TestDuration</td>
+                </tr>
+                <tr>
+                    <th>Cost:</th>
+                    <td>@Model.TestCost.ToString("C")</td>
+                </tr>
+                <tr>
+                    <th>Test Method:</th>
+                    <td>@Model.TestMethod</td>
+                </tr>
+            </table>
+
+            <div class="text-end">
+                <a href="@Url.Action("DisplayLabTests", "Laboratory")" class="btn btn-secondary btn-back">
+                    <i class="fa fa-arrow-left"></i> Back to Lab Tests
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

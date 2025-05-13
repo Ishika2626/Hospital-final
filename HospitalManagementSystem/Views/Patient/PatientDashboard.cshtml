@@ -3,6 +3,10 @@
     ViewBag.Title = "Patient Dashboard";
 }
 @using System.IO
+@{
+    var patientReports = ViewBag.PatientReports as List<LabReportViewModel2>;
+}
+
 
 
 
@@ -255,6 +259,36 @@
                             else
                             {
                                 <div class="alert alert-info">No documents uploaded yet.</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3: Lab Report Info -->
+                <div class="col-md-6 mb-4">
+                    <div class="dashboard-card">
+                        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">📄 Lab Report</h5>
+                            <a href="@Url.Action("LabReportsDetails", "Patient")" class="btn btn-outline-light btn-sm">View All</a>
+                        </div>
+                        <div class="card-body">
+                            @if (ViewBag.PatientReports != null && ((List<HospitalManagementSystem.Models.LabReportViewModel2>)ViewBag.PatientReports).Count > 0)
+                            {
+                                var reports = (List<HospitalManagementSystem.Models.LabReportViewModel2>)ViewBag.PatientReports;
+                                var report = reports.First();  // Show only the first report
+
+                                <div class="card mb-3 shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary">📄 @report.TestName</h5>
+                                        <p class="card-text"><strong>Doctor:</strong> @report.DoctorName</p>
+                                        <p class="card-text"><strong>Test Order ID:</strong> @report.TestOrderId</p>
+
+                                        <a href="@report.ReportPdf" class="btn btn-outline-primary btn-sm" target="_blank">View Report</a>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-info">No reports found.</div>
                             }
                         </div>
                     </div>

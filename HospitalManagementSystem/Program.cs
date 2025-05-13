@@ -28,7 +28,7 @@ namespace HospitalManagementSystem
             builder.Services.AddScoped<IPharmacyRepository, PharmacyRepository>();
             builder.Services.AddScoped<IStaffRepository, StaffRepository>();
             builder.Services.AddScoped<IReportsAnalyticsRepository, ReportsAnalyticsRepository>();
-
+            builder.Services.AddScoped<ILabTestRepository, LabTestRepository>();
             // Load configuration from user secrets (only for development environment)
             if (builder.Environment.IsDevelopment())
             {

@@ -1,17 +1,29 @@
 ﻿using HospitalManagementSystem.Models;
 using HospitalManagementSystem.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
 
 namespace HospitalManagementSystem.Controllers
 {
     public class StaffHomeController : Controller
     {
         private readonly IStaffRepository staffRepository;
-        public StaffHomeController(IStaffRepository staffRepository)
+        private readonly ILabTestRepository labTestRepository;
+        private readonly IPatientRepository patientRepository;
+        private readonly IDoctorRepository doctorRepository;
+        public StaffHomeController(IStaffRepository staffRepository, ILabTestRepository labTestRepository, IPatientRepository patientRepository, IDoctorRepository doctorRepository)
         {
             this.staffRepository = staffRepository;
+            this.doctorRepository = doctorRepository;
+            this.patientRepository = patientRepository;
+            this.labTestRepository = labTestRepository;
         }
 
         public IActionResult ReceptionistDashboard()
@@ -287,117 +299,59 @@ namespace HospitalManagementSystem.Controllers
         }
         public IActionResult LTConductLabTest()
         {
-            return View();
+            var bookings = labTestRepository.GetConfirmAndCollectedBookings();
+            return View(bookings);
         }
-        public IActionResult LTAddNewLabTest()
+        [HttpPost]
+        public ActionResult Createreport(LabReport model)
         {
-            return View();
-        }
-        public IActionResult LTPerformLabTest()
-        {
-            return View();
-        }
-        public IActionResult LTViewLabTest()
-        {
-            return View();
-        }
-        public IActionResult LTTestReports()
-        {
-            return View();
-        }
-        public IActionResult LTAddTestReports()
-        {
-            return View();
-        }
-        public IActionResult LTViewTestReports()
-        {
-            return View();
-        }
-        public IActionResult LTEditTestReports()
-        {
-            return View();
-        }
-        public IActionResult LTDeleteTestReports()
-        {
-            return View();
-        }
-        public IActionResult LTLabInventory()
-        {
-            return View();
-        }
-        public IActionResult LTLabInventoryAdd()
-        {
-            return View();
-        }
-        public IActionResult LTLabInventoryView()
-        {
-            return View();
-        }
-        public IActionResult LTLabInventoryEdit()
-        {
-            return View();
-        }
-        public IActionResult LTLabInventoryDelete()
-        {
-            return View();
-        }
-        public IActionResult LTManagePatietSamples()
-        {
-            return View();
-        }
-        public IActionResult LTManagePatietSamplesAdd()
-        {
-            return View();
-        }
-        public IActionResult LTManagePatietSamplesVew()
-        {
-            return View();
-        }
-        public IActionResult LTManagePatietSamplesEdit()
-        {
-            return View();
-        }
-        public IActionResult LTManagePatietSamplesDelete()
-        {
-            return View();
-        }
-        public IActionResult LTEquipmentMaintenance()
-        {
-            return View();
-        }
-        public IActionResult LTEquipmentMaintenanceAdd()
-        {
-            return View();
-        }
-        public IActionResult LTEquipmentMaintenanceView()
-        {
-            return View();
-        }
-        public IActionResult LTEquipmentMaintenanceDelete()
-        {
-            return View();
-        }
-        public IActionResult LTEquipmentMaintenanceEdit()
-        {
-            return View();
-        }
-        public IActionResult LTTestRequests()
-        {
-            return View();
-        }
-        public IActionResult LTTestRequestsProcess()
-        {
-            return View();
-        }
-        public IActionResult LTTestRequestsView()
-        {
-            return View();
+
+            model.ReportDate = DateTime.Now;
+
+            var labtechid = HttpContext.Session.GetInt32("EmployeeId");
+            model.LabTechnicianId = (int)labtechid;
+            labTestRepository.AddLabReport(model);
+
+            // Provide feedback to the user
+            TempData["Message"] = "Lab report added successfully.";
+
+            // Redirect to the page where lab tests are listed or reviewed
+            return RedirectToAction("LTConductLabTest", "StaffHome");
+
         }
 
-        public IActionResult LTTestRequestsDelete()
+
+        public IActionResult LTTestReports()
         {
-            return View();
+            IEnumerable<LabReportViewModel> labReports = labTestRepository.GetLabReports();
+            return View(labReports);
         }
+
+
+        public IActionResult LTManagePatietSamples()
+        {
+            var bookings = labTestRepository.GetConfirmBookings();
+            return View(bookings);
+        }
+        [HttpPost]
+        public IActionResult CollectSample(int bookingId)
+        {
+            labTestRepository.CollectSample(bookingId);
+            return RedirectToAction("LTManagePatietSamples");
+        }
+
+        public IActionResult LTTestRequests()
+        {
+            var bookings = labTestRepository.GetAllBookings();
+            return View(bookings);
+        }
+        [HttpPost]
+        public IActionResult ConfirmTest(int bookingId)
+        {
+            labTestRepository.ConfirmTest(bookingId);
+            return RedirectToAction("GetAllBookings");
+        }
+
         public IActionResult HREmployee()
         {
             var roles = staffRepository.GetAllRoles();  // Assuming this fetches roles from the database
@@ -575,10 +529,7 @@ namespace HospitalManagementSystem.Controllers
             return RedirectToAction("HRScheduling");
         }
 
-        public IActionResult HRPayroll()
-        {
-            return View();
-        }
+
         [HttpGet]
         public ActionResult MarkAttendance()
         {
@@ -627,23 +578,304 @@ namespace HospitalManagementSystem.Controllers
         }
 
 
-        public IActionResult HRPerformance()
+
+        [HttpGet]
+        public IActionResult ApplyLeave()
         {
             return View();
         }
-        public IActionResult HRTraining()
+        [HttpPost]
+        public IActionResult ApplyLeave(LeaveRequest model)
         {
-            return View();
-        }
-        public IActionResult HRComplaints()
-        {
-            return View();
-        }
-        public IActionResult HRLeaves()
-        {
-            return View();
+
+            // ✅ Get employee ID from session
+            int? employeeId = HttpContext.Session.GetInt32("EmployeeId");
+            if (employeeId == null)
+            {
+                ModelState.AddModelError("", "Session expired. Please log in again.");
+                return View(model);
+            }
+
+            // Set required fields
+            model.EmployeeId = employeeId.Value;
+            model.Status = "Pending";
+
+            try
+            {
+                // ✅ Call the repository method (which returns void)
+                staffRepository.ApplyLeave(model); // No need for success check here
+
+                // If no exception was thrown, we consider the request submitted
+                TempData["Success"] = "✅ Leave request submitted!";
+                return RedirectToAction("ApplyLeave"); // Redirect to prevent duplicate submissions
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "❌ Error submitting leave: " + ex.Message);
+                return View(model); // Return the model with error message
+            }
         }
 
+        public IActionResult ViewLeaveRequests()
+        {
+            var requests = staffRepository.GetAllLeaveRequests();
+            return View(requests);
+        }
+
+        [HttpPost]
+        public IActionResult ApproveLeave(int id)
+        {
+            staffRepository.UpdateLeaveStatus(id, "Approved");
+            return RedirectToAction("ViewLeaveRequests");
+        }
+
+        [HttpPost]
+        public IActionResult RejectLeave(int id)
+        {
+            staffRepository.UpdateLeaveStatus(id, "Rejected");
+            return RedirectToAction("ViewLeaveRequests");
+        }
+
+        public IActionResult ViewReview()
+        {
+            var loginId = HttpContext.Session.GetString("LoginID");
+            var role = HttpContext.Session.GetString("Role");
+
+            if (string.IsNullOrEmpty(loginId) || role != "HR Manager")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var reviews = staffRepository.GetAllReviews();
+
+            // Fetch employees excluding those with 'HR' role
+            var employees = new List<SelectListItem>();
+            string connectionString = "Data Source=SSMLEC_01\\MSSQLSERVERDEV22;Initial Catalog=hospitalManagementSystem;Persist Security Info=True;User ID=sa;Password=Admin@1234;Encrypt=False;Trust Server Certificate=True";
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT employee_id, first_name, last_name FROM EmployeeManagement.Employees WHERE role_id != @ExcludedRole";
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ExcludedRole", 5);
+                    connection.Open();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string fullName = $"{reader["first_name"]} {reader["last_name"]}";
+                            employees.Add(new SelectListItem
+                            {
+                                Value = reader["employee_id"].ToString(),
+                                Text = fullName
+                            });
+                        }
+                    }
+                }
+            }
+
+            ViewBag.Employees = employees;
+
+            // Set reviewer info
+            ViewBag.ReviewerId = HttpContext.Session.GetInt32("EmployeeId") ?? 0;
+            ViewBag.ReviewerName = HttpContext.Session.GetString("FullName") ?? "Unknown";
+
+            return View(reviews);
+        }
+
+        [HttpPost]
+        public IActionResult AddReview(PerformanceReview review)
+        {
+            // Call the repository method to add the review
+            staffRepository.AddReview(review);
+            TempData["Success"] = "Review added successfully.";
+            TempData["Error"] = "Please fill in all required fields.";
+            return RedirectToAction("ViewReview");
+        }
+
+        // Display all employee training records
+        public IActionResult HRTraining()
+        {
+            var trainings = staffRepository.GetAllEmpTraining(); // Get all training records
+                                                                 // Check if there's a session message to display
+            ViewBag.Message = HttpContext.Session.GetString("Message");
+
+            // Clear the session message after displaying it
+            HttpContext.Session.Remove("Message");
+            ViewBag.Employees = staffRepository.GetAll();
+            ViewBag.Trainings = staffRepository.GetAllTrainings();  // Get available training programs for the dropdown
+            return View(trainings);
+        }
+
+        // Handle the POST request to create a new EmployeeTraining record
+        [HttpPost]
+        public IActionResult Createtraining(EmployeeTraining training)
+        {
+
+            staffRepository.AddEmpTraining(training);
+            TempData["Message"] = "Training record created successfully!";
+
+            // If the model state is not valid, return the view with the existing data
+            ViewBag.Employees = staffRepository.GetAll();  // Repopulate dropdown lists if there's an error
+            ViewBag.Trainings = staffRepository.GetAllTrainings();
+            return RedirectToAction("HRTraining");
+        }
+
+        [HttpPost]
+        public IActionResult UpdateTrainingStatus(int TrainingId, string trainingStatus)
+        {
+            try
+            {
+                if (TrainingId <= 0 || string.IsNullOrEmpty(trainingStatus))
+                {
+                    TempData["Message"] = "Invalid input.";
+                    return RedirectToAction("HRTraining");
+                }
+
+                staffRepository.UpdateTrainingStatus(TrainingId, trainingStatus);
+
+                TempData["Message"] = "Training status updated successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = "Error: " + ex.Message;
+            }
+
+            return RedirectToAction("HRTraining");
+        }
+
+        // This method will get the payroll data and filter it based on query parameters
+        [HttpGet]
+        public IActionResult HRPayroll()
+        {
+
+            // If no filter, return all payroll data
+            var allPayrollData = staffRepository.GenerateMonthlyPayroll(DateTime.Now);
+            return View(allPayrollData);
+
+        }
+        [HttpPost]
+        public IActionResult HRPayroll(DateTime? payDate)
+        {
+
+            // Otherwise, filter based on the parameters
+            var filteredPayrollData = staffRepository.GenerateMonthlyPayroll(payDate.Value);
+            return View(filteredPayrollData);
+        }
+
+        // Action for downloading payroll data as PDF
+        public IActionResult DownloadPdf(DateTime? payDate)
+        {
+            // Check if payDate is provided; otherwise, default to current date
+            if (!payDate.HasValue)
+            {
+                payDate = DateTime.Now;
+            }
+
+            // Get payroll data for the given date
+            var payrollData = staffRepository.GenerateMonthlyPayroll(payDate.Value);
+
+            // Generate PDF from the payroll data (your existing PDF generation logic)
+            using (var memoryStream = new MemoryStream())
+            {
+                var document = new Document();
+                PdfWriter.GetInstance(document, memoryStream);
+
+                // Open the document
+                document.Open();
+
+                // Add title to the document
+                document.Add(new Paragraph("Payroll Report"));
+
+                // Create the table to hold the payroll data
+                var table = new PdfPTable(7); // 7 columns in the table (excluding payment method)
+
+                // Add headers to the table
+                table.AddCell("Employee ID");
+                table.AddCell("Base Salary");
+                table.AddCell("Bonuses");
+                table.AddCell("Overtime");
+                table.AddCell("Deductions");
+                table.AddCell("Total Salary");
+                table.AddCell("Pay Date");
+
+                // Add payroll data to the table
+                foreach (var payroll in payrollData)
+                {
+                    table.AddCell(payroll.EmployeeId.ToString());
+                    table.AddCell(payroll.BaseSalary.ToString("C"));
+                    table.AddCell(payroll.Bonuses.ToString("C"));
+                    table.AddCell(payroll.Overtime.ToString("C"));
+                    table.AddCell(payroll.Deductions.ToString("C"));
+                    table.AddCell(payroll.TotalSalary.ToString("C"));
+                    table.AddCell(payroll.PayDate.ToString("yyyy-MM-dd"));
+                }
+
+                // Add the table to the document
+                document.Add(table);
+
+                // Close the document
+                document.Close();
+
+                // Return the PDF as a downloadable file
+                return File(memoryStream.ToArray(), "application/pdf", "PayrollReport.pdf");
+            }
+        }
+
+        public IActionResult SalarySlip(DateTime payDate)
+        {
+            var employeeId = HttpContext.Session.GetInt32("EmployeeId");
+
+            if (employeeId == null)
+            {
+                return RedirectToAction("Login", "RegisterLogin"); // or appropriate controller
+            }
+
+            var payroll = staffRepository.GetSalarySlip(employeeId.Value, payDate);
+
+            if (payroll == null)
+            {
+                return NotFound("Salary slip not found.");
+            }
+
+            return View(payroll);
+        }
+
+
+
+
+
+        public IActionResult DownloadSalarySlip(DateTime payDate)
+        {
+            int? employeeId = HttpContext.Session.GetInt32("EmployeeId");
+
+            if (!employeeId.HasValue)
+                return RedirectToAction("Login", "RegisterLogin");
+
+            var payroll = staffRepository.GetSalarySlip(employeeId.Value, payDate);
+
+            if (payroll == null)
+                return NotFound("Salary slip not found.");
+
+            // Generate PDF using iTextSharp
+            using (var stream = new MemoryStream())
+            {
+                var document = new Document();
+                PdfWriter.GetInstance(document, stream);
+                document.Open();
+
+                document.Add(new Paragraph($"Salary Slip for Employee ID: {payroll.EmployeeId}"));
+                document.Add(new Paragraph($"Pay Date: {payroll.PayDate:yyyy-MM-dd}"));
+                document.Add(new Paragraph($"Base Salary: {payroll.BaseSalary:C}"));
+                document.Add(new Paragraph($"Bonuses: {payroll.Bonuses:C}"));
+                document.Add(new Paragraph($"Overtime: {payroll.Overtime:C}"));
+                document.Add(new Paragraph($"Deductions: {payroll.Deductions:C}"));
+                document.Add(new Paragraph($"Total Salary: {payroll.TotalSalary:C}"));
+
+                document.Close();
+
+                return File(stream.ToArray(), "application/pdf", "SalarySlip.pdf");
+            }
+        }
         public IActionResult BSBilling()
         {
             return View();

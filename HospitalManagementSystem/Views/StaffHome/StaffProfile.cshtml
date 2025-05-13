@@ -69,8 +69,8 @@
                         // Add more roles if you have others
                     }
 
-                    <a asp-action="@dashboardAction" asp-controller="StaffHome" class="btn btn-outline-secondary">
-                        <i class="fas fa-home me-1"></i> Back to Dashboard
+                    <a href="@Url.Action("SalarySlip", "StaffHome", new {  payDate = DateTime.Today.ToString("yyyy-MM-dd") })" class="btn btn-primary">
+                        View My Salary Slip
                     </a>
 
                     <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#changePasswordModal">

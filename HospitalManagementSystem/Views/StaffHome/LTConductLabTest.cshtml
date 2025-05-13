@@ -1,44 +1,216 @@
-﻿@{
-    ViewData["Title"] = "Conduct Lab Tests";
-    Layout = "_stafflayout";
+﻿@model IEnumerable<HospitalManagementSystem.Models.TestBooking>
+
+@{
+    ViewData["Title"] = "Lab Test Bookings";
+    Layout = "~/Views/Shared/_stafflayout.cshtml";
 }
-<a href="@Url.Action("LabTechnicianDashboard", "StaffHome")" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
-<h2>🧪 Conduct Lab Tests</h2>
 
-<a asp-action="LTAddNewLabTest" class="btn btn-primary">➕ Add New Lab Test</a>
+<!-- Styles and Scripts (optional if already in layout) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-<table class="table table-bordered mt-3">
-    <thead class="thead-dark">
-        <tr>
-            <th>#</th>
-            <th>Patient</th>
-            <th>Test</th>
-            <th>Sample Collected</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>1</td>
-            <td>John Doe</td>
-            <td>Blood Test</td>
-            <td>✔ Yes</td>
-            <td><span class="badge badge-warning">Pending</span></td>
-            <td>
-                <a asp-action="LTPerformLabTest" class="btn btn-sm btn-success">🧪 Conduct Test</a>
-                <a asp-action="LTViewLabTest" class="btn btn-sm btn-info">ℹ View</a>
-            </td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Jane Smith</td>
-            <td>Urine Test</td>
-            <td>✔ Yes</td>
-            <td><span class="badge badge-success">Completed</span></td>
-            <td>
-                <a asp-action="LTViewLabTest" class="btn btn-sm btn-info">ℹ View</a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<style>
+    body {
+        background: #f4f7f6;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background: linear-gradient(to right, #1e3c72, #2a5298);
+        color: white;
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .btn {
+        width: auto;
+    }
+</style>
+
+<div class="container">
+    <div class="card p-3">
+        <div class="card-header">
+            <i class="fa-solid fa-calendar-plus"></i> Lab Test Bookings
+        </div>
+
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Patient ID</th>
+                        <th>Test</th>
+                        <th>Test Date</th>
+                        <th>Sample Collected Date</th>
+                        <th>Status</th>
+                        <th>Doctor ID</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.BookingId</td>
+                            <td>@item.PatientId</td>
+                            <td>@item.TestId - @item.TestType</td>
+                            <td>@item.TestDate.ToShortDateString()</td>
+                            <td>@item.SampleCollectedDate</td>
+                            <td>
+                                <span class="badge bg-@(item.BookingStatus == "Confirmed" ? "success" : "warning")">
+                                    @item.BookingStatus
+                                </span>
+                            </td>
+                            <td>@item.DoctorId</td>
+                            <td>
+                                <button class="btn btn-info btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#detailsModal"
+                                        data-bookingid="@item.BookingId"
+                                        data-patient="@item.PatientId"
+                                        data-test="@item.TestId - @item.TestType"
+                                        data-date="@item.TestDate.ToShortDateString()"
+                                        data-status="@item.BookingStatus"
+                                        data-doctor="@item.DoctorId"
+                                        data-notes="@item.AdditionalNotes">
+                                    <i class="fa-solid fa-eye"></i> Details
+                                </button>
+
+                                @if (item.ResultStatus != "Completed")
+                                {
+                                    <button class="btn btn-primary btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#addReportModal"
+                                            data-patienttestid="@item.BookingId">
+                                        <i class="fa-solid fa-file-medical"></i> Add Report
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Report Modal -->
+<div class="modal fade" id="addReportModal" tabindex="-1" aria-labelledby="addReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post" action="/StaffHome/Createreport">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addReportModalLabel">Add Lab Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="PatientTestId" id="inputPatientTestId" />
+
+                    <div class="mb-3">
+                        <label for="TestResult" class="form-label">Test Result</label>
+                        <textarea class="form-control" name="TestResult" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Findings" class="form-label">Findings</label>
+                        <textarea class="form-control" name="Findings" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ReportStatus" class="form-label">Status</label>
+                        <select name="ReportStatus" class="form-select">
+                            <option>Pending</option>
+                            <option>Completed</option>
+                            <option>Reviewed</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="DoctorNotes" class="form-label">Doctor Notes</label>
+                        <textarea class="form-control" name="DoctorNotes"></textarea>
+                    </div>
+
+                    <!-- Hidden Lab Technician ID (comes from session) -->
+                    <input type="hidden" name="LabTechnicianId" value="@@Session[" LabTechnicianId"]" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Details Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="detailsModalLabel">Booking Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Booking ID</dt>
+                    <dd class="col-sm-9" id="detailBookingId"></dd>
+
+                    <dt class="col-sm-3">Patient</dt>
+                    <dd class="col-sm-9" id="detailPatient"></dd>
+
+                    <dt class="col-sm-3">Test</dt>
+                    <dd class="col-sm-9" id="detailTest"></dd>
+
+                    <dt class="col-sm-3">Test Date</dt>
+                    <dd class="col-sm-9" id="detailTestDate"></dd>
+
+                    <dt class="col-sm-3">Doctor</dt>
+                    <dd class="col-sm-9" id="detailDoctor"></dd>
+
+                    <dt class="col-sm-3">Status</dt>
+                    <dd class="col-sm-9" id="detailStatus"></dd>
+
+                    <dt class="col-sm-3">Notes</dt>
+                    <dd class="col-sm-9" id="detailNotes"></dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const detailsModal = document.getElementById('detailsModal');
+    detailsModal.addEventListener('show.bs.modal', event => {
+        const button = event.relatedTarget;
+
+        document.getElementById('detailBookingId').textContent = button.getAttribute('data-bookingid');
+        document.getElementById('detailPatient').textContent = button.getAttribute('data-patient');
+        document.getElementById('detailTest').textContent = button.getAttribute('data-test');
+        document.getElementById('detailTestDate').textContent = button.getAttribute('data-date');
+        document.getElementById('detailStatus').textContent = button.getAttribute('data-status');
+        document.getElementById('detailDoctor').textContent = button.getAttribute('data-doctor');
+        document.getElementById('detailNotes').textContent = button.getAttribute('data-notes') || "N/A";
+    });
+
+    const addReportModal = document.getElementById('addReportModal');
+    addReportModal.addEventListener('show.bs.modal', event => {
+        const button = event.relatedTarget;
+        const patientTestId = button.getAttribute('data-patienttestid');
+        document.getElementById('inputPatientTestId').value = patientTestId;
+    });
+</script>
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

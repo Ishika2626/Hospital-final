@@ -1,156 +1,56 @@
-﻿@{
-    ViewData["Title"] = "HR Manager - Payroll Management";
-    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+﻿@model IEnumerable<Payroll>
+
+@{
+    ViewData["Title"] = "Monthly Payroll";
+    Layout = "~/Views/shared/_stafflayout.cshtml";
 }
 
-<a href="/HRManagerDashboard" class="btn btn-secondary">🔙 Back to Dashboard</a>
-<h2>💰 Payroll Management</h2>
+<h1>@ViewData["Title"]</h1>
 
-<div class="d-flex justify-content-between mb-3">
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPayrollModal">➕ Add Payroll</button>
-    <input type="text" id="searchInput" class="form-control w-25" placeholder="🔍 Search Employee">
-</div>
+<hr>
 
-<div class="table-responsive">
-    <table class="table table-bordered table-striped" id="payrollTable">
-        <thead class="thead-dark">
+<form method="post" action="@Url.Action("HRPayroll", "StaffHome")">
+    <div class="form-group">
+        <label for="payDate">Pay Date</label>
+        <input type="date" id="payDate" name="payDate" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Generate Payroll</button>
+</form>
+
+<hr>
+
+<table class="table">
+    <thead>
+        <tr>
+            @* <th>Employee ID</th> *@
+            <th>Base Salary</th>
+            <th>Bonuses</th>
+            <th>Overtime</th>
+            <th>Deductions</th>
+            <th>Total Salary</th>
+            <th>Pay Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var payroll in Model)
+        {
             <tr>
-                <th>#</th>
-                <th>Employee Name</th>
-                <th>Department</th>
-                <th>Salary</th>
-                <th>Bonus</th>
-                <th>Deductions</th>
-                <th>Net Pay</th>
-                <th>Actions</th>
+                <td>@payroll.EmployeeId</td>
+                <td>@payroll.BaseSalary</td>
+                <td>@payroll.Bonuses</td>
+                <td>@payroll.Overtime</td>
+                <td>@payroll.Deductions</td>
+                <td>@payroll.TotalSalary</td>
+                <td>@payroll.PayDate.ToString("yyyy-MM-dd")</td>
             </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>John Doe</td>
-                <td>IT</td>
-                <td>$5000</td>
-                <td>$500</td>
-                <td>$200</td>
-                <td>$5300</td>
-                <td>
-                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editPayrollModal">✏ Edit</button>
-                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deletePayrollModal">🗑 Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+        }
+    </tbody>
+</table>
 
+<form method="get" action="@Url.Action("DownloadPdf", "StaffHome")">
+    <!-- Use the HttpContext to get the query parameters -->
+    <input type="hidden" name="payDate" value="@Context.Request.Query["payDate"]" />
+    <button type="submit" class="btn btn-danger">Download PDF Report</button>
+</form>
 
-<!-- Add Payroll Modal -->
-<div class="modal fade" id="addPayrollModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">➕ Add Payroll</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label">Employee Name</label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Department</label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Salary</label>
-                        <input type="number" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Bonus</label>
-                        <input type="number" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Deductions</label>
-                        <input type="number" class="form-control">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success">✔ Save</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">🔙 Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Edit Payroll Modal -->
-<div class="modal fade" id="editPayrollModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">✏ Edit Payroll</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label">Employee Name</label>
-                        <input type="text" class="form-control" value="John Doe">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Department</label>
-                        <input type="text" class="form-control" value="IT">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Salary</label>
-                        <input type="number" class="form-control" value="5000">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Bonus</label>
-                        <input type="number" class="form-control" value="500">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Deductions</label>
-                        <input type="number" class="form-control" value="200">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary">✔ Update</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">🔙 Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Delete Payroll Modal -->
-<div class="modal fade" id="deletePayrollModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">🗑 Delete Payroll Record</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this payroll record?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger">🗑 Delete</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">🔙 Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.getElementById("searchInput").addEventListener("keyup", function() {
-        let filter = this.value.toLowerCase();
-        let rows = document.querySelectorAll("#payrollTable tbody tr");
-
-        rows.forEach(row => {
-            let name = row.cells[1].textContent.toLowerCase();
-            row.style.display = name.includes(filter) ? "" : "none";
-        });
-    });
-</script>

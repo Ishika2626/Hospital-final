@@ -611,7 +611,7 @@ namespace HospitalManagementSystem.Repositories
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@NurseId", nurseId);  
+                cmd.Parameters.AddWithValue("@NurseId", nurseId);
 
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -698,15 +698,15 @@ namespace HospitalManagementSystem.Repositories
 
             return report;
         }
-       
+
 
         public List<DischargedPatientViewModel> GetDischargedPatientsByNurse(int nurseId)
-            {
-                var dischargedPatients = new List<DischargedPatientViewModel>();
+        {
+            var dischargedPatients = new List<DischargedPatientViewModel>();
 
-                using (var connection = new SqlConnection(_connectionString))
-                {
-                    string query = @"
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                string query = @"
                    SELECT 
     pa.admission_id AS AdmissionId,
     pr.first_name + ' ' + pr.last_name AS PatientName,
@@ -721,50 +721,50 @@ JOIN patient.patient_admission pa ON pr.patient_id = pa.patient_id
 JOIN patient.Diagnosis dg ON pr.patient_id = dg.patient_id
 JOIN Doctors.doctors d ON dg.doctor_id = d.doctor_id
 WHERE npa.employee_id = @employeeId
-"; 
+";
 
 
-                    using (var command = new SqlCommand(query, connection))
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@employeeId", nurseId);
+                    connection.Open();
+
+                    using (var reader = command.ExecuteReader())
                     {
-                        command.Parameters.AddWithValue("@employeeId", nurseId);
-                        connection.Open();
-
-                        using (var reader = command.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
+                            var patient = new DischargedPatientViewModel
                             {
-                                var patient = new DischargedPatientViewModel
-                                {
-                                    AdmissionId =Convert.ToInt32( reader["AdmissionId"].ToString()),
-                                    PatientName = reader["PatientName"].ToString(),
-                                    DoctorName = reader["DoctorName"].ToString(),
-                                    Diagnosis = reader["Diagnosis"].ToString(),
-                                    DischargeDate = reader["DischargeDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["DischargeDate"]),
-                                    DischargeReason = reader["DischargeReason"].ToString(),
-                                     // Ensure you're fetching PatientId as well
-                                    PatientId = reader.IsDBNull(reader.GetOrdinal("PatientId")) ? 0 : reader.GetInt32(reader.GetOrdinal("PatientId"))
-                                };
-                                dischargedPatients.Add(patient);
-                            }
+                                AdmissionId = Convert.ToInt32(reader["AdmissionId"].ToString()),
+                                PatientName = reader["PatientName"].ToString(),
+                                DoctorName = reader["DoctorName"].ToString(),
+                                Diagnosis = reader["Diagnosis"].ToString(),
+                                DischargeDate = reader["DischargeDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["DischargeDate"]),
+                                DischargeReason = reader["DischargeReason"].ToString(),
+                                // Ensure you're fetching PatientId as well
+                                PatientId = reader.IsDBNull(reader.GetOrdinal("PatientId")) ? 0 : reader.GetInt32(reader.GetOrdinal("PatientId"))
+                            };
+                            dischargedPatients.Add(patient);
                         }
                     }
                 }
-
-                return dischargedPatients;
             }
+
+            return dischargedPatients;
+        }
 
 
         public void UpdateDischargeDetails(int admissionId, DateTime dischargeDate, string dischargeReason, int? doctorId)
-         {
-            using (  var connection = new SqlConnection(_connectionString))
-                                                 {
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
                 string query = "UPDATE patient.patient_admission " +
                                "SET discharge_date = @DischargeDate, discharge_reason = @DischargeReason, status = 'Discharged', doctor_id = @DoctorId " +
                                "WHERE admission_id = @AdmissionId";
 
                 using (var command = new SqlCommand(query, connection))
-                 {
-                               command.Parameters.AddWithValue("@AdmissionId", admissionId);
+                {
+                    command.Parameters.AddWithValue("@AdmissionId", admissionId);
                     command.Parameters.AddWithValue("@DischargeDate", dischargeDate);
                     command.Parameters.AddWithValue("@DischargeReason", dischargeReason);
                     command.Parameters.AddWithValue("@DoctorId", doctorId ?? (object)DBNull.Value);  // Use DBNull if doctorId is null
@@ -1235,6 +1235,377 @@ WHERE npa.employee_id = @employeeId
             }
         }
 
+        public void ApplyLeave(LeaveRequest request)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"INSERT INTO EmployeeManagement.Leave_Requests
+                        (employee_id, leave_start_date, leave_end_date, leave_type, status, reason)
+                         VALUES (@EmployeeId, @StartDate, @EndDate, @LeaveType, @Status, @Reason)";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@EmployeeId", request.EmployeeId);
+                cmd.Parameters.AddWithValue("@StartDate", request.LeaveStartDate);
+                cmd.Parameters.AddWithValue("@EndDate", request.LeaveEndDate);
+                cmd.Parameters.AddWithValue("@LeaveType", request.LeaveType);
+                cmd.Parameters.AddWithValue("@Status", "Pending"); // Default status
+                cmd.Parameters.AddWithValue("@Reason", request.Reason ?? (object)DBNull.Value);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public List<LeaveRequest> GetAllLeaveRequests()
+        {
+            var leaveRequests = new List<LeaveRequest>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"
+                                SELECT 
+                                    lr.leave_request_id AS Id,
+                                    lr.leave_type AS LeaveType,
+                                    lr.leave_start_date AS LeaveStartDate,
+                                    lr.leave_end_date AS LeaveEndDate,
+                                    lr.reason AS Reason,
+                                    lr.status AS Status,
+                                    (e.first_name + ' ' + e.last_name) AS StaffName
+                                FROM 
+                                    EmployeeManagement.Leave_Requests lr
+                                JOIN 
+                                    EmployeeManagement.Employees e ON lr.employee_id = e.employee_id";
+
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    leaveRequests.Add(new LeaveRequest
+                    {
+                        LeaveRequestId = Convert.ToInt32(reader["Id"]),
+                        LeaveType = reader["LeaveType"].ToString(),
+                        LeaveStartDate = Convert.ToDateTime(reader["LeaveStartDate"]),
+                        LeaveEndDate = Convert.ToDateTime(reader["LeaveEndDate"]),
+                        Reason = reader["Reason"].ToString(),
+                        Status = reader["Status"].ToString(),
+                        EmployeeName = reader["StaffName"].ToString()
+                    });
+                }
+
+                reader.Close();
+            }
+
+            return leaveRequests;
+        }
+
+        public void UpdateLeaveStatus(int requestId, string status)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"UPDATE EmployeeManagement.Leave_Requests 
+                         SET status = @Status 
+                         WHERE leave_request_id = @Id";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Status", status);
+                cmd.Parameters.AddWithValue("@Id", requestId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+        public List<PerformanceReview> GetAllReviews()
+        {
+            var reviews = new List<PerformanceReview>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"
+            SELECT 
+                r.review_id, 
+                r.employee_id, 
+                e.first_name + ' ' + e.last_name AS EmployeeName,
+                r.reviewer_id, 
+                r2.first_name + ' ' + r2.last_name AS ReviewerName,
+                r.review_date, 
+                r.performance_rating, 
+                r.feedback
+            FROM EmployeeManagement.Performance_Reviews r
+            JOIN EmployeeManagement.Employees e ON r.employee_id = e.employee_id
+            JOIN EmployeeManagement.Employees r2 ON r.reviewer_id = r2.employee_id";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        reviews.Add(new PerformanceReview
+                        {
+                            ReviewId = Convert.ToInt32(reader["review_id"]),
+                            EmployeeId = Convert.ToInt32(reader["employee_id"]),
+                            EmployeeName = reader["EmployeeName"].ToString(),
+                            ReviewerId = Convert.ToInt32(reader["reviewer_id"]),
+                            ReviewerName = reader["ReviewerName"].ToString(),
+                            ReviewDate = Convert.ToDateTime(reader["review_date"]),
+                            PerformanceRating = reader["performance_rating"].ToString(),
+                            Feedback = reader["feedback"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return reviews;
+        }
+
+        public void AddReview(PerformanceReview review)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"INSERT INTO EmployeeManagement.Performance_Reviews
+                            (employee_id, reviewer_id, review_date, performance_rating, feedback)
+                             VALUES (@EmployeeId, @ReviewerId, @ReviewDate, @PerformanceRating, @Feedback)";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@EmployeeId", review.EmployeeId);
+                cmd.Parameters.AddWithValue("@ReviewerId", review.ReviewerId);
+                cmd.Parameters.AddWithValue("@ReviewDate", review.ReviewDate);
+                cmd.Parameters.AddWithValue("@PerformanceRating", review.PerformanceRating);
+                cmd.Parameters.AddWithValue("@Feedback", review.Feedback);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public List<EmployeeTraining> GetAllEmpTraining()
+        {
+            var list = new List<EmployeeTraining>();
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                string query = @"SELECT * FROM EmployeeManagement.Employee_Training";
+                SqlCommand cmd = new SqlCommand(query, con);
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    list.Add(new EmployeeTraining
+                    {
+                        // Check if the value is DBNull before casting
+                        TrainingId = rdr["training_id"] != DBNull.Value ? (int)rdr["training_id"] : 0,  // Defaulting to 0 if NULL
+                        EmployeeId = rdr["employee_id"] != DBNull.Value ? (int)rdr["employee_id"] : 0,  // Defaulting to 0 if NULL
+                        TrainingStartDate = rdr["training_start_date"] != DBNull.Value ? (DateTime)rdr["training_start_date"] : DateTime.MinValue,  // Defaulting to DateTime.MinValue if NULL
+                        TrainingEndDate = rdr["training_end_date"] != DBNull.Value ? (DateTime)rdr["training_end_date"] : DateTime.MinValue,  // Defaulting to DateTime.MinValue if NULL
+                        TrainingStatus = rdr["training_status"] != DBNull.Value ? rdr["training_status"].ToString() : string.Empty,  // Defaulting to empty string if NULL
+                        TrainingProvider = rdr["training_provider"] != DBNull.Value ? rdr["training_provider"].ToString() : string.Empty,  // Defaulting to empty string if NULL
+                        TrainingTblId = rdr["trainingtbl_id"] != DBNull.Value ? (int)rdr["trainingtbl_id"] : 0  // Defaulting to 0 if NULL
+                    });
+                }
+            }
+            return list;
+        }
+
+
+        public List<Training> GetAllTrainings()
+        {
+            var list = new List<Training>();
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT * FROM EmployeeManagement.Training";
+                SqlCommand cmd = new SqlCommand(query, con);
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    list.Add(new Training
+                    {
+                        TrainingId = (int)rdr["training_id"],
+                        TrainingName = rdr["training_name"].ToString()
+                    });
+                }
+            }
+            return list;
+        }
+
+
+
+        public void AddEmpTraining(EmployeeTraining training)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                string query = @"
+            INSERT INTO EmployeeManagement.Employee_Training (
+                employee_id, 
+                trainingtbl_id, 
+                training_start_date, 
+                training_end_date, 
+                training_status, 
+                training_provider
+            ) 
+            VALUES (
+                @EmployeeId, 
+                @TrainingTblId, 
+                @TrainingStartDate, 
+                @TrainingEndDate, 
+                @TrainingStatus, 
+                @TrainingProvider
+            )";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@EmployeeId", training.EmployeeId);
+                cmd.Parameters.AddWithValue("@TrainingTblId", training.TrainingTblId);
+                cmd.Parameters.AddWithValue("@TrainingStartDate", training.TrainingStartDate);
+                cmd.Parameters.AddWithValue("@TrainingEndDate", training.TrainingEndDate);
+                cmd.Parameters.AddWithValue("@TrainingStatus", training.TrainingStatus);
+                cmd.Parameters.AddWithValue("@TrainingProvider", training.TrainingProvider);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+        public void UpdateTrainingStatus(int trainingId, string trainingStatus)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                string query = "UPDATE EmployeeManagement.Employee_Training SET training_status = @TrainingStatus WHERE training_id = @TrainingId";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@TrainingStatus", trainingStatus);
+                cmd.Parameters.AddWithValue("@TrainingId", trainingId);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+
+        public void DeleteEmpTraining(int id)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                string query = "DELETE FROM EmployeeTraining WHERE TrainingId = @TrainingId";
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@TrainingId", id);
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public EmployeeTraining GetTraningById(int id)
+        {
+            EmployeeTraining training = null;
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT * FROM EmployeeTraining WHERE TrainingId = @TrainingId";
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@TrainingId", id);
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read())
+                {
+                    training = new EmployeeTraining
+                    {
+                        TrainingId = (int)rdr["TrainingId"],
+                        EmployeeId = (int)rdr["EmployeeId"],
+                        TrainingTblId = (int)rdr["TrainingTblId"],
+                        TrainingStartDate = (DateTime)rdr["TrainingStartDate"],
+                        TrainingEndDate = (DateTime)rdr["TrainingEndDate"],
+                        TrainingStatus = rdr["TrainingStatus"].ToString(),
+                        TrainingProvider = rdr["TrainingProvider"].ToString()
+                    };
+                }
+            }
+            return training;
+        }
+
+
+
+        IEnumerable<Payroll> IStaffRepository.GenerateMonthlyPayroll(DateTime payDate)
+        {
+            var payrollList = new List<Payroll>();
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand("EmployeeManagement.GenerateMonthlyPayroll", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Add parameters for the stored procedure
+                    command.Parameters.Add(new SqlParameter("@pay_date", SqlDbType.Date) { Value = payDate });
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var payroll = new Payroll
+                            {
+                                EmployeeId = reader.GetInt32(reader.GetOrdinal("employee_id")),
+                                BaseSalary = reader.GetDecimal(reader.GetOrdinal("base_salary")),
+                                Bonuses = reader.GetDecimal(reader.GetOrdinal("bonuses")),
+                                Overtime = reader.GetDecimal(reader.GetOrdinal("overtime")),
+                                Deductions = reader.GetDecimal(reader.GetOrdinal("deductions")),
+                                TotalSalary = reader.GetDecimal(reader.GetOrdinal("total_salary")),
+                                PayDate = reader.GetDateTime(reader.GetOrdinal("pay_date")),
+                            };
+
+                            payrollList.Add(payroll);
+                        }
+                    }
+                }
+            }
+
+            return payrollList;
+        }
+
+        public Payroll GetSalarySlip(int employeeId, DateTime payDate)
+        {
+            Payroll payroll = null;
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var query = @"SELECT TOP 1 * 
+                      FROM EmployeeManagement.Payroll 
+                      WHERE employee_id = @employeeId AND pay_date = @payDate";
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@employeeId", employeeId);
+                    command.Parameters.AddWithValue("@payDate", payDate);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            payroll = new Payroll
+                            {
+                                EmployeeId = reader.GetInt32(reader.GetOrdinal("employee_id")),
+                                BaseSalary = reader.GetDecimal(reader.GetOrdinal("base_salary")),
+                                Bonuses = reader.GetDecimal(reader.GetOrdinal("bonuses")),
+                                Overtime = reader.GetDecimal(reader.GetOrdinal("overtime")),
+                                Deductions = reader.GetDecimal(reader.GetOrdinal("deductions")),
+                                TotalSalary = reader.GetDecimal(reader.GetOrdinal("total_salary")),
+                                PayDate = reader.GetDateTime(reader.GetOrdinal("pay_date")),
+                                PaymentMethod = reader.GetString(reader.GetOrdinal("payment_method"))
+                            };
+                        }
+                    }
+                }
+            }
+
+            return payroll;
+        }
+
         public IEnumerable<Employee> GetEmployee()
         {
             var employees = new List<Employee>();
@@ -1254,7 +1625,7 @@ WHERE npa.employee_id = @employeeId
                         {
                             EmployeeId = reader.GetInt32(reader.GetOrdinal("employee_id")),
                             FirstName = reader.GetString(reader.GetOrdinal("first_name")),
-                           LastName= reader.GetString(reader.GetOrdinal("last_name"))
+                            LastName = reader.GetString(reader.GetOrdinal("last_name"))
                         };
 
                         employees.Add(emp);
@@ -1267,4 +1638,5 @@ WHERE npa.employee_id = @employeeId
 
     }
 }
+
 

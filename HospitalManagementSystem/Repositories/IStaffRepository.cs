@@ -63,7 +63,20 @@ namespace HospitalManagementSystem.Repositories
         void InsertPunchIn(AttendanceModel model);
         void UpdatePunchOut(AttendanceModel model);
 
-
+        void ApplyLeave(LeaveRequest request);
         IEnumerable<Employee> GetEmployee();
+        List<LeaveRequest> GetAllLeaveRequests();
+        void UpdateLeaveStatus(int requestId, string status);
+        List<PerformanceReview> GetAllReviews();
+        void AddReview(PerformanceReview review);
+        List<EmployeeTraining> GetAllEmpTraining();
+        List<Training> GetAllTrainings();
+        EmployeeTraining GetTraningById(int id);
+        void AddEmpTraining(EmployeeTraining training);
+        void UpdateTrainingStatus(int trainingId, string trainingStatus);
+        void DeleteEmpTraining(int id);  // Delete an employee training record
+        IEnumerable<Payroll> GenerateMonthlyPayroll(DateTime payDate);
+
+        Payroll GetSalarySlip(int employeeId, DateTime payDate);
     }
 }

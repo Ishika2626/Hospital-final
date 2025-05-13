@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Lab Test Bookings";
-    Layout = "~/Views/Shared/_stafflayout.cshtml";
+    Layout = "~/Views/Shared/admin.cshtml";
 }
 
 <!-- Styles and Scripts (optional if already in layout) -->
@@ -65,18 +65,18 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td>@item.BookingId</td>
-                            <td>@item.PatientId</td>
-                            <td>@item.TestId - @item.TestType</td>
-                            <td>@item.TestDate.ToShortDateString()</td>
-                            <td>@item.SampleCollectedDate</td>
-                            <td>
-                                <span class="badge bg-@(item.BookingStatus == "Confirmed" ? "success" : "warning")">
+                            <tr>
+                                <td>@item.BookingId</td>
+                                <td>@item.PatientId</td>
+                                <td>@item.TestId - @item.TestType</td>
+                                <td>@item.TestDate.ToShortDateString()</td>
+                                <td>@item.SampleCollectedDate</td>
+                                <td>
+                                    <span class="badge bg-@(item.BookingStatus == "Confirmed" ? "success" : "warning")">
                                     @item.BookingStatus
-                                </span>
-                            </td>
-                            <td>@item.DoctorId</td>
+                                    </span>
+                                </td>
+                                <td>@item.DoctorId</td>
                             <td>
                                 <button class="btn btn-info btn-sm"
                                         data-bs-toggle="modal"
@@ -91,7 +91,19 @@
                                     <i class="fa-solid fa-eye"></i> Details
                                 </button>
 
-                                
+                                @if (item.SampleCollectedDate == null)
+                                {
+                                    <button class="btn btn-warning btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#collectSampleModal"
+                                            data-bookingid="@item.BookingId">
+                                        <i class="fa-solid fa-vial"></i> Collect Sample
+                                    </button>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Sample Collected</span>
+                                }
                                 @if (item.BookingStatus != "Confirmed")
                                 {
                                     <button class="btn btn-success btn-sm"
@@ -107,7 +119,7 @@
                                 }
                             </td>
 
-                        </tr>
+                            </tr>
                     }
                 </tbody>
             </table>
@@ -115,6 +127,80 @@
     </div>
 </div>
 
+<!-- Booking Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form asp-action="CreateBooking" method="post">
+
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="bookingModalLabel">New Test Booking</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <input type="hidden" name="source" value="admin" />
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label class="form-label">Patient Id</label>
+                        <select name="PatientId" class="form-select" required>
+                            <option value="">-- Select Patient --</option>
+                            @foreach (var patient in ViewBag.Patients)
+                            {
+                                <option value="@patient.PatientId">@patient.FirstName @patient.LastName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Test</label>
+                        <select name="TestId" class="form-select" required>
+                            <option value="">-- Select Test --</option>
+                            @* Assume ViewBag.LabTests = List<LabTestViewModel> *@
+                            @foreach (var test in ViewBag.LabTests)
+                            {
+                                <option value="@test.TestId">@test.TestName (@test.TestType)</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Test Date</label>
+                        <input name="TestDate" type="date" class="form-control" required />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Test</label>
+                        <select name="DoctorId" class="form-select" required>
+                            <option value="">-- Select Doctor --</option>
+                            @* Assume ViewBag.LabTests = List<LabTestViewModel> *@
+                            @foreach (var test in ViewBag.Doctors)
+                            {
+                                <option value="@test.DoctorId">@test.FullName </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Booking Status</label>
+                        <select name="BookingStatus" class="form-select" required>
+                            <option>Pending</option>
+                            <option>Confirmed</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Additional Notes</label>
+                        <textarea name="AdditionalNotes" class="form-control"></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Booking
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <!-- Details Modal -->
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
@@ -151,7 +237,31 @@
         </div>
     </div>
 </div>
+<!-- Collect Sample Modal -->
+<div class="modal fade" id="collectSampleModal" tabindex="-1" aria-labelledby="collectSampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-action="CollectSample">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="collectSampleModalLabel">Collect Sample</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
+                <div class="modal-body">
+                    <input type="hidden" name="bookingId" id="collectSampleBookingId" />
+                    <p>Are you sure you want to mark the sample as <strong>collected</strong> for Booking ID <span id="confirmBookingId"></span>?</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fa-solid fa-vial"></i> Confirm Collection
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <!-- Confirm Test Modal -->
 <div class="modal fade" id="confirmTestModal" tabindex="-1" aria-labelledby="confirmTestModalLabel" aria-hidden="true">
@@ -194,7 +304,14 @@
         document.getElementById('detailNotes').textContent = button.getAttribute('data-notes') || "N/A";
     });
 
-  
+    const collectSampleModal = document.getElementById('collectSampleModal');
+    collectSampleModal.addEventListener('show.bs.modal', event => {
+        const button = event.relatedTarget;
+        const bookingId = button.getAttribute('data-bookingid');
+
+        document.getElementById('collectSampleBookingId').value = bookingId;
+        document.getElementById('confirmBookingId').textContent = bookingId;
+    });
         const confirmTestModal = document.getElementById('confirmTestModal');
     confirmTestModal.addEventListener('show.bs.modal', event => {
         const button = event.relatedTarget;

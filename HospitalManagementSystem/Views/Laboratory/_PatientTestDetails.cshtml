@@ -1,0 +1,15 @@
+﻿@model HospitalManagementSystem.Models.PatientTestViewModel
+
+<div class="container">
+    <h4>Patient Test Details</h4>
+    <hr>
+    <p><strong>Patient Test ID:</strong> @Model.PatientTestId</p>
+    <p><strong>Test Order ID:</strong> @Model.TestOrderId</p>
+    <p><strong>Test Name:</strong> @Model.TestName</p>
+    <p><strong>Test Type:</strong> @Model.TestType</p>
+    <p><strong>Test Category:</strong> @Model.TestCategory</p>
+    <p><strong>Result Received:</strong> @(Model.ResultReceived ? "Yes" : "No")</p>
+    <p><strong>Result Status:</strong> @Model.ResultStatus</p>
+    <p><strong>Test Duration:</strong> @Model.TestDuration</p>
+    <p><strong>Test Cost:</strong> @Model.TestCost</p>
+</div>

@@ -1,0 +1,52 @@
+﻿@model List<HospitalManagementSystem.Models.LeaveRequest>
+@{
+    Layout = "~/Views/Shared/_stafflayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-success">🗂 Leave Requests</h2>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Staff Name</th>
+                <th>Leave Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var req in Model)
+            {
+                <tr>
+                    <td>@req.EmployeeName</td>
+                    <td>@req.LeaveType</td>
+                    <td>@req.LeaveStartDate.ToShortDateString()</td>
+                    <td>@req.LeaveEndDate.ToShortDateString()</td>
+                    <td>@req.Reason</td>
+                    <td>@req.Status</td>
+                    <td>
+                        @if (req.Status == "Pending")
+                        {
+                            <form asp-action="ApproveLeave" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@req.LeaveRequestId" />
+                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                            </form>
+                            <form asp-action="RejectLeave" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@req.LeaveRequestId" />
+                                <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Processed</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

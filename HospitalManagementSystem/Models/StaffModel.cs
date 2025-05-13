@@ -121,5 +121,72 @@ namespace HospitalManagementSystem.Models
         public string EmployeeName { get; set; }
     }
 
+    public class LeaveRequest
+    {
+        public int LeaveRequestId { get; set; }
+        public int EmployeeId { get; set; }
+        public DateTime LeaveStartDate { get; set; }
+        public DateTime LeaveEndDate { get; set; }
+        public string LeaveType { get; set; }
+        public string Status { get; set; }
+        public string Reason { get; set; }
+        public string EmployeeName { get; set; }
+    }
+
+    public class PerformanceReview
+    {
+        public int ReviewId { get; set; }
+        public int EmployeeId { get; set; }
+        public string EmployeeName { get; set; } // For display
+        public int ReviewerId { get; set; }
+        public string ReviewerName { get; set; } // For display
+        public DateTime ReviewDate { get; set; }
+        public string PerformanceRating { get; set; }
+        public string Feedback { get; set; }
+        public string first_name { get; set; }
+        public string last_name { get; set; }
+
+        // Computed property for FullName
+        public string FullName => $"{first_name} {last_name}";
+    }
+
+    public class EmployeeTraining
+    {
+        public int TrainingId { get; set; }
+        public int EmployeeId { get; set; }
+        public int TrainingTblId { get; set; }
+        public DateTime TrainingStartDate { get; set; }
+        public DateTime TrainingEndDate { get; set; }
+        public string TrainingStatus { get; set; }
+        public string TrainingProvider { get; set; }
+
+        // Optional: for display
+        public string EmployeeName { get; set; }
+        public string TrainingName { get; set; }
+    }
+
+
+    public class Training
+    {
+        public int TrainingId { get; set; } // PK
+        public string TrainingName { get; set; }
+        public string TrainingDescription { get; set; }
+        public string TrainingCategory { get; set; }
+
+        public ICollection<EmployeeTraining> EmployeeTrainings { get; set; }
+    }
+
+    public class Payroll
+    {
+        public int EmployeeId { get; set; }
+        public decimal BaseSalary { get; set; }
+        public decimal Bonuses { get; set; }
+        public decimal Overtime { get; set; }
+        public decimal Deductions { get; set; }
+        public decimal TotalSalary { get; set; }
+        public DateTime PayDate { get; set; }
+        public string PaymentMethod { get; set; }
+    }
+
 
 }

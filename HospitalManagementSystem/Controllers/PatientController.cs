@@ -26,7 +26,8 @@ namespace HospitalManagementSystem.Controllers
         private readonly IAppointmentRepository appointmentRepository;
         private readonly IBillingRepository billingRepository;
         private readonly IPharmacyRepository pharmacyRepository;
-        public PatientController(IPatientRepository patientRepository, IDoctorRepository doctorrepository, IBedsRepository bedsRepository, IAppointmentRepository appointmentRepository, IBillingRepository billingRepository, IPharmacyRepository pharmacyRepository, IWebHostEnvironment env)
+        private readonly ILabTestRepository labTestRepository;
+        public PatientController(IPatientRepository patientRepository, ILabTestRepository labTestRepository, IDoctorRepository doctorrepository, IBedsRepository bedsRepository, IAppointmentRepository appointmentRepository, IBillingRepository billingRepository, IPharmacyRepository pharmacyRepository, IWebHostEnvironment env)
         {
             this.patientRepository = patientRepository;
             this.doctorrepository = doctorrepository;
@@ -34,6 +35,7 @@ namespace HospitalManagementSystem.Controllers
             this.appointmentRepository = appointmentRepository;
             this.billingRepository = billingRepository;
             this.pharmacyRepository = pharmacyRepository;
+            this.labTestRepository = labTestRepository;
             _env = env;
         }
 
@@ -542,6 +544,11 @@ namespace HospitalManagementSystem.Controllers
                 UpcomingAppointments = appointmentsRaw
             };
 
+            // Get the list of patient reports from the database as LabReportViewModel2
+            var patientReports = labTestRepository.GetReportsByPatientId(patientId) ?? new List<LabReportViewModel2>();
+
+            // Pass the list of reports to the view using ViewBag
+            ViewBag.PatientReports = patientReports;
             return View(model);
         }
 
@@ -623,6 +630,21 @@ namespace HospitalManagementSystem.Controllers
         }
 
 
+        public IActionResult LabReportsDetails()
+        {
+            var patientIdString = HttpContext.Session.GetString("PatientId");
+
+            if (string.IsNullOrEmpty(patientIdString))
+            {
+                return RedirectToAction("PatientLogin");
+            }
+
+            int patientId = Convert.ToInt32(patientIdString);
+
+            var reports = labTestRepository.GetReportsByPatientId(patientId).ToList();
+
+            return View(reports);
+        }
 
 
         public ActionResult ForgotPassword()

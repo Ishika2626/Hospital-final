@@ -322,24 +322,26 @@
                 <a>Staff Management <i class="fa-solid fa-chevron-down"></i></a>
                 <ul class="submenu">
                     <li><a class="nav-link text-white" href="@Url.Action("DisplayStaffRecords", "Staff")">Staff Records</a></li>
-                    <li><a class="nav-link text-white" href="@Url.Action("DisplayPayroll", "Staff")">Payroll</a></li>
-                    <li><a class="nav-link text-white" href="@Url.Action("DisplayScheduling", "Staff")">Scheduling</a></li>
-                   @*  <li><a class="nav-link text-white" href="@Url.Action("DisplayRoles", "Staff")">Staff Roles</a></li> *@
-                    <li><a class="nav-link text-white" href="@Url.Action("DisplayAttendance", "Staff")">Attendance</a></li>
-                    <li><a class="nav-link text-white" href="@Url.Action("DisplayLeaveRequests", "Staff")">Leave Requests</a></li>
-                    <li><a class="nav-link text-white" href="@Url.Action("DisplayPerformanceReviews", "Staff")">Performance Reviews</a></li>
-                    <li><a class="nav-link text-white" href="@Url.Action("DisplayTraining", "Staff")">Staff Training</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Payroll", "Staff")">Payroll</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Scheduling", "Staff")">Scheduling</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("DisplayRoles", "Staff")">Staff Roles</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("DisplayDepartments", "Staff")">Departments</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Attendance", "Staff")">Attendance</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("LeaveRequests", "Staff")">Leave Requests</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("PerformanceReviews", "Staff")">Performance Reviews</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("Training", "Staff")">Staff Training</a></li>
                 </ul>
             </li>
 
-         
+
             <!-- Laboratory Management Section -->
             <li class="dropdown">
                 <a>Laboratory Management  <i class="fa-solid fa-chevron-down"></i></a>
                 <ul class="submenu">
                     <li><a class="nav-link text-white" href="@Url.Action("DisplayLabTests","Laboratory")">Lab Tests</a></li>
-                    <li><a class="nav-link text-white" href="@Url.Action("DisplayPatientTests","Laboratory")">Patient Tests</a></li>
-                    <li><a class="nav-link text-white" href="@Url.Action("DisplayLabReports","Laboratory")">Lab Reports</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("GetAllBookings","Laboratory")">Bookings</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("PatientTestList","Laboratory")">Patient Tests</a></li>
+                    <li><a class="nav-link text-white" href="@Url.Action("DisplayAllReports","Laboratory")">Lab Reports</a></li>
                 </ul>
             </li>
 
