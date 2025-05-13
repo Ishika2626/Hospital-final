@@ -441,7 +441,13 @@
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav align-items-center">
-                    
+                    <li class="nav-item px-2">
+                        <a class="nav-link" asp-controller="StaffHome" asp-action="MarkAttendance">
+                            <i class="fa-solid fa-pen-to-square me-1"></i> 📝 Mark Attendance
+                        </a>
+                    </li>
+
+
                     <!-- Profile -->
                     <li class="nav-item px-2">
                         <a class="nav-link" href="@Url.Action("adminProfile", "DashBoard")">

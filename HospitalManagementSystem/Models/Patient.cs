@@ -3,88 +3,88 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HospitalManagementSystem.Models
 {
-    [Table("patient_registration", Schema = "patient")]
-    public class PatientRegistration
-    {
-        [Key]
-        [Column("patient_id")]
-        public int PatientId { get; set; }
+        [Table("patient_registration", Schema = "patient")]
+        public class PatientRegistration
+        {
+            [Key]
+            [Column("patient_id")]
+            public int PatientId { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        [Column("first_name")]
-        public string FirstName { get; set; }
+            [Required]
+            [StringLength(100)]
+            [Column("first_name")]
+            public string FirstName { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        [Column("last_name")]
-        public string LastName { get; set; }
+            [Required]
+            [StringLength(100)]
+            [Column("last_name")]
+            public string LastName { get; set; }
 
-        [Required]
-        [StringLength(10)]
-        [Column("gender")]
-        public string Gender { get; set; }
+            [Required]
+            [StringLength(10)]
+            [Column("gender")]
+            public string Gender { get; set; }
 
-        [Required]
-        [Column("dob")]
-        public DateTime Dob { get; set; }
-
-
-        [Column("address")]
-        public string Address { get; set; }
-
-        [Required]
-        [StringLength(100)]
-        [EmailAddress]
-        [Column("email")]
-        public string Email { get; set; }
-
-        [Required]
-        [StringLength(15)]
-        [Phone]
-        [Column("phone_number")]
-        public string PhoneNumber { get; set; }
-
-        [Required]
-        [StringLength(100)]
-        [Column("emergency_contact_name")]
-        public string EmergencyContactName { get; set; }
-
-        [Required]
-        [StringLength(15)]
-        [Phone]
-        [Column("emergency_contact_phone")]
-        public string EmergencyContactPhone { get; set; }
-
-        [Required]
-        [StringLength(100)]
-        [Column("marital_status")]
-        public string MaritalStatus { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        [Column("nationality")]
-        public string Nationality { get; set; }
-
-        [StringLength(5)]
-        [Column("blood_group")]
-        public string BloodGroup { get; set; }
-
-        [Column("created_at")]
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-        [Column("updated_at")]
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
-
-        [Required]
-        [StringLength(6)]
-        [Column("password")]
-        public string Password { get; set; }
-
-        public string patient_img { get; set; }
+            [Required]
+            [Column("dob")]
+            public DateTime Dob { get; set; }
 
 
-    }
+            [Column("address")]
+            public string Address { get; set; }
+
+            [Required]
+            [StringLength(100)]
+            [EmailAddress]
+            [Column("email")]
+            public string Email { get; set; }
+
+            [Required]
+            [StringLength(15)]
+            [Phone]
+            [Column("phone_number")]
+            public string PhoneNumber { get; set; }
+
+            [Required]
+            [StringLength(100)]
+            [Column("emergency_contact_name")]
+            public string EmergencyContactName { get; set; }
+
+            [Required]
+            [StringLength(15)]
+            [Phone]
+            [Column("emergency_contact_phone")]
+            public string EmergencyContactPhone { get; set; }
+
+            [Required]
+            [StringLength(100)]
+            [Column("marital_status")]
+            public string MaritalStatus { get; set; }
+
+            [Required]
+            [StringLength(50)]
+            [Column("nationality")]
+            public string Nationality { get; set; }
+
+            [StringLength(5)]
+            [Column("blood_group")]
+            public string BloodGroup { get; set; }
+
+            [Column("created_at")]
+            public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+            [Column("updated_at")]
+            public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
+            [Required]
+            [StringLength(6)]
+            [Column("password")]
+            public string Password { get; set; }
+
+            public string patient_img { get; set; }
+
+
+        }
 
 
     [Table("patient_admission", Schema = "patient")]

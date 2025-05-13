@@ -1,166 +1,119 @@
-﻿@{
-    Layout = "_stafflayout";
+﻿@model IEnumerable<HospitalManagementSystem.Models.patient_visits>
+
+@{
+    ViewData["Title"] = "Patient Visits";
+    Layout = "~/Views/Shared/_stafflayout.cshtml";
+
+    // Cast ViewBag values to the respective collections
+    var patients = ViewBag.patientName as IEnumerable<HospitalManagementSystem.Models.PatientRegistration>;
+    var doctors = ViewBag.doctorName as IEnumerable<HospitalManagementSystem.Models.Doctor>;
 }
-<div style="margin-top: 20px; align-content:center">
-    <a href="@Url.Action("ReceptionistDashboard", "StaffHome")" class="btn btn-secondary mb-3"
-       style="background-color: #6c757d; color: white; padding: 10px 15px;
-              border-radius: 5px; text-decoration: none; display: inline-block;">
-        🔙 Back to Dashboard
-    </a>
-</div>
 
-<div class="container mt-4">
-    <div class="card p-4">
-        <h3 class="text-center mb-4">🚪 Visitor Records</h3>
+<h2>All Patient Visits</h2>
 
-        <!-- Add Visitor Button -->
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addVisitorModal">➕ Add Visitor</button>
+<!-- Button to trigger modal -->
+<button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addVisitModal">
+    + Add New Visit
+</button>
 
-        <!-- Search Bar -->
-        <input type="text" id="searchInput" class="form-control mb-3" placeholder="🔍 Search by Name or Patient">
-
-        <div class="table-responsive">
-            <table class="table table-bordered" id="visitorRecordsTable">
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(0)">Visitor Name ⬆⬇</th>
-                        <th onclick="sortTable(1)">Patient Name ⬆⬇</th>
-                        <th>Relationship</th>
-                        <th onclick="sortTable(3)">Visit Date ⬆⬇</th>
-                        <th onclick="sortTable(4)">Check-In ⬆⬇</th>
-                        <th>Check-Out</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="visitorTable">
-                    <tr>
-                        <td>Michael Johnson</td>
-                        <td>John Doe</td>
-                        <td>Brother</td>
-                        <td>2025-03-12</td>
-                        <td>10:00 AM</td>
-                        <td>12:00 PM</td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-warning">✏ Edit</a>
-                            <a href="#" class="btn btn-sm btn-danger">❌ Remove</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Emily Watson</td>
-                        <td>Jane Smith</td>
-                        <td>Friend</td>
-                        <td>2025-03-12</td>
-                        <td>2:00 PM</td>
-                        <td>4:00 PM</td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-warning">✏ Edit</a>
-                            <a href="#" class="btn btn-sm btn-danger">❌ Remove</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- Add Visitor Modal -->
-<div class="modal fade" id="addVisitorModal" tabindex="-1" aria-labelledby="addVisitorLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addVisitorLabel">➕ Add Visitor</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addVisitorForm">
-                    <div class="mb-3">
-                        <label class="form-label">Visitor Name</label>
-                        <input type="text" class="form-control" id="visitorName" required />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Patient Name</label>
-                        <input type="text" class="form-control" id="patientName" required />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Relationship</label>
-                        <select class="form-control" id="relationship">
-                            <option value="">Select Relationship</option>
-                            <option>Parent</option>
-                            <option>Sibling</option>
-                            <option>Friend</option>
-                            <option>Relative</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Visit Date</label>
-                        <input type="date" class="form-control" id="visitDate" required />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Check-In Time</label>
-                        <input type="time" class="form-control" id="checkIn" required />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Check-Out Time</label>
-                        <input type="time" class="form-control" id="checkOut" required />
-                    </div>
-                    <button type="submit" class="btn btn-success">✅ Save Visitor</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Search functionality
-    document.getElementById("searchInput").addEventListener("keyup", function () {
-        let filter = this.value.toLowerCase();
-        let rows = document.querySelectorAll("#visitorTable tr");
-        rows.forEach(row => {
-            let visitorName = row.cells[0].textContent.toLowerCase();
-            let patientName = row.cells[1].textContent.toLowerCase();
-            row.style.display = visitorName.includes(filter) || patientName.includes(filter) ? "" : "none";
-        });
-    });
-
-    // Sorting function (sorts table by column index)
-    function sortTable(colIndex) {
-        let table = document.getElementById("visitorRecordsTable").getElementsByTagName("tbody")[0];
-        let rows = Array.from(table.rows);
-        let sortedRows = rows.sort((a, b) => {
-            let cellA = a.cells[colIndex].textContent.trim();
-            let cellB = b.cells[colIndex].textContent.trim();
-
-            if (!isNaN(Date.parse(cellA)) && !isNaN(Date.parse(cellB))) {
-                return new Date(cellA) - new Date(cellB);
+<!-- Table -->
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Visit ID</th>
+            <th>Patient ID</th>
+            <th>Visit Date</th>
+            <th>Department</th>
+            <th>Doctor ID</th>
+            <th>Visit Reason</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            foreach (var visit in Model)
+            {
+                <tr>
+                    <td>@visit.VisitId</td>
+                    <td>@visit.PatientId</td>
+                    <td>@visit.VisitDate.ToString("yyyy-MM-dd")</td>
+                    <td>@visit.Department</td>
+                    <td>@visit.DoctorId</td>
+                    <td>@visit.VisitReason</td>
+                </tr>
             }
-            if (!isNaN(cellA) && !isNaN(cellB)) {
-                return Number(cellA) - Number(cellB);
-            }
-            return cellA.localeCompare(cellB);
-        });
-
-        table.innerHTML = "";
-        sortedRows.forEach(row => table.appendChild(row));
-    }
-
-    // Form validation before submission
-    document.getElementById("addVisitorForm").addEventListener("submit", function (e) {
-        e.preventDefault();
-        let visitorName = document.getElementById("visitorName").value.trim();
-        let patientName = document.getElementById("patientName").value.trim();
-        let relationship = document.getElementById("relationship").value.trim();
-        let visitDate = document.getElementById("visitDate").value;
-        let checkIn = document.getElementById("checkIn").value;
-        let checkOut = document.getElementById("checkOut").value;
-
-        if (!visitorName || !patientName || !relationship || !visitDate || !checkIn || !checkOut) {
-            alert("⚠ Please fill in all fields!");
-            return;
         }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center text-danger">No visits found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-        alert("✅ Visitor added successfully!");
-        document.getElementById("addVisitorForm").reset();
-        let modal = bootstrap.Modal.getInstance(document.getElementById('addVisitorModal'));
-        modal.hide();
-    });
-</script>
+<!-- Modal Form -->
+<div class="modal fade" id="addVisitModal" tabindex="-1" aria-labelledby="addVisitModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post" action="@Url.Action("AddReceptionistVisitorsLog", "StaffHome")">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addVisitModalLabel">Add Patient Visit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <!-- Patient Dropdown -->
+                        <div class="col-md-6 mb-3">
+                            <label>Patient</label>
+                            <select class="form-control" name="PatientId" required>
+                                <option value="">-- Select Patient --</option>
+                                @foreach (var item in patients)
+                                {
+                                    <option value="@item.PatientId">@item.FirstName @item.LastName</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Visit Date -->
+                        <div class="col-md-6 mb-3">
+                            <label>Visit Date</label>
+                            <input type="datetime-local" name="VisitDate" class="form-control" required />
+                        </div>
+
+                        <!-- Department -->
+                        <div class="col-md-6 mb-3">
+                            <label>Department</label>
+                            <input type="text" name="Department" class="form-control" required />
+                        </div>
+
+                        <!-- Doctor Dropdown -->
+                        <div class="col-md-6 mb-3">
+                            <label>Doctor</label>
+                            <select class="form-control" name="DoctorId" required>
+                                <option value="">-- Select Doctor --</option>
+                                @foreach (var item in doctors)
+                                {
+                                    <option value="@item.DoctorId">@item.FullName</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Reason -->
+                        <div class="col-md-12 mb-3">
+                            <label>Visit Reason</label>
+                            <textarea name="VisitReason" class="form-control" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

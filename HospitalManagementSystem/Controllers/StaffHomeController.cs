@@ -267,11 +267,38 @@ namespace HospitalManagementSystem.Controllers
         }
         public IActionResult ReceptionistPatientRecords()
         {
-            return View();
+            var patients = patientRepository.GetAll();
+            return View(patients);
         }
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public IActionResult AddPatient(PatientRegistration patient, IFormFile patient_img)
+        {
+            patientRepository.Add(patient, patient_img);
+            return RedirectToAction("ReceptionistPatientRecords");
+        }
+
         public IActionResult ReceptionistVisitorsLog()
         {
-            return View();
+            var visits = patientRepository.GetAllpatient_visits();
+
+            // Fetch patients and doctors from repository
+            var patients = patientRepository.GetAll();
+            var doctors = doctorRepository.GetAllDoctors();
+
+            // Assign them to ViewBag (still raw collections)
+            ViewBag.patientName = patients;
+            ViewBag.doctorName = doctors;
+
+            return View(visits);
+        }
+        [HttpPost]
+        public ActionResult AddReceptionistVisitorsLog(patient_visits visit)
+        {
+            patientRepository.Addpatient_visits(visit);
+            ViewBag.patientName = patientRepository.GetAll();
+            ViewBag.doctorName = doctorRepository.GetAllDoctors();// Insert into DB without model validation check
+            return RedirectToAction("ReceptionistVisitorsLog");
         }
         public IActionResult PharmacistManageMedicines()
         {

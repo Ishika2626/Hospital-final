@@ -115,6 +115,12 @@
                         <a class="nav-link" asp-controller="StaffHome" asp-action="LabTechnicianDashboard">Dashboard</a>
                     </li>
                 }
+                else if (userRole == "Receptionist")
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="StaffHome" asp-action="ReceptionistDashboard">Dashboard</a>
+                    </li>
+                }
                 <li class="nav-item">
                     <a class="nav-link" asp-controller="StaffHome" asp-action="MarkAttendance">📝 Mark Attendance</a>
                 </li>
