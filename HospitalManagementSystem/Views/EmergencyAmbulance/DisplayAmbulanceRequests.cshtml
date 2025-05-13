@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<HospitalManagementSystem.Models.AmbulanceRequest>
+
+@{
     Layout = "~/Views/Shared/admin.cshtml";
 }
 
@@ -9,10 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Ambulance Requests - Hospital System</title>
 
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
-    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
@@ -31,7 +30,7 @@
         }
 
         .table th {
-            background-color: #007bff;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
             color: white;
         }
 
@@ -57,19 +56,27 @@
             .action-icons i:hover {
                 color: #007bff;
             }
+
+        .gradient-text {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
         <div class="card p-3">
-            <h2 class="text-center text-primary mb-3">
+            <h2 class="text-center mb-3 gradient-text">
                 <i class="fa-solid fa-truck-medical"></i> Ambulance Requests
             </h2>
 
             <!-- Search & Add Request -->
             <div class="d-flex justify-content-between mb-3">
                 <input type="text" class="form-control search-bar" placeholder="🔍 Search Requests..." id="searchRequest">
-                <a href="@Url.Action("AmbulanceRequests","EmergencyAmbulance")" class="btn btn-success">
+                <a href="@Url.Action("AmbulanceRequests", "EmergencyAmbulance")" class="btn btn-success">
                     <i class="fa-solid fa-plus"></i> New Request
                 </a>
             </div>
@@ -86,20 +93,163 @@
                             <th>Destination</th>
                             <th>Ambulance ID</th>
                             <th>Status</th>
-                            <th>Assigned Driver</th>
+                            <th>Driver ID</th>
                             <th>Notes</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="ambulanceRequestTable">
-                        <!-- Dynamic ambulance request data will be inserted here -->
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var req in Model)
+                            {
+                                <tr>
+                                    <td>@req.RequestID</td>
+                                    <td>@req.PatientID</td>
+                                    <td>@req.RequestTime.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>@req.PickupLocation</td>
+                                    <td>@req.Destination</td>
+                                    <td>@req.AmbulanceID</td>
+                                    <td>@req.Status</td>
+                                    <td>@req.AssignedDriver</td>
+                                    <td>@req.Notes</td>
+                                    <td class="action-icons">
+                                        <button type="button" class="btn btn-warning edit-btn" title="Edit"
+                                                data-requestid="@req.RequestID"
+                                                data-patientid="@req.PatientID"
+                                                data-requesttime="@req.RequestTime.ToString("yyyy-MM-ddTHH:mm")"
+                                                data-pickuplocation="@req.PickupLocation"
+                                                data-destination="@req.Destination"
+                                                data-ambulanceid="@req.AmbulanceID"
+                                                data-status="@req.Status"
+                                                data-driver="@req.AssignedDriver"
+                                                data-notes="@req.Notes">
+                                            <i class="fa-solid fa-edit"></i>
+                                        </button>
+
+
+                                        <a href="@Url.Action("DeleteAmbulanceRequests", "EmergencyAmbulance", new { id = req.RequestID })" class="btn btn-danger" title="Delete" onclick="return confirm('Are you sure?')">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="10">No ambulance requests found.</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    <!-- Edit Ambulance Request Modal -->
+    <div class="modal fade" id="editAmbulanceModal" tabindex="-1" aria-labelledby="editAmbulanceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form method="post" action="@Url.Action("EditAmbulanceRequests", "EmergencyAmbulance")">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="editAmbulanceModalLabel">Edit Ambulance Request</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body row g-3">
+
+                        <input type="hidden" id="editRequestID" name="RequestID" />
+
+                        <div class="col-md-6">
+                            <label for="editPatientID" class="form-label">Patient ID</label>
+                            <input type="text" class="form-control" id="editPatientID" name="PatientID" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editRequestTime" class="form-label">Request Time</label>
+                            <input type="datetime-local" class="form-control" id="editRequestTime" name="RequestTime" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editPickupLocation" class="form-label">Pickup Location</label>
+                            <input type="text" class="form-control" id="editPickupLocation" name="PickupLocation" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editDestination" class="form-label">Destination</label>
+                            <input type="text" class="form-control" id="editDestination" name="Destination" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editAmbulanceID" class="form-label">Ambulance ID</label>
+                            <input type="text" class="form-control" id="editAmbulanceID" name="AmbulanceID">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editStatus" class="form-label">Status</label>
+                            <select class="form-control" id="editStatus" name="Status">
+                                <option value="Pending">Pending</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="InTransit">InTransit</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editAssignedDriver" class="form-label">Assigned Driver</label>
+                            <input type="text" class="form-control" id="editAssignedDriver" name="AssignedDriver">
+                        </div>
+
+                        <div class="col-12">
+                            <label for="editNotes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="editNotes" name="Notes" rows="2"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Attach click event to all edit buttons
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                document.getElementById('editRequestID').value = this.dataset.requestid;
+                document.getElementById('editPatientID').value = this.dataset.patientid;
+                document.getElementById('editRequestTime').value = this.dataset.requesttime;
+                document.getElementById('editPickupLocation').value = this.dataset.pickuplocation;
+                document.getElementById('editDestination').value = this.dataset.destination;
+                document.getElementById('editAmbulanceID').value = this.dataset.ambulanceid;
+                document.getElementById('editStatus').value = this.dataset.status;
+                document.getElementById('editAssignedDriver').value = this.dataset.driver;
+                document.getElementById('editNotes').value = this.dataset.notes;
+
+                const modal = new bootstrap.Modal(document.getElementById('editAmbulanceModal'));
+                modal.show();
+            });
+        });
+    </script>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Simple search filter -->
+    <script>
+        document.getElementById("searchRequest").addEventListener("input", function () {
+            let value = this.value.toLowerCase();
+            let rows = document.querySelectorAll("#ambulanceRequestTable tr");
+
+            rows.forEach(row => {
+                let text = row.textContent.toLowerCase();
+                row.style.display = text.includes(value) ? "" : "none";
+            });
+        });
+    </script>
+
 </body>
 </html>

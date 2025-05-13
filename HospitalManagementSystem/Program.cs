@@ -64,7 +64,7 @@ namespace HospitalManagementSystem
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=DashBoard}/{action=adminDashBoard}/{id?}");
+                pattern: "{controller=Patient}/{action=PatientLogin}/{id?}");
 
             app.Run();
         }

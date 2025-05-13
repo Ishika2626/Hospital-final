@@ -12,6 +12,74 @@ namespace HospitalManagementSystem.Repositories
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
+        public void AddAmbulance(Ambulance ambulance)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"
+        INSERT INTO EmergencyAmbulanceManagement.ambulances 
+        (AmbulanceNumber)
+        VALUES (@AmbulanceNumber)";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@AmbulanceNumber", ambulance.AmbulanceNumber);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void AddAmbulanceRequest(AmbulanceRequest request)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"
+        INSERT INTO EmergencyAmbulanceManagement.ambulance_requests 
+        (PatientID, RequestTime, PickupLocation, Destination, AmbulanceID, Status, AssignedDriver, Notes)
+        VALUES 
+        (@PatientID, @RequestTime, @PickupLocation, @Destination, @AmbulanceID, @Status, @AssignedDriver, @Notes)";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@PatientID", request.PatientID);
+                cmd.Parameters.AddWithValue("@RequestTime", request.RequestTime);
+                cmd.Parameters.AddWithValue("@PickupLocation", request.PickupLocation);
+                cmd.Parameters.AddWithValue("@Destination", request.Destination);
+                cmd.Parameters.AddWithValue("@AmbulanceID", (object)request.AmbulanceID ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Status", request.Status.ToString());
+                cmd.Parameters.AddWithValue("@AssignedDriver", request.AssignedDriver);
+                cmd.Parameters.AddWithValue("@Notes", (object)request.Notes ?? DBNull.Value);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void AddEmergencyCase(EmergencyCase emergencyCase)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"
+        INSERT INTO EmergencyAmbulanceManagement.emergency_cases 
+        (PatientID, ArrivalTime, SeverityLevel, Diagnosis, TreatmentGiven, DoctorID, Status, Notes)
+        VALUES 
+        (@PatientID, @ArrivalTime, @SeverityLevel, @Diagnosis, @TreatmentGiven, @DoctorID, @Status, @Notes)";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@PatientID", emergencyCase.PatientID);
+                cmd.Parameters.AddWithValue("@ArrivalTime", emergencyCase.ArrivalTime);
+                cmd.Parameters.AddWithValue("@SeverityLevel", emergencyCase.SeverityLevel.ToString());
+                cmd.Parameters.AddWithValue("@Diagnosis", (object)emergencyCase.Diagnosis ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@TreatmentGiven", (object)emergencyCase.TreatmentGiven ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@DoctorID", emergencyCase.DoctorID);
+                cmd.Parameters.AddWithValue("@Status", emergencyCase.Status.ToString());
+                cmd.Parameters.AddWithValue("@Notes", (object)emergencyCase.Notes ?? DBNull.Value);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
         // Add a new medicine      
         public void AddMedicine(Medicine medicine)
         {
@@ -114,6 +182,46 @@ namespace HospitalManagementSystem.Repositories
             }
         }
 
+        public void DeleteAmbulance(int ambulanceId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "DELETE FROM EmergencyAmbulanceManagement.ambulances WHERE AmbulanceID = @AmbulanceID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@AmbulanceID", ambulanceId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteAmbulanceRequest(int requestId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "DELETE FROM EmergencyAmbulanceManagement.ambulance_requests WHERE RequestID = @RequestID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@RequestID", requestId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteEmergencyCase(int caseId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "DELETE FROM EmergencyAmbulanceManagement.emergency_cases WHERE CaseID = @CaseID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@CaseID", caseId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
         // Delete a medicine
         public void DeleteMedicine(int medicineId)
         {
@@ -168,6 +276,103 @@ namespace HospitalManagementSystem.Repositories
                 connection.Open();
                 command.ExecuteNonQuery();
             }
+        }
+
+        public IEnumerable<Ambulance> GetAllAmbulances()
+        {
+            var ambulances = new List<Ambulance>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT AmbulanceID, AmbulanceNumber FROM EmergencyAmbulanceManagement.ambulances";
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    ambulances.Add(new Ambulance
+                    {
+                        AmbulanceID = reader.GetInt32(0),
+                        AmbulanceNumber = reader.GetString(1)
+                    });
+                }
+            }
+
+            return ambulances;
+        }
+
+        public IEnumerable<AmbulanceRequest> GetAllAmbulanceRequests()
+        {
+            var requests = new List<AmbulanceRequest>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"
+            SELECT RequestID, PatientID, RequestTime, PickupLocation, Destination,
+                   AmbulanceID, Status, AssignedDriver, Notes
+            FROM EmergencyAmbulanceManagement.ambulance_requests";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    requests.Add(new AmbulanceRequest
+                    {
+                        RequestID = reader.GetInt32(0),
+                        PatientID = reader.GetInt32(1),
+                        RequestTime = reader.GetDateTime(2),
+                        PickupLocation = reader.GetString(3),
+                        Destination = reader.GetString(4),
+                        AmbulanceID = reader.IsDBNull(5) ? null : reader.GetInt32(5),
+                        Status = Enum.Parse<AmbulanceRequestStatus>(reader.GetString(6)),
+                        AssignedDriver = reader.GetInt32(7),
+                        Notes = reader.IsDBNull(8) ? null : reader.GetString(8)
+                    });
+                }
+            }
+
+            return requests;
+        }
+
+        public IEnumerable<EmergencyCase> GetAllEmergencyCases()
+        {
+            var cases = new List<EmergencyCase>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"
+            SELECT CaseID, PatientID, ArrivalTime, SeverityLevel,
+                   Diagnosis, TreatmentGiven, DoctorID, Status, Notes
+            FROM EmergencyAmbulanceManagement.emergency_cases";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    cases.Add(new EmergencyCase
+                    {
+                        CaseID = reader.GetInt32(0),
+                        PatientID = reader.GetInt32(1),
+                        ArrivalTime = reader.GetDateTime(2),
+                        SeverityLevel = Enum.Parse<SeverityLevel>(reader.GetString(3)),
+                        Diagnosis = reader.IsDBNull(4) ? null : reader.GetString(4),
+                        TreatmentGiven = reader.IsDBNull(5) ? null : reader.GetString(5),
+                        DoctorID = reader.GetInt32(6),
+                        Status = Enum.Parse<EmergencyCaseStatus>(reader.GetString(7)),
+                        Notes = reader.IsDBNull(8) ? null : reader.GetString(8)
+                    });
+                }
+            }
+
+            return cases;
         }
 
         // Get all medicines
@@ -297,6 +502,101 @@ namespace HospitalManagementSystem.Repositories
             }
 
             return prescriptions;
+        }
+
+        public Ambulance GetAmbulanceById(int ambulanceId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT AmbulanceID, AmbulanceNumber FROM EmergencyAmbulancManagement.ambulances WHERE AmbulanceID = @AmbulanceID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@AmbulanceID", ambulanceId);
+
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new Ambulance
+                        {
+                            AmbulanceID = reader.GetInt32(0),
+                            AmbulanceNumber = reader.GetString(1)
+                        };
+                    }
+                }
+            }
+            return null; // Not found
+        }
+
+        public AmbulanceRequest GetAmbulanceRequestById(int requestId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"
+            SELECT RequestID, PatientID, RequestTime, PickupLocation, Destination,
+                   AmbulanceID, Status, AssignedDriver, Notes
+            FROM EmergencyAmbulanceManagement.ambulance_requests
+            WHERE RequestID = @RequestID";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@RequestID", requestId);
+
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new AmbulanceRequest
+                        {
+                            RequestID = reader.GetInt32(0),
+                            PatientID = reader.GetInt32(1),
+                            RequestTime = reader.GetDateTime(2),
+                            PickupLocation = reader.GetString(3),
+                            Destination = reader.GetString(4),
+                            AmbulanceID = reader.IsDBNull(5) ? null : reader.GetInt32(5),
+                            Status = (AmbulanceRequestStatus)reader.GetInt32(6),
+                            AssignedDriver = reader.GetInt32(7),
+                            Notes = reader.IsDBNull(8) ? null : reader.GetString(8)
+                        };
+                    }
+                }
+            }
+            return null;
+        }
+        public EmergencyCase GetEmergencyCaseById(int caseId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"
+            SELECT CaseID, PatientID, ArrivalTime, SeverityLevel,
+                   Diagnosis, TreatmentGiven, DoctorID, Status, Notes
+            FROM EmergencyAmbulanceManagement.emergency_cases
+            WHERE CaseID = @CaseID";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@CaseID", caseId);
+
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new EmergencyCase
+                        {
+                            CaseID = reader.GetInt32(0),
+                            PatientID = reader.GetInt32(1),
+                            ArrivalTime = reader.GetDateTime(2),
+                            SeverityLevel = Enum.Parse<SeverityLevel>(reader.GetString(3)),
+                            Diagnosis = reader.IsDBNull(4) ? null : reader.GetString(4),
+                            TreatmentGiven = reader.IsDBNull(5) ? null : reader.GetString(5),
+                            DoctorID = reader.GetInt32(6),
+                            Status = Enum.Parse<EmergencyCaseStatus>(reader.GetString(7)),
+                            Notes = reader.IsDBNull(8) ? null : reader.GetString(8)
+                        };
+                    }
+                }
+            }
+            return null;
         }
 
         // Get medicine by Id
@@ -494,6 +794,89 @@ namespace HospitalManagementSystem.Repositories
             }
 
             return prescriptions;
+        }
+
+        public void UpdateAmbulance(Ambulance ambulance)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"
+            UPDATE EmergencyAmbulanceManagement.ambulances
+            SET AmbulanceNumber = @AmbulanceNumber
+            WHERE AmbulanceID = @AmbulanceID";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@AmbulanceID", ambulance.AmbulanceID);
+                cmd.Parameters.AddWithValue("@AmbulanceNumber", ambulance.AmbulanceNumber ?? (object)DBNull.Value);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+        public void UpdateAmbulanceRequest(AmbulanceRequest request)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"
+            UPDATE EmergencyAmbulanceManagement.ambulance_requests
+            SET PatientID = @PatientID,
+                RequestTime = @RequestTime,
+                PickupLocation = @PickupLocation,
+                Destination = @Destination,
+                AmbulanceID = @AmbulanceID,
+                Status = @Status,
+                AssignedDriver = @AssignedDriver,
+                Notes = @Notes
+            WHERE RequestID = @RequestID";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@RequestID", request.RequestID);
+                cmd.Parameters.AddWithValue("@PatientID", request.PatientID);
+                cmd.Parameters.AddWithValue("@RequestTime", request.RequestTime);
+                cmd.Parameters.AddWithValue("@PickupLocation", request.PickupLocation);
+                cmd.Parameters.AddWithValue("@Destination", request.Destination);
+                cmd.Parameters.AddWithValue("@AmbulanceID", (object?)request.AmbulanceID ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Status", request.Status.ToString()); // Convert enum to string
+                cmd.Parameters.AddWithValue("@AssignedDriver", request.AssignedDriver);
+                cmd.Parameters.AddWithValue("@Notes", (object?)request.Notes ?? DBNull.Value);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void UpdateEmergencyCase(EmergencyCase emergencyCase)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"
+            UPDATE EmergencyAmbulanceManagement.emergency_cases
+            SET PatientID = @PatientID,
+                ArrivalTime = @ArrivalTime,
+                SeverityLevel = @SeverityLevel,
+                Diagnosis = @Diagnosis,
+                TreatmentGiven = @TreatmentGiven,
+                DoctorID = @DoctorID,
+                Status = @Status,
+                Notes = @Notes
+            WHERE CaseID = @CaseID";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@CaseID", emergencyCase.CaseID);
+                cmd.Parameters.AddWithValue("@PatientID", emergencyCase.PatientID);
+                cmd.Parameters.AddWithValue("@ArrivalTime", emergencyCase.ArrivalTime);
+                cmd.Parameters.AddWithValue("@SeverityLevel", emergencyCase.SeverityLevel.ToString()); // assuming string storage
+                cmd.Parameters.AddWithValue("@Diagnosis", (object?)emergencyCase.Diagnosis ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@TreatmentGiven", (object?)emergencyCase.TreatmentGiven ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@DoctorID", emergencyCase.DoctorID);
+                cmd.Parameters.AddWithValue("@Status", emergencyCase.Status.ToString()); // assuming string storage
+                cmd.Parameters.AddWithValue("@Notes", (object?)emergencyCase.Notes ?? DBNull.Value);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
 

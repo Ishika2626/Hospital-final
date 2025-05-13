@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<HospitalManagementSystem.Models.EmergencyCase>
+
+@{
     Layout = "~/Views/Shared/admin.cshtml";
 }
 
@@ -57,6 +59,11 @@
             .action-icons i:hover {
                 color: #dc3545;
             }
+
+        /* Optional: Add a margin to the footer for better spacing */
+        .modal-footer {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -91,7 +98,47 @@
                         </tr>
                     </thead>
                     <tbody id="emergencyTable">
-                        <!-- Dynamic emergency cases data will be inserted here -->
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var caseItem in Model)
+                            {
+                                <tr>
+                                    <td>@caseItem.CaseID</td>
+                                    <td>@caseItem.PatientID</td>
+                                    <td>@caseItem.ArrivalTime.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>@caseItem.SeverityLevel</td>
+                                    <td>@caseItem.Diagnosis</td>
+                                    <td>@caseItem.TreatmentGiven</td>
+                                    <td>@caseItem.DoctorID</td>
+                                    <td>@caseItem.Status.ToString()</td>
+
+                                    <td class="action-icons">
+                                        <!-- Edit Button -->
+                                        <button type="button" class="btn btn-warning edit-btn" title="Edit"
+                                                data-caseid="@caseItem.CaseID"
+                                                data-patientid="@caseItem.PatientID"
+                                                data-arrivaltime="@caseItem.ArrivalTime.ToString("yyyy-MM-ddTHH:mm")"
+                                                data-severitylevel="@caseItem.SeverityLevel"
+                                                data-diagnosis="@caseItem.Diagnosis"
+                                                data-treatmentgiven="@caseItem.TreatmentGiven"
+                                                data-doctorid="@caseItem.DoctorID"
+                                                data-status="@caseItem.Status">
+                                            <i class="fa-solid fa-edit"></i>
+                                        </button>
+                                        <!-- Delete Button -->
+                                        <a href="@Url.Action("DeleteEmergencyCases", "EmergencyAmbulance", new { id = caseItem.CaseID })" class="btn btn-danger" title="Delete" onclick="return confirm('Are you sure?')">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="9">No emergency cases found.</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
@@ -100,5 +147,104 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Simple search filter -->
+    <script>
+        document.getElementById("searchEmergency").addEventListener("input", function () {
+            let value = this.value.toLowerCase();
+            let rows = document.querySelectorAll("#emergencyTable tr");
+
+            rows.forEach(row => {
+                let text = row.textContent.toLowerCase();
+                row.style.display = text.includes(value) ? "" : "none";
+            });
+        });
+    </script>
+
+    <!-- Edit Emergency Case Modal Script -->
+    <script>
+        // Attach click event to all edit buttons
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                document.getElementById('editCaseID').value = this.dataset.caseid;
+                document.getElementById('editPatientID').value = this.dataset.patientid;
+                document.getElementById('editArrivalTime').value = this.dataset.arrivaltime;
+                document.getElementById('editSeverityLevel').value = this.dataset.severitylevel;
+                document.getElementById('editDiagnosis').value = this.dataset.diagnosis;
+                document.getElementById('editTreatmentGiven').value = this.dataset.treatmentgiven;
+                document.getElementById('editDoctorID').value = this.dataset.doctorid;
+                document.getElementById('editStatus').value = this.dataset.status;
+
+                const modal = new bootstrap.Modal(document.getElementById('editEmergencyModal'));
+                modal.show();
+            });
+        });
+    </script>
+
+    <!-- Edit Emergency Case Modal -->
+    <div class="modal fade" id="editEmergencyModal" tabindex="-1" aria-labelledby="editEmergencyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form method="post" action="@Url.Action("EditEmergencyCases", "EmergencyAmbulance")">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="editEmergencyModalLabel">Edit Emergency Case</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body row g-3">
+
+                        <input type="hidden" id="editCaseID" name="CaseID" />
+
+                        <div class="col-md-6">
+                            <label for="editPatientID" class="form-label">Patient ID</label>
+                            <input type="text" class="form-control" id="editPatientID" name="PatientID" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editArrivalTime" class="form-label">Arrival Time</label>
+                            <input type="datetime-local" class="form-control" id="editArrivalTime" name="ArrivalTime" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editSeverityLevel" class="form-label">Severity Level</label>
+                            <input type="text" class="form-control" id="editSeverityLevel" name="SeverityLevel" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editDiagnosis" class="form-label">Diagnosis</label>
+                            <input type="text" class="form-control" id="editDiagnosis" name="Diagnosis" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editTreatmentGiven" class="form-label">Treatment Given</label>
+                            <input type="text" class="form-control" id="editTreatmentGiven" name="TreatmentGiven">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editDoctorID" class="form-label">Doctor ID</label>
+                            <input type="text" class="form-control" id="editDoctorID" name="DoctorID" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="editStatus" class="form-label">Status</label>
+                            <select class="form-control" id="editStatus" name="Status">
+                                <option value="Admitted">Admitted</option>
+                                <option value="TreatedAndDischarged">TreatedAndDischarged</option>
+                                <option value="Transferred">Transferred</option>
+                                <option value="Deceased">Deceased</option>
+                                
+                            </select>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>

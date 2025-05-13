@@ -223,6 +223,7 @@ namespace HospitalManagementSystem.Models
         Cancelled
     }
 
+
     // Emergency Cases Model
     [Table("emergency_cases", Schema = "EmergencyAmbulanceManagement")]
     public class EmergencyCase
