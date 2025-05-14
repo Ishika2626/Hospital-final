@@ -78,5 +78,8 @@ namespace HospitalManagementSystem.Repositories
         IEnumerable<Payroll> GenerateMonthlyPayroll(DateTime payDate);
 
         Payroll GetSalarySlip(int employeeId, DateTime payDate);
+
+        //Receptionist
+        IEnumerable<Doctor> GetDoctorsByDepartment(int departmentId);           
     }
 }

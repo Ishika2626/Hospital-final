@@ -1,0 +1,121 @@
+﻿@model List<hospitalManagementSystem.Models.Donor>
+
+@{
+    ViewBag.Title = "Donors";
+    Layout = "~/Views/Shared/_stafflayout.cshtml";
+}
+
+<h2>Donors</h2>
+
+<!-- Add Donor Button -->
+<button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addDonorModal">
+    ➕ Add Donor
+</button>
+
+<!-- Donors Table -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Blood Type</th>
+            <th>Phone Number</th>
+            <th>Eligibility Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var donor in Model)
+        {
+            <tr>
+                <td>@donor.FullName</td>
+                <td>@donor.BloodType</td>
+                <td>@donor.PhoneNumber</td>
+                <td>@donor.EligibilityStatus</td>
+             
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Add Donor Modal -->
+<div class="modal fade" id="addDonorModal" tabindex="-1" aria-labelledby="addDonorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="/BloodBank/AddDonor" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addDonorModalLabel">Add New Donor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Full Name</label>
+                            <input name="FullName" class="form-control" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Date of Birth</label>
+                            <input name="DateOfBirth" class="form-control" type="date" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Gender</label>
+                            <select name="Gender" class="form-select">
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Blood Type</label>
+                            <select name="BloodType" class="form-select" required>
+                                <option>O+</option>
+                                <option>O-</option>
+                                <option>A+</option>
+                                <option>A-</option>
+                                <option>B+</option>
+                                <option>B-</option>
+                                <option>AB+</option>
+                                <option>AB-</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number</label>
+                            <input name="PhoneNumber" class="form-control" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input name="Email" type="email" class="form-control" />
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Address</label>
+                            <textarea name="Address" class="form-control"></textarea>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Last Donation Date</label>
+                            <input name="LastDonationDate" class="form-control" type="date" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Eligibility</label>
+                            <select name="EligibilityStatus" class="form-select">
+                                <option value="Eligible">Eligible</option>
+                                <option value="Not Eligible">Not Eligible</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer mt-3">
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

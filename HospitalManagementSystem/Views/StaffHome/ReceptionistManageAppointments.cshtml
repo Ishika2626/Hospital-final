@@ -1,93 +1,163 @@
-﻿@{
-    Layout = "_stafflayout";
+﻿@model IEnumerable<HospitalManagementSystem.Models.Appointment>
+
+@{
+    ViewData["Title"] = "Manage Appointments";
+    Layout = "~/Views/Shared/_stafflayout.cshtml";
 }
 
-<div style="margin-top: 20px; align-content:center">
-    <a href="@Url.Action("ReceptionistDashboard", "StaffHome")" class="btn btn-secondary mb-3"
-       style="background-color: #6c757d; color: white; padding: 10px 15px;
-              border-radius: 5px; text-decoration: none; display: inline-block;">
-        🔙 Back to Dashboard
-    </a>
-</div>
+<h2>Manage Appointments</h2>
 
-<div class="container mt-4">
-    <div class="card p-4">
-        <h3 class="text-center mb-4">📅 Manage Appointments</h3>
+<!-- Button to trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#appointmentModal">
+    Create New Appointment
+</button>
 
-        <!-- Search Bar -->
-        <input type="text" id="searchInput" class="form-control mb-3" placeholder="🔍 Search by Patient Name or Doctor">
+<!-- Table to display appointments -->
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Appointment ID</th>
+            <th>Patient ID</th>
+            <th>Doctor</th>
+            <th>Appointment Date</th>
+            <th>Status</th>
+            <th>Reason</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            foreach (var appointment in Model)
+            {
+                <tr>
+                    <td>@appointment.AppointmentId</td>
+                    <td>@appointment.PatientId</td>
+                    <td>@appointment.Doctor.FullName</td>
+                    <td>@appointment.AppointmentDate.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@appointment.AppointmentStatus</td>
+                    <td>@appointment.Reason</td>
+                    <td>@appointment.CreatedAt.ToString("yyyy-MM-dd")</td>
+                    <td>@appointment.UpdatedAt.ToString("yyyy-MM-dd")</td>
+                    <td>
+                    <!-- Reschedule Button -->
+                    <button type="button"
+                            class="btn btn-info btn-sm"
+                            data-toggle="modal"
+                            data-target="#rescheduleModal"
+                            onclick="setRescheduleId(@appointment.AppointmentId)">
+                        Reschedule
+                    </button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="9" class="text-center text-danger">No appointments found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<!-- Modal HTML -->
+<div class="modal fade" id="appointmentModal" tabindex="-1" role="dialog" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="appointmentModalLabel">Create Appointment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Modal Form for Appointment -->
+                <form method="post" asp-action="ReceptionistAddAppointments" asp-controller="StaffHome">
+                 
+                    <div class="form-group">
+                        <label for="patientId">Patient</label>
+                        <select id="patientId" name="patientId" class="form-control" required>
+                            <option value="">Select a Patient</option>
+                            @foreach (var p in ViewBag.Patients)
+                            {
+                                <option value="@p.PatientId">@p.FirstName @p.LastName</option>
+                            }
+                        </select>
+                    </div>
 
-        <div class="table-responsive">
-            <table class="table table-bordered" id="appointmentsTable">
-                <thead>
-                    <tr>
-                        <th>Appointment ID</th>
-                        <th>Patient Name</th>
-                        <th>Doctor</th>
-                        <th onclick="sortTable()">Date & Time ⬆⬇</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="appointmentTable">
-                    <tr>
-                        <td>1001</td>
-                        <td>John Doe</td>
-                        <td>Dr. Smith</td>
-                        <td>2025-03-15 10:00 AM</td>
-                        <td><span class="badge bg-warning">Pending</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-success">Confirm</button>
-                            <button class="btn btn-sm btn-danger" onclick="confirmCancel(this)">Cancel</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1002</td>
-                        <td>Jane Smith</td>
-                        <td>Dr. Brown</td>
-                        <td>2025-03-15 11:00 AM</td>
-                        <td><span class="badge bg-success">Confirmed</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-secondary" disabled>Confirmed</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                    <div class="form-group">
+                        <label for="doctorId">Doctor</label>
+                        <select id="doctorId" name="DoctorId" class="form-control" required>
+                            <option value="">Select a Doctor</option>
+                            @foreach (var doctor in ViewBag.Doctors)
+                            {
+                                <option value="@doctor.DoctorId">@doctor.FullName</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointmentDate">Appointment Date</label>
+                        <input type="datetime-local" id="appointmentDate" name="AppointmentDate" class="form-control" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appointmentStatus">Appointment Status</label>
+                        <select id="appointmentStatus" name="AppointmentStatus" class="form-control" required>
+                            <option value="">-- Select Status --</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reason">Reason</label>
+                        <textarea id="reason" name="Reason" class="form-control" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Create Appointment</button>
+                </form>
+            </div>
         </div>
-
-        <a href="/StaffHome/ReceptionistAddAppointments" class="btn btn-primary">➕ Add New Appointment</a>
     </div>
 </div>
 
+<!-- Reschedule Modal -->
+<div class="modal fade" id="rescheduleModal" tabindex="-1" role="dialog" aria-labelledby="rescheduleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post" asp-action="RescheduleAppointment" asp-controller="StaffHome">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rescheduleModalLabel">Reschedule Appointment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="rescheduleAppointmentId" name="appointmentId" />
+
+                    <div class="form-group">
+                        <label for="newDate">New Appointment Date</label>
+                        <input type="datetime-local" id="newDate" name="newDate" class="form-control" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script>
-    // Search functionality
-    document.getElementById("searchInput").addEventListener("keyup", function () {
-        let filter = this.value.toLowerCase();
-        let rows = document.querySelectorAll("#appointmentTable tr");
-        rows.forEach(row => {
-            let text = row.textContent.toLowerCase();
-            row.style.display = text.includes(filter) ? "" : "none";
-        });
-    });
-
-    // Sorting function (sorts table by date & time)
-    function sortTable() {
-        let table = document.getElementById("appointmentsTable").getElementsByTagName("tbody")[0];
-        let rows = Array.from(table.rows);
-        let sortedRows = rows.sort((a, b) => {
-            let dateA = new Date(a.cells[3].textContent);
-            let dateB = new Date(b.cells[3].textContent);
-            return dateA - dateB;
-        });
-
-        table.innerHTML = "";
-        sortedRows.forEach(row => table.appendChild(row));
-    }
-
-    // Confirm before canceling an appointment
-    function confirmCancel(button) {
-        if (confirm("Are you sure you want to cancel this appointment?")) {
-            button.closest("tr").remove();
-        }
+    function setRescheduleId(id) {
+        document.getElementById("rescheduleAppointmentId").value = id;
     }
 </script>
+
+<!-- Bootstrap and jQuery JS files (if not already included in your layout) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>

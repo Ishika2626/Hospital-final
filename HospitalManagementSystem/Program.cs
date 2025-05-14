@@ -1,4 +1,5 @@
 
+using HospitalManagementSystem.Models;
 using HospitalManagementSystem.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,6 +30,7 @@ namespace HospitalManagementSystem
             builder.Services.AddScoped<IStaffRepository, StaffRepository>();
             builder.Services.AddScoped<IReportsAnalyticsRepository, ReportsAnalyticsRepository>();
             builder.Services.AddScoped<ILabTestRepository, LabTestRepository>();
+            builder.Services.AddScoped<IBloodbankRepo, BloodbankRepo>();
             // Load configuration from user secrets (only for development environment)
             if (builder.Environment.IsDevelopment())
             {

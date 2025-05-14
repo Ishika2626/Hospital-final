@@ -1636,6 +1636,37 @@ WHERE npa.employee_id = @employeeId
             return employees;
         }
 
+        public IEnumerable<Doctor> GetDoctorsByDepartment(int departmentId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT doctor_id, full_name FROM Doctors.doctors WHERE department_id = @DepartmentId AND status = 'Active'";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@DepartmentId", departmentId);
+                    conn.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        List<Doctor> doctors = new List<Doctor>();
+
+                        while (reader.Read())
+                        {
+                            doctors.Add(new Doctor
+                            {
+                                DoctorId = Convert.ToInt32(reader["doctor_id"]),
+                                FullName = reader["full_name"].ToString()
+                            });
+                        }
+
+                        return doctors;
+                    }
+                }
+            }
+        }
+
+
     }
 }
 

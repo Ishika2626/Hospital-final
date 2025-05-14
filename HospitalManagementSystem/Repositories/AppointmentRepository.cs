@@ -1,6 +1,7 @@
 ﻿using HospitalManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace HospitalManagementSystem.Repositories
 {
@@ -605,6 +606,30 @@ namespace HospitalManagementSystem.Repositories
 
             return appointments;
         }
+
+        public void UpdateAppointmentDate(int appointmentId, DateTime newDate)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionstring))
+            {
+                string query = @"
+           
+            UPDATE AppointmentScheduling.appointment_scheduling
+            SET appointment_date = @newDate,
+                appointment_status = 'Rescheduled',
+                updated_at = GETDATE()
+            WHERE appointment_id = @appointmentId";
+
+        SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@newDate", newDate);
+                cmd.Parameters.AddWithValue("@appointmentId", appointmentId);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+        
 
     }
 }

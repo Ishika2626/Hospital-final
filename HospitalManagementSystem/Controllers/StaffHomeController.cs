@@ -18,12 +18,14 @@ namespace HospitalManagementSystem.Controllers
         private readonly ILabTestRepository labTestRepository;
         private readonly IPatientRepository patientRepository;
         private readonly IDoctorRepository doctorRepository;
-        public StaffHomeController(IStaffRepository staffRepository, ILabTestRepository labTestRepository, IPatientRepository patientRepository, IDoctorRepository doctorRepository)
+        private readonly IAppointmentRepository appointmentRepository;
+        public StaffHomeController(IStaffRepository staffRepository, IAppointmentRepository appointmentRepository, ILabTestRepository labTestRepository, IPatientRepository patientRepository, IDoctorRepository doctorRepository)
         {
             this.staffRepository = staffRepository;
             this.doctorRepository = doctorRepository;
             this.patientRepository = patientRepository;
             this.labTestRepository = labTestRepository;
+            this.appointmentRepository = appointmentRepository;
         }
 
         public IActionResult ReceptionistDashboard()
@@ -88,46 +90,7 @@ namespace HospitalManagementSystem.Controllers
 
         }
 
-        //[HttpGet]
-        //public IActionResult MarkAttendance()
-        //{
-        //    var employeeId = HttpContext.Session.GetInt32("EmployeeId");
-
-        //    if (!employeeId.HasValue)
-        //    {
-        //        TempData["ErrorMessage"] = "You must be logged in to mark attendance!";
-        //        return RedirectToAction("Login", "RegisterLogin");
-        //    }
-
-        //    ViewData["EmployeeId"] = employeeId.Value;
-
-        //    return View();
-        //}
-
-        //// POST: /Attendance/Mark
-        //[HttpPost]
-        //public IActionResult MarkAttendance(AttendanceModel attendance)
-        //{
-        //    if (attendance.EmployeeId <= 0)
-        //    {
-        //        TempData["ErrorMessage"] = "Invalid employee data!";
-        //        return RedirectToAction("Mark");
-        //    }
-
-        //    try
-        //    {
-        //        // Call the repository to insert attendance
-        //        staffRepository.MarkAttendance(attendance);
-
-        //        TempData["SuccessMessage"] = "Attendance marked successfully!";
-        //        return RedirectToAction("MarkAttendance");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        TempData["ErrorMessage"] = $"Error: {ex.Message}";
-        //        return RedirectToAction("MarkAttendance");
-        //    }
-        //}
+     
 
         public IActionResult StaffProfile()
         {
@@ -259,11 +222,25 @@ namespace HospitalManagementSystem.Controllers
 
         public IActionResult ReceptionistManageAppointments()
         {
-            return View();
+            var app=appointmentRepository.GetAllAppointments();
+            ViewBag.Doctors = doctorRepository.GetAllDoctors();
+            ViewBag.Patients = patientRepository.GetAll();
+            return View(app);
         }
-        public IActionResult ReceptionistAddAppointments()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ReceptionistAddAppointments(Appointment appointment)
         {
-            return View();
+            appointmentRepository.AddAppointment(appointment);
+            ViewBag.Doctors = doctorRepository.GetAllDoctors();
+            ViewBag.Patients = patientRepository.GetAll();
+            return RedirectToAction("ReceptionistManageAppointments");
+        }
+        [HttpPost]
+        public IActionResult RescheduleAppointment(int appointmentId, DateTime newDate)
+        {
+            appointmentRepository.UpdateAppointmentDate(appointmentId, newDate);
+            return RedirectToAction("ReceptionistManageAppointments");
         }
         public IActionResult ReceptionistPatientRecords()
         {
@@ -277,7 +254,14 @@ namespace HospitalManagementSystem.Controllers
             patientRepository.Add(patient, patient_img);
             return RedirectToAction("ReceptionistPatientRecords");
         }
+        [HttpGet]
+        public JsonResult GetDoctorsByDepartment(int departmentId)
+        {
+            var doctors = staffRepository.GetDoctorsByDepartment(departmentId)
+                .Select(d => new { id = d.DoctorId, name = d.FullName }).ToList();
 
+            return Json(doctors); // This will send a JSON response to the client
+        }
         public IActionResult ReceptionistVisitorsLog()
         {
             var visits = patientRepository.GetAllpatient_visits();
@@ -285,10 +269,12 @@ namespace HospitalManagementSystem.Controllers
             // Fetch patients and doctors from repository
             var patients = patientRepository.GetAll();
             var doctors = doctorRepository.GetAllDoctors();
+            var departments = staffRepository.GetAllDepartments();
 
             // Assign them to ViewBag (still raw collections)
             ViewBag.patientName = patients;
             ViewBag.doctorName = doctors;
+            ViewBag.Departments = departments;
 
             return View(visits);
         }
@@ -297,7 +283,8 @@ namespace HospitalManagementSystem.Controllers
         {
             patientRepository.Addpatient_visits(visit);
             ViewBag.patientName = patientRepository.GetAll();
-            ViewBag.doctorName = doctorRepository.GetAllDoctors();// Insert into DB without model validation check
+            ViewBag.doctorName = doctorRepository.GetAllDoctors();
+            ViewBag.Departments = staffRepository.GetAllDepartments();
             return RedirectToAction("ReceptionistVisitorsLog");
         }
         public IActionResult PharmacistManageMedicines()
@@ -561,12 +548,24 @@ namespace HospitalManagementSystem.Controllers
         public ActionResult MarkAttendance()
         {
             int? employeeId = HttpContext.Session.GetInt32("EmployeeId");
+            string role = HttpContext.Session.GetString("Role"); // may be null if not admin
+
             if (employeeId == null)
             {
-                return RedirectToAction("Login"); // or show an error
+                return RedirectToAction("Login","RegisterLogin");
             }
 
-            DateTime today = DateTime.Today;
+            // Only override layout if admin
+            if (role == "Admin")
+            {
+                ViewBag.Layout = "~/Views/Shared/admin.cshtml";
+            }
+            else
+            {
+                ViewBag.Layout = "~/Views/Shared/_stafflayout.cshtml";
+            }
+
+                DateTime today = DateTime.Today;
 
             var model = staffRepository.GetAttendanceForToday(employeeId.Value, today)
                 ?? new AttendanceModel
@@ -578,6 +577,7 @@ namespace HospitalManagementSystem.Controllers
 
             return View(model);
         }
+
 
 
         [HttpPost]
@@ -957,30 +957,7 @@ namespace HospitalManagementSystem.Controllers
         {
             return View();
         }
-        public IActionResult BBSDonors()
-        {
-            return View();
-        }
-        public IActionResult BBSInventory()
-        {
-            return View();
-        }
-        public IActionResult BBSTesting()
-        {
-            return View();
-        }
-        public IActionResult BBSRequests()
-        {
-            return View();
-        }
-        public IActionResult BBSEmergency()
-        {
-            return View();
-        }
-        public IActionResult BBSReports()
-        {
-            return View();
-        }
+        
 
     }
 

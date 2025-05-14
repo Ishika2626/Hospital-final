@@ -38,5 +38,7 @@ namespace HospitalManagementSystem.Repositories
         List<Appointment> GetAppointmentsByPatientId(int patientId);
         List<AppointmentInfo> GetAppointmentsByPatientName(string patientName);
 
+        void UpdateAppointmentDate(int appointmentId, DateTime newDate);
+
     }
 }

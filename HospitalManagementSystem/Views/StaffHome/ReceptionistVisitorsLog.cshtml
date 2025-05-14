@@ -4,7 +4,6 @@
     ViewData["Title"] = "Patient Visits";
     Layout = "~/Views/Shared/_stafflayout.cshtml";
 
-    // Cast ViewBag values to the respective collections
     var patients = ViewBag.patientName as IEnumerable<HospitalManagementSystem.Models.PatientRegistration>;
     var doctors = ViewBag.doctorName as IEnumerable<HospitalManagementSystem.Models.Doctor>;
 }
@@ -81,21 +80,23 @@
                             <input type="datetime-local" name="VisitDate" class="form-control" required />
                         </div>
 
-                        <!-- Department -->
+                        <!-- Department Dropdown -->
                         <div class="col-md-6 mb-3">
                             <label>Department</label>
-                            <input type="text" name="Department" class="form-control" required />
+                            <select id="departmentDropdown" name="Department" class="form-control" required>
+                                <option value="">Select Department</option>
+                                @foreach (var dept in ViewBag.Departments)
+                                {
+                                    <option value="@dept.DepartmentId">@dept.DepartmentName</option>
+                                }
+                            </select>
                         </div>
 
                         <!-- Doctor Dropdown -->
                         <div class="col-md-6 mb-3">
                             <label>Doctor</label>
-                            <select class="form-control" name="DoctorId" required>
-                                <option value="">-- Select Doctor --</option>
-                                @foreach (var item in doctors)
-                                {
-                                    <option value="@item.DoctorId">@item.FullName</option>
-                                }
+                            <select id="doctorDropdown" name="DoctorId" class="form-control" required>
+                                <option value="">Select Doctor</option>
                             </select>
                         </div>
 
@@ -115,5 +116,33 @@
     </div>
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- JavaScript for Dynamic Doctor Dropdown -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+       $('#departmentDropdown').change(function () {
+        var deptId = $(this).val();
+        if (deptId) {
+            $.ajax({
+                url: '/StaffHome/GetDoctorsByDepartment', // The correct URL here
+                type: 'GET',
+                data: { departmentId: deptId },
+                success: function (data) {
+                    console.log(data); // Log the response data to check if doctors are returned
+
+                    var $doctorDropdown = $('#doctorDropdown');
+                    $doctorDropdown.empty();  // Clear existing options
+                    $doctorDropdown.append($('<option>').text('Select Doctor').attr('value', ''));
+
+                    $.each(data, function (i, doctor) {
+                        $doctorDropdown.append($('<option>').text(doctor.name).attr('value', doctor.id));
+                    });
+                },
+                error: function () {
+                    alert('An error occurred while fetching doctors.');
+                }
+            });
+        } else {
+            $('#doctorDropdown').empty().append($('<option>').text('Select Doctor').attr('value', ''));
+        }
+    });
+ </script>
