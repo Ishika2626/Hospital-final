@@ -39,6 +39,32 @@
             [Display(Name = "Eligibility")]
             public string EligibilityStatus { get; set; }
         }
+
+    [Table("blood_bags", Schema = "blood_bank")]
+    public class BloodBag
+    {
+        public int Id { get; set; }
+        public int DonorId { get; set; }
+        public string BloodType { get; set; }
+        public DateTime CollectionDate { get; set; }
+        public DateTime ExpiryDate { get; set; }
+        public string Status { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public bool IsTested { get; set; }
     }
+    
+    [Table("blood_donation_history", Schema = "blood_bank")]
+    public class BloodDonationHistory
+    {
+        public int Id { get; set; }
+        public int DonorId { get; set; }
+        public DateTime DonationDate { get; set; }
+        public int BloodBagId { get; set; }
+        public DateTime? CreatedAt { get; set; }
+
+        public BloodBag BloodBag { get; set; } // For joining bag info
+    }
+
+}
 
 

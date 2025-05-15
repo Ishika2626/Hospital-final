@@ -151,7 +151,7 @@
                     <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("PatientLogin","Patient")">Patient Portal</a></li>
                     <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("AboutUs","UserHome")">About </a></li>
                     <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("ContactUS","UserHome")">Contact </a></li>
-                    <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("Careers", "UserHome")">Careers</a></li>
+                    
                     <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("Laboratory", "UserHome")">Laboratory</a></li>
 
                     <!-- Services Dropdown -->
@@ -164,7 +164,7 @@
                             <a class="dropdown-item" href="@Url.Action("EmergencyServices","UserHome")">🚑 Emergency Services</a>
                         </div>
                     </li>
-
+                    <li class="nav-item"><a class="nav-link text-light" href="@Url.Action("Careers", "UserHome")">Careers</a></li>
                     <!-- Search Bar -->
                     <li class="nav-item">
                         <div class="search-container">
@@ -175,17 +175,7 @@
                         </div>
                     </li>
                    
-                    <!-- Profile Dropdown -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-light" href="#" data-bs-toggle="dropdown">👤 Profile</a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow">
-                            <li><a class="dropdown-item" href="@Url.Action("Login","RegisterLogin")">🔑 Login</a></li>
-
-                            <li><a class="dropdown-item" href="@Url.Action("Register","RegisterLogin")">📝 Register</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="@Url.Action("PatientProfile","UserHome")">⚙️ Settings</a></li>
-                        </ul>
-                    </li> 
+                   
                 </ul>
             </div>
         </div>

@@ -1,0 +1,57 @@
+﻿@model List<hospitalManagementSystem.Models.Donor>
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Blood Type</th>
+                    <th>Phone Number</th>
+                    <th>Eligibility</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var donor in Model)
+                {
+                    <tr>
+                        <td>@donor.FullName</td>
+                        <td>@donor.BloodType</td>
+                        <td>@donor.PhoneNumber</td>
+                        <td>
+                            @if (donor.EligibilityStatus == "Eligible")
+                            {
+                                <span class="badge bg-success">Eligible</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Not Eligible</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (ViewBag.TotalPages > 1)
+    {
+        <nav class="mt-3">
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                        <a href="#" class="page-link donor-page-link" data-page="@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+}
+else
+{
+    <div class="alert alert-info text-center">
+        No donors found.
+    </div>
+}

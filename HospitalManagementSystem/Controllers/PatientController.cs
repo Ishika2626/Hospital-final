@@ -407,6 +407,13 @@ namespace HospitalManagementSystem.Controllers
                 return View(model);
             }
 
+            // ✅ Special login logic for hospital
+            if (model.Email == "curelife@gmail.com" && model.Password == "000000")
+            {
+                // Redirect to Login action of RegisterLogin controller
+                return RedirectToAction("Login", "RegisterLogin");
+            }
+
             // Authenticate the patient using the repository
             var patient = patientRepository.Authenticate(model.Email, model.Password);
 

@@ -1,6 +1,6 @@
 ﻿@model List<hospitalManagementSystem.Models.Donor>
 @{
-    Layout = "~/Views/Shared/_stafflayout.cshtml";
+    Layout = "~/Views/Shared/admin.cshtml";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -14,24 +14,15 @@
 <body>
     <div class="main-content ms-5">
         <div class="card shadow rounded">
-            <div class="card-header text-white text-center" style="background: linear-gradient(to right, #1e3c72, #2a5298); font-size: 1.4rem; font-weight: 600;">
+            <div class="card-header text-white text-center" style="background: linear-gradient(to right, #c31432, #240b36); font-size: 1.4rem; font-weight: 600;">
                 <i class="fa-solid fa-hand-holding-droplet me-2"></i> Donor List
             </div>
             <div class="card-body">
-
-                <!-- ADD DONOR BUTTON -->
-                <div class="d-flex justify-content-end mb-3">
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDonorModal">
-                        <i class="fa fa-plus me-1"></i> Add Donor
-                    </button>
-                </div>
-
                 <form method="get" class="mb-3">
                     <div class="mb-3">
                         <input type="text" id="searchInput" class="form-control" placeholder="Search by Full Name" autocomplete="off" />
                     </div>
                 </form>
-
                 <div id="donorList">
                     @* Initial table render *@
                     @if (Model != null && Model.Any())
@@ -91,88 +82,10 @@
         </div>
     </div>
 
-    <!-- Add Donor Modal -->
-    <div class="modal fade" id="addDonorModal" tabindex="-1" aria-labelledby="addDonorModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <form action="/BloodBank/AddDonor" method="post">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addDonorModalLabel">Add New Donor</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Full Name</label>
-                                <input name="FullName" class="form-control" required />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Date of Birth</label>
-                                <input name="DateOfBirth" class="form-control" type="date" required />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Gender</label>
-                                <select name="Gender" class="form-select">
-                                    <option>Male</option>
-                                    <option>Female</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Blood Type</label>
-                                <select name="BloodType" class="form-select" required>
-                                    <option>O+</option>
-                                    <option>O-</option>
-                                    <option>A+</option>
-                                    <option>A-</option>
-                                    <option>B+</option>
-                                    <option>B-</option>
-                                    <option>AB+</option>
-                                    <option>AB-</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Phone Number</label>
-                                <input name="PhoneNumber" class="form-control" required />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Email</label>
-                                <input name="Email" type="email" class="form-control" />
-                            </div>
-
-                            <div class="col-md-12">
-                                <label class="form-label">Address</label>
-                                <textarea name="Address" class="form-control"></textarea>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Last Donation Date</label>
-                                <input name="LastDonationDate" class="form-control" type="date" />
-                            </div>
-
-                            
-                        </div>
-                    </div>
-
-                    <div class="modal-footer mt-3">
-                        <button type="submit" class="btn btn-success">Save</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <script>
         function loadDonorList(searchTerm = '', page = 1) {
             $.ajax({
-                url: '@Url.Action("DonorsTablePartial")',
+                url: '@Url.Action("DonorsPartial")',
                 type: 'GET',
                 data: { search: searchTerm, page: page },
                 success: function (result) {
@@ -203,4 +116,3 @@
     </script>
 </body>
 </html>
-

@@ -13,12 +13,28 @@ namespace HospitalManagementSystem.Controllers
         {
             _bloodbankRepo = bloodbankRepo;
         }
-        // View all donors
-        public ActionResult GetAllDonors()
+        
+
+        public IActionResult GetAllDonors(string search = "", int page = 1)
         {
-            var donors = _bloodbankRepo.GetAllDonors();
-            return View(donors);
+            int pageSize = 10;
+            var donors = _bloodbankRepo.GetPagedDonors(page, pageSize, search);
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(_bloodbankRepo.GetDonorCount(search) / (double)pageSize);
+            ViewBag.Search = search;
+            return View(donors);  // should be List<Donor>
         }
+
+        public PartialViewResult DonorsTablePartial(string search = "", int page = 1)
+        {
+            int pageSize = 10;
+            var donors = _bloodbankRepo.GetPagedDonors(page, pageSize, search);
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(_bloodbankRepo.GetDonorCount(search) / (double)pageSize);
+            ViewBag.Search = search;
+            return PartialView("_DonorTablePartial", donors);  // same
+        }
+
 
         // View details of a single donor
         public ActionResult Details(int id)
@@ -75,24 +91,82 @@ namespace HospitalManagementSystem.Controllers
             _bloodbankRepo.DeleteDonor(id);
             return RedirectToAction("Index");
         }
-    
-       
 
-        public IActionResult Donors()
+        public IActionResult Donors(string search = "", int page = 1)
         {
-            return View();
+            int pageSize = 10;
+            var donors = _bloodbankRepo.GetPagedDonors(page, pageSize, search);
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(_bloodbankRepo.GetDonorCount(search) / (double)pageSize);
+            ViewBag.Search = search;
+            return View(donors);
         }
-        public IActionResult DisplayDonors()
+
+        public IActionResult DonorsPartial(string search = "", int page = 1)
         {
-            return View();
+            int pageSize = 10;
+            var donors = _bloodbankRepo.GetPagedDonors(page, pageSize, search);
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(_bloodbankRepo.GetDonorCount(search) / (double)pageSize);
+            ViewBag.Search = search;
+            return PartialView("_DonorTablePartial", donors);
         }
-        public IActionResult BloodBags()
+
+
+        [HttpGet]
+        public IActionResult BloodBags(string searchTerm = "", int page = 1)
         {
-            return View();
+            int pageSize = 10;
+
+            var pagedBags = _bloodbankRepo.GetBloodBagsPagedWithSearch(searchTerm, page, pageSize);
+            int totalItems = _bloodbankRepo.GetTotalBloodBagsCountWithSearch(searchTerm);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            ViewBag.SearchTerm = searchTerm;
+            ViewBag.Donors = _bloodbankRepo.GetAllDonors();
+
+            return View(pagedBags);
         }
-        public IActionResult DisplayBloodBags()
+
+        [HttpGet]
+        public JsonResult AutoSearch(string term)
         {
-            return View();
+            var matches = _bloodbankRepo.GetMatchingBloodTypes(term);
+            return Json(matches);
+        }
+
+
+        [HttpPost]
+        public IActionResult AddDonation(int DonorId, string BloodType)
+        {
+            try
+            {
+                _bloodbankRepo.RecordDonation(DonorId, BloodType);
+                TempData["Success"] = "Donation recorded successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Failed to record donation: " + ex.Message;
+            }
+
+            return RedirectToAction("BloodBags");
+        }
+
+        [HttpGet]
+        public IActionResult GetEligibleDonorsByBloodType(string bloodType)
+        {
+            if (string.IsNullOrEmpty(bloodType))
+                return BadRequest("Blood type is required");
+
+            var donors = _bloodbankRepo.GetEligibleDonorsByBloodType(bloodType);
+            return Json(donors); // Returns List<Donor> as JSON
+        }
+
+        public IActionResult DonationHistory()
+        {
+            var data = _bloodbankRepo.GetAllDonationHistory();
+            return View(data);
         }
         public IActionResult BloodRequests()
         {
@@ -110,14 +184,7 @@ namespace HospitalManagementSystem.Controllers
         {
             return View();
         }
-        public IActionResult BloodDonationHistory()
-        {
-            return View();
-        }
-        public IActionResult DisplayBloodDonationHistory()
-        {
-            return View();
-        }
+        
         public IActionResult Inventory()
         {
             return View();
